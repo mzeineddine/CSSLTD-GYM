@@ -1,34 +1,34 @@
 <?php
-    require_once __DIR__ . "/../../models/Member.php";
-    class Member_Controller{
+    require_once __DIR__ . "/../../models/Coach.php";
+    class Coach_Controller{
         // CRUD APIs Functions
         static function create(){
             $data = json_decode(file_get_contents("php://input"),true);
-            $member = Member::create($data);
+            $coach = Coach::create($data);
         }
         static function read(){
             $data = json_decode(file_get_contents("php://input"),true);
-            $member = Member::read($data);
+            $coach = Coach::read($data);
             echo json_encode([
-                "result" => boolval($member),
-                "message" => $member ? "member/s found":"no members found",
-                "data" => $member
+                "result" => boolval($coach),
+                "message" => $coach ? "coach/s found":"no coachs found",
+                "data" => $coach
             ]);
         }
         static function update(){
             $data = json_decode(file_get_contents("php://input"),true);
-            $updated = Member::update($data);
+            $updated = Coach::update($data);
             echo json_encode([
                 "result" => $updated,
-                "message" => $updated?"Member updated successfully":"Member not updated",
+                "message" => $updated?"Coach updated successfully":"Coach not updated",
             ]);
         }
         static function delete(){
             $data = json_decode(file_get_contents("php://input"),true);
-            $deleted = Member::delete($data);
+            $deleted = Coach::delete($data);
             echo json_encode([
                 "result" => $deleted,
-                "message" => $deleted?"Member deleted successfully":"Member not deleted",
+                "message" => $deleted?"Coach deleted successfully":"Coach not deleted",
             ]);
         }
     }
