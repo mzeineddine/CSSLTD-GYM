@@ -10,8 +10,7 @@
             $sql = "INSERT INTO users (`username`, `email`, `password`,`title`,`access_level`,`contact`,`address`) VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
             $stmt->execute([$data["username"], $data["email"], password_hash($data['password'], PASSWORD_DEFAULT),$data["title"],$data["access_level"],$data["contact"], $data["address"]]);
-            $user = $stmt->fetch(PDO::FETCH_ASSOC);
-            return $user;
+            return boolval($stmt->rowCount());
         }
         static function read($data){
             global $conn;
@@ -33,13 +32,12 @@
                 return $users;
             }
         }
-
         static function update($data){
             global $conn;
             $sql = "UPDATE users SET `username` = ?, `email` = ?, `password` = ?,
             `title` = ?,`access_level` = ?,`contact` = ?,`address` = ?WHERE id = ?";
             $stmt = $conn->prepare($sql);
-            $stmt->execute([$data['username'],$data['email'],$data['password'],$data['title'],$data['access_level'],$data['contact'],$data['address'],$data['id']]);
+            $stmt->execute([$data['username'],$data['email'],password_hash($data['password'], PASSWORD_DEFAULT),$data['title'],$data['access_level'],$data['contact'],$data['address'],$data['id']]);
             return boolval($stmt->rowCount());
         }
         static function delete($data){
@@ -48,6 +46,18 @@
             $stmt = $conn->prepare($sql);
             $stmt->execute([$data['id']]);
             return $stmt? true : false;
+        }
+        static function read_email($data){
+            global $conn;
+            $email = $data['email'] ?? null;
+            if ($email) {
+                $stmt = $conn->prepare("SELECT * FROM users WHERE email = ?");
+                $stmt->execute([$email]);
+                $user = $stmt->fetch(PDO::FETCH_ASSOC);
+                return $user;
+            } else{
+                return false;
+            }
         }
     }
 ?>

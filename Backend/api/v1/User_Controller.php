@@ -4,7 +4,7 @@
         // CRUD APIs Functions
         static function create(){
             $data = json_decode(file_get_contents("php://input"),true);
-            $user = User::create($data);
+            User::create($data);
         }
         static function read(){
             $data = json_decode(file_get_contents("php://input"),true);
@@ -17,6 +17,14 @@
         }
         static function update(){
             $data = json_decode(file_get_contents("php://input"),true);
+            $user = User::read_email($data);
+            if($user && $user["id"] != $data['id']){
+                echo json_encode([
+                    "result"=>false,
+                    "message"=>"Email already used"
+                ]);
+                return false;
+            }
             $updated = User::update($data);
             echo json_encode([
                 "result" => $updated,
@@ -59,7 +67,12 @@
                 ]);
                 return false;
             }
-            $user=User::create($data);
+            User::create($data);
+            echo json_encode([
+                "result"=>true,
+                "message"=>"User created successfully"
+            ]);
+            return true;
         }
     }
 ?>
