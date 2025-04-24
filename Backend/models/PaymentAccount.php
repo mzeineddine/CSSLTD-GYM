@@ -1,7 +1,7 @@
 <?php
     require_once __DIR__ . "/PaymentAccount_Skeleton.php";
     require_once __DIR__ . "/../connections/connection.php";
-    class PaymentAccount{
+    class PaymentAccount extends PaymentAccount_Skeleton{
         static function create($data){
             global $conn;
             // id, name, description, created_on,created_by, is_deleted
