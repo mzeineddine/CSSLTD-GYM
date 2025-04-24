@@ -41,6 +41,12 @@ $apis = [
     "/payment_account/read"    => ['controller' => 'PaymentAccount_Controller', "method" => 'read'],
     "/payment_account/update"  => ['controller' => 'PaymentAccount_Controller', "method" => 'update'],
     "/payment_account/delete"  => ['controller' => 'PaymentAccount_Controller', "method" => 'delete'],
+
+    // CRUD Expense apis paths
+    "/expense/create"  => ['controller' => 'Expense_Controller', "method" => 'create'],
+    "/expense/read"    => ['controller' => 'Expense_Controller', "method" => 'read'],
+    "/expense/update"  => ['controller' => 'Expense_Controller', "method" => 'update'],
+    "/expense/delete"  => ['controller' => 'Expense_Controller', "method" => 'delete'],
 ];
 
 if (isset($apis[$request])) {

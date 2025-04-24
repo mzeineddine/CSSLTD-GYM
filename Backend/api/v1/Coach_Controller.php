@@ -45,7 +45,7 @@
             if(!Controllers_Utilities::check_params($data,["id","full_name","contact","address","dob"]))
                 return false;
 
-            if(Coach::read($data)){
+            if(!Coach::read($data)){
                 echo json_encode([
                     "result" => false,
                     "message" => "No coaches found"

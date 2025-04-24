@@ -43,7 +43,7 @@
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id","full_name","contact","address","dob"]))
                 return false;
-            if(Member::read($data)){
+            if(!Member::read($data)){
                 echo json_encode([
                     "result" => false,
                     "message" => "No members found"

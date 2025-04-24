@@ -45,7 +45,7 @@
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id","name","description"]))
                 return false;
-            if(PaymentAccount::read($data)){
+            if(!PaymentAccount::read($data)){
                 echo json_encode([
                     "result" => false,
                     "message" => "No payment accounts found"
