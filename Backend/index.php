@@ -53,6 +53,12 @@ $apis = [
     "/expense_payment/read"    => ['controller' => 'ExpensePayment_Controller', "method" => 'read'],
     "/expense_payment/update"  => ['controller' => 'ExpensePayment_Controller', "method" => 'update'],
     "/expense_payment/delete"  => ['controller' => 'ExpensePayment_Controller', "method" => 'delete'],
+
+    // CRUD Category apis paths
+    "/category/create"  => ['controller' => 'Category_Controller', "method" => 'create'],
+    "/category/read"    => ['controller' => 'Category_Controller', "method" => 'read'],
+    "/category/update"  => ['controller' => 'Category_Controller', "method" => 'update'],
+    "/category/delete"  => ['controller' => 'Category_Controller', "method" => 'delete'],
 ];
 
 if (isset($apis[$request])) {

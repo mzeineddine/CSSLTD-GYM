@@ -6,7 +6,7 @@
         public static $created_on;
         public static $created_by;
         public static $is_deleted;
-        static function create_user($id, $expense_id, $amount, $created_on, $created_by, $is_deleted){
+        static function create_expense_payment($id, $expense_id, $amount, $created_on, $created_by, $is_deleted){
             self::$id=$id;
             self::$expense_id=$expense_id;
             self::$amount=$amount;
