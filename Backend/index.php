@@ -59,6 +59,12 @@ $apis = [
     "/category/read"    => ['controller' => 'Category_Controller', "method" => 'read'],
     "/category/update"  => ['controller' => 'Category_Controller', "method" => 'update'],
     "/category/delete"  => ['controller' => 'Category_Controller', "method" => 'delete'],
+    
+    // CRUD Category apis paths
+    "/subscription/create"  => ['controller' => 'Subscription_Controller', "method" => 'create'],
+    "/subscription/read"    => ['controller' => 'Subscription_Controller', "method" => 'read'],
+    "/subscription/update"  => ['controller' => 'Subscription_Controller', "method" => 'update'],
+    "/subscription/delete"  => ['controller' => 'Subscription_Controller', "method" => 'delete'],
 ];
 
 if (isset($apis[$request])) {
