@@ -23,6 +23,18 @@ $apis = [
     //User apis
     "/user/signup"       => ['controller' => 'User_Controller', "method" => 'signup'],
     "/user/login"        => ['controller' => 'User_Controller', "method" => 'login'],
+
+    // CRUD Member apis paths
+    "/member/create"  => ['controller' => 'Member_Controller', "method" => 'create'],
+    "/member/read"    => ['controller' => 'Member_Controller', "method" => 'read'],
+    "/member/update"  => ['controller' => 'Member_Controller', "method" => 'update'],
+    "/member/delete"  => ['controller' => 'Member_Controller', "method" => 'delete'],
+
+    // CRUD Coach apis paths
+    "/coach/create"  => ['controller' => 'Coach_Controller', "method" => 'create'],
+    "/coach/read"    => ['controller' => 'Coach_Controller', "method" => 'read'],
+    "/coach/update"  => ['controller' => 'Coach_Controller', "method" => 'update'],
+    "/coach/delete"  => ['controller' => 'Coach_Controller', "method" => 'delete'],
 ];
 
 if (isset($apis[$request])) {

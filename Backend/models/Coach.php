@@ -38,7 +38,7 @@
             $sql = "UPDATE coaches SET is_deleted = 1 WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $stmt->execute([$data['id']]);
-            return $stmt? true : false;
+            return boolval($stmt->rowCount());
         }
     }
 ?>
