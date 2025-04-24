@@ -22,6 +22,13 @@
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id","username","email","password","title", "access_level","contact", "address"]))
                 return false;
+            if(User::read($data)){
+                echo json_encode([
+                    "result" => false,
+                    "message" => "No users found"
+                ]);
+                return false;
+            }
             $user = User::read_email($data);
             if($user && $user["id"] != $data['id']){
                 echo json_encode([

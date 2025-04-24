@@ -1,8 +1,8 @@
 <?php
     require_once __DIR__ . "/../../models/User.php";
-    require_once __DIR__ . "/../../models/Member.php";
+    require_once __DIR__ . "/../../models/PaymentAccount.php";
     require_once __DIR__ . "/../../utilities/Controllers_Utilities.php";
-    class Member_Controller{
+    class PaymentAccount_Controller{
         static function check_created_by($data){
             if(!User::read($data)){
                 echo json_encode([
@@ -16,15 +16,16 @@
         // CRUD APIs Functions
         static function create(){
             $data = json_decode(file_get_contents("php://input"),true);
-            if(!Controllers_Utilities::check_params($data,["full_name","contact","address","dob", "created_by"]))
+            if(!Controllers_Utilities::check_params($data,["name", "description", "created_by"]))
                 return false;
             $modified_data = ["id"=>$data["created_by"]];
             if(self::check_created_by($modified_data)){
-                $created = Member::create($data);
+                $created = PaymentAccount::create($data);
                 echo json_encode([
                     "result" => $created,
-                    "message" => $created?"Member created successfully":"Member not updated",
+                    "message" => $created?"Payment account created successfully":"Payment account not updated",
                 ]);
+                return $created;
             }
             return false;
         }
@@ -32,52 +33,51 @@
             $data = json_decode(file_get_contents("php://input"),true);
             // if(!Controllers_Utilities::check_params($data,["id"]))
             //     return false;
-            $member = Member::read($data);
+            $payment_account = PaymentAccount::read($data);
             echo json_encode([
-                "result" => boolval($member),
-                "message" => $member ? "member/s found":"no members found",
-                "data" => $member
+                "result" => boolval($payment_account),
+                "message" => $payment_account ? "Payment account found":"No payment accounts found",
+                "data" => $payment_account
             ]);
+            return boolval($payment_account);
         }
         static function update(){
             $data = json_decode(file_get_contents("php://input"),true);
-            if(!Controllers_Utilities::check_params($data,["id","full_name","contact","address","dob"]))
+            if(!Controllers_Utilities::check_params($data,["id","name","description"]))
                 return false;
-            if(Member::read($data)){
+            if(PaymentAccount::read($data)){
                 echo json_encode([
                     "result" => false,
-                    "message" => "No members found"
+                    "message" => "No payment accounts found"
                 ]);
                 return false;
             }
-            // $modified_data = ["id"=>$data["created_by"]];
-            // if(self::check_created_by($modified_data)){
-                $updated = Member::update($data);
-                echo json_encode([
-                    "result" => $updated,
-                    "message" => $updated?"Member updated successfully":"Member not updated",
-                ]);
-            // }
+            $updated = PaymentAccount::update($data);
+            echo json_encode([
+                "result" => $updated,
+                "message" => $updated?"Payment account updated successfully":"Payment account not updated",
+            ]);
             return $updated;
         }
         static function delete(){
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id"]))
                 return false;
-            $member=Member::read($data);
-            if(!$member){
+            $payment_account=PaymentAccount::read($data);
+            if(!$payment_account){
                 echo json_encode([
-                    "result" => boolval($member),
-                    "message" => $member ? "member found":"no members found",
-                    "data" => $member
+                    "result" => boolval($payment_account),
+                    "message" => $payment_account ? "Payment account found":"no payment accounts found",
+                    "data" => $payment_account
                 ]);
                 return false;
             }
-            $deleted = Member::delete($data);
+            $deleted = PaymentAccount::delete($data);
             echo json_encode([
                 "result" => $deleted,
-                "message" => $deleted?"Member deleted successfully":"Member not deleted",
+                "message" => $deleted?"Payment account deleted successfully":"Payment account not deleted",
             ]);
+            return $deleted;
         }
     }
 ?>

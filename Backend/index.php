@@ -35,6 +35,12 @@ $apis = [
     "/coach/read"    => ['controller' => 'Coach_Controller', "method" => 'read'],
     "/coach/update"  => ['controller' => 'Coach_Controller', "method" => 'update'],
     "/coach/delete"  => ['controller' => 'Coach_Controller', "method" => 'delete'],
+
+    // CRUD PaymentAccount apis paths
+    "/payment_account/create"  => ['controller' => 'PaymentAccount_Controller', "method" => 'create'],
+    "/payment_account/read"    => ['controller' => 'PaymentAccount_Controller', "method" => 'read'],
+    "/payment_account/update"  => ['controller' => 'PaymentAccount_Controller', "method" => 'update'],
+    "/payment_account/delete"  => ['controller' => 'PaymentAccount_Controller', "method" => 'delete'],
 ];
 
 if (isset($apis[$request])) {
