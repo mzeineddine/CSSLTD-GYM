@@ -1,9 +1,10 @@
 <?php
     require_once __DIR__ . "/../../models/User.php";
     require_once __DIR__ . "/../../models/Class.php";
-    require_once __DIR__ . "/../../models/Coach.php";
+    require_once __DIR__ . "/../../models/ClassMember.php";
+    require_once __DIR__ . "/../../models/Member.php";
     require_once __DIR__ . "/../../utilities/Controllers_Utilities.php";
-    class Class_Controller{
+    class ClassMember_Controller{
         static function check_created_by($data){
             if(!User::read($data)){
                 echo json_encode([
@@ -15,10 +16,21 @@
             return true;
         }
         static function check_class($data){
-            if(!Coach::read($data)){
+            if(!Classes::read($data)){
                 echo json_encode([
                     "result"=>false,
-                    "message"=>"Invalid Coach"
+                    "message"=>"Invalid Class"
+                ]);
+                return false;
+            }
+            return true;
+        } 
+
+        static function check_member($data){
+            if(!Member::read($data)){
+                echo json_encode([
+                    "result"=>false,
+                    "message"=>"Invalid member"
                 ]);
                 return false;
             }
@@ -27,18 +39,21 @@
         // CRUD APIs Functions
         static function create(){
             $data = json_decode(file_get_contents("php://input"),true);
-            if(!Controllers_Utilities::check_params($data,['coach_id','title','start_date','end_date','created_by']))
+            if(!Controllers_Utilities::check_params($data,['class_id','member_id','created_by']))
                 return false;
             $modified_data = ["id"=>$data["created_by"]];
             if(self::check_created_by($modified_data)){
-                $modified_data = ["id"=>$data["coach_id"]];
+                $modified_data = ["id"=>$data["class_id"]];
                 if(self::check_class($modified_data)){
-                    $created = Classes::create($data);
-                    echo json_encode([
-                        "result" => $created,
-                        "message" => $created?"Class created successfully":"Class not created",
-                    ]);
-                    return $created;
+                    $modified_data = ["id"=>$data["member_id"]];
+                    if(self::check_member($modified_data)){
+                        $created = ClassMember::create($data);
+                        echo json_encode([
+                            "result" => $created,
+                            "message" => $created?"Class member created successfully":"Class member not created",
+                        ]);
+                        return $created;
+                    }return false;
                 }return false;
             }return false;
         }
@@ -46,52 +61,55 @@
             $data = json_decode(file_get_contents("php://input"),true);
             // if(!Controllers_Utilities::check_params($data,["id"]))
             //     return false;
-            $class = Classes::read($data);
+            $class = ClassMember::read($data);
             echo json_encode([
                 "result" => boolval($class),
-                "message" => $class ? "Class found":"no classes found",
+                "message" => $class ? "Class member found":"no class members found",
                 "data" => $class
             ]);
             return boolval($class);
         }
         static function update(){
             $data = json_decode(file_get_contents("php://input"),true);
-            if(!Controllers_Utilities::check_params($data,["coach_id","title","start_date","end_date", "id"]))
+            if(!Controllers_Utilities::check_params($data,["member_id","class_id","id"]))
                 return false;
-            if(!Classes::read($data)){
+            if(!ClassMember::read($data)){
                 echo json_encode([
                     "result" => false,
-                    "message" => "No class found"
+                    "message" => "No class member found"
                 ]);
                 return false;
             }
-            $modified_data["id"]=$data["coach_id"];
+            $modified_data["id"]=$data["class_id"];
             if(self::check_class($modified_data)){
-                $updated = Classes::update($data);
-                echo json_encode([
-                    "result" => $updated,
-                    "message" => $updated?"Class updated successfully":"Class not updated",
-                ]);
-                return $updated;
+                $modified_data["id"]=$data["member_id"];
+                if(self::check_member($modified_data)){
+                    $updated = ClassMember::update($data);
+                    echo json_encode([
+                        "result" => $updated,
+                        "message" => $updated?"Class member updated successfully":"Class member not updated",
+                    ]);
+                    return $updated;
+                }return false;
             }return false;
         }
         static function delete(){
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id"]))
                 return false;
-            $class=Classes::read($data);
+            $class=ClassMember::read($data);
             if(!$class){
                 echo json_encode([
                     "result" => boolval($class),
-                    "message" => $class ? "Class found":"no classes found",
+                    "message" => $class ? "Class member found":"no class members found",
                     "data" => $class
                 ]);
                 return false;
             }
-            $deleted = Classes::delete($data);
+            $deleted = ClassMember::delete($data);
             echo json_encode([
                 "result" => $deleted,
-                "message" => $deleted?"Class deleted successfully":"Class not deleted",
+                "message" => $deleted?"Class member deleted successfully":"Class member not deleted",
             ]);
             return $deleted;
         }

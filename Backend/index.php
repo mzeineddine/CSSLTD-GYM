@@ -72,11 +72,17 @@ $apis = [
     "/subscription_payment/update"  => ['controller' => 'SubscriptionPayment_Controller', "method" => 'update'],
     "/subscription_payment/delete"  => ['controller' => 'SubscriptionPayment_Controller', "method" => 'delete'],
 
-        // CRUD Class apis paths
-        "/class/create"  => ['controller' => 'Class_Controller', "method" => 'create'],
-        "/class/read"    => ['controller' => 'Class_Controller', "method" => 'read'],
-        "/class/update"  => ['controller' => 'Class_Controller', "method" => 'update'],
-        "/class/delete"  => ['controller' => 'Class_Controller', "method" => 'delete'],
+    // CRUD Class apis paths
+    "/class/create"  => ['controller' => 'Class_Controller', "method" => 'create'],
+    "/class/read"    => ['controller' => 'Class_Controller', "method" => 'read'],
+    "/class/update"  => ['controller' => 'Class_Controller', "method" => 'update'],
+    "/class/delete"  => ['controller' => 'Class_Controller', "method" => 'delete'],
+
+    // CRUD Class Member apis paths
+    "/class_member/create"  => ['controller' => 'ClassMember_Controller', "method" => 'create'],
+    "/class_member/read"    => ['controller' => 'ClassMember_Controller', "method" => 'read'],
+    "/class_member/update"  => ['controller' => 'ClassMember_Controller', "method" => 'update'],
+    "/class_member/delete"  => ['controller' => 'ClassMember_Controller', "method" => 'delete'],
 ];
 
 if (isset($apis[$request])) {
