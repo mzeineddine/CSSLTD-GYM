@@ -89,6 +89,12 @@ $apis = [
     "/class_member_attendance/read"    => ['controller' => 'ClassMemberAttendance_Controller', "method" => 'read'],
     "/class_member_attendance/update"  => ['controller' => 'ClassMemberAttendance_Controller', "method" => 'update'],
     "/class_member_attendance/delete"  => ['controller' => 'ClassMemberAttendance_Controller', "method" => 'delete'],
+
+    // CRUD Global Setting Attendance apis paths
+    "/global_setting/create"  => ['controller' => 'GlobalSetting_Controller', "method" => 'create'],
+    "/global_setting/read"    => ['controller' => 'GlobalSetting_Controller', "method" => 'read'],
+    "/global_setting/update"  => ['controller' => 'GlobalSetting_Controller', "method" => 'update'],
+    "/global_setting/delete"  => ['controller' => 'GlobalSetting_Controller', "method" => 'delete'],
 ];
 
 if (isset($apis[$request])) {
