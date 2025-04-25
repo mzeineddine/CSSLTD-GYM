@@ -45,6 +45,13 @@
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id","name","price"]))
                 return false;
+            if(!Category::read($data)){
+                echo json_encode([
+                    "result" => false,
+                    "message" => "No Category found"
+                ]);
+                return false;
+            }
             $updated = Category::update($data);
             echo json_encode([
                 "result" => $updated,
