@@ -61,13 +61,13 @@
             $data = json_decode(file_get_contents("php://input"),true);
             // if(!Controllers_Utilities::check_params($data,["id"]))
             //     return false;
-            $class = ClassMember::read($data);
+            $class_member = ClassMember::read($data);
             echo json_encode([
-                "result" => boolval($class),
-                "message" => $class ? "Class member found":"no class members found",
-                "data" => $class
+                "result" => boolval($class_member),
+                "message" => $class_member ? "Class member found":"no class members found",
+                "data" => $class_member
             ]);
-            return boolval($class);
+            return boolval($class_member);
         }
         static function update(){
             $data = json_decode(file_get_contents("php://input"),true);

@@ -83,6 +83,12 @@ $apis = [
     "/class_member/read"    => ['controller' => 'ClassMember_Controller', "method" => 'read'],
     "/class_member/update"  => ['controller' => 'ClassMember_Controller', "method" => 'update'],
     "/class_member/delete"  => ['controller' => 'ClassMember_Controller', "method" => 'delete'],
+
+    // CRUD Class Member Attendance apis paths
+    "/class_member_attendance/create"  => ['controller' => 'ClassMemberAttendance_Controller', "method" => 'create'],
+    "/class_member_attendance/read"    => ['controller' => 'ClassMemberAttendance_Controller', "method" => 'read'],
+    "/class_member_attendance/update"  => ['controller' => 'ClassMemberAttendance_Controller', "method" => 'update'],
+    "/class_member_attendance/delete"  => ['controller' => 'ClassMemberAttendance_Controller', "method" => 'delete'],
 ];
 
 if (isset($apis[$request])) {
