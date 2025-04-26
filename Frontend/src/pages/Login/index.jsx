@@ -1,0 +1,77 @@
+import React, { useState } from 'react';
+import './login.css'
+import Logo from './../../assets/logo.png'
+import Land_image from './../../assets/land_image.png' 
+import axios from "axios";
+import { Link } from 'react-router-dom';
+const LoginPage = () => {
+    const logo = Logo;
+    const gym_description = "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fuga, rerum corporis voluptas unde, aspernatur maiores debitis tenetur ab veniam optio sit laborum, dolores maxime? Accusantium iure similique ipsam ipsa explicabo.";
+    const gym_image = Land_image;
+    const gym_name="CSSLTD";
+
+    const [form, setForm] = useState({email:"",password:"",is_remember:false});
+    const onSubmit_handler = async(event) => {
+        event.preventDefault(); 
+        console.log(form)
+        let response = await axios({
+            method: 'post',
+            url: 'http://localhost/Projects/CSSLTD-GYM/Backend/user/login',
+            headers: {
+                "Content-Type": "application/json"
+            }, 
+            data: form
+        }).catch(err => {
+            console.log(err);
+        });
+        console.log(response.data)
+        setForm({email:"",password:"",is_remember:false});
+    }
+    return (
+        <div className="login-container">
+            <div className="left-side">
+                <div className="logo-section">
+                    <img src={logo} alt="Gym Logo" className="logo" />
+                    <h2 className="tagline">{gym_description}</h2>
+                    <img src={gym_image} alt="Gym Image" className="illustration" />
+                </div>
+            </div>
+
+            <div className="right-side">
+                <div className="login-form">
+                    <div className='title'>
+                        <h2>Welcome To <span className="highlight">{gym_name}</span></h2>
+                        <h3>Sign In</h3>
+                    </div>
+                    <form onSubmit={onSubmit_handler}>
+                        <input 
+                            type="email" 
+                            value={form.email} 
+                            onChange={(e)=>{setForm({...form, email:e.target.value})}} 
+                            placeholder="Email" 
+                        />
+                        <input 
+                            type="password" 
+                            value={form.password} 
+                            onChange={(e)=>{setForm({...form, password:e.target.value})}} 
+                            placeholder="Password" 
+                        />
+                        <div className="options">
+                        <div className='remember-me'>
+                            <label className="toggle-switch">
+                                <input type="checkbox" checked={form.is_remember} onChange={(e)=>{setForm({...form, is_remember:e.target.checked})}}/>
+                                <span className="slider"></span>
+                            </label>
+                            <span className="remember-text">Remember Me</span>
+                        </div>
+                        <Link to="#">Forgot Password?</Link>
+                        </div>
+                        <button type="submit">Login</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default LoginPage;
