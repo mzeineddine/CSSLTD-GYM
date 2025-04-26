@@ -97,10 +97,16 @@ $apis = [
     "/global_setting/delete"  => ['controller' => 'GlobalSetting_Controller', "method" => 'delete'],
 
     // CRUD Log apis paths
-    "/log/create"  => ['controller' => 'log_Controller', "method" => 'create'],
-    "/log/read"    => ['controller' => 'log_Controller', "method" => 'read'],
-    "/log/update"  => ['controller' => 'log_Controller', "method" => 'update'],
-    "/log/delete"  => ['controller' => 'log_Controller', "method" => 'delete'],
+    "/log/create"  => ['controller' => 'Log_Controller', "method" => 'create'],
+    "/log/read"    => ['controller' => 'Log_Controller', "method" => 'read'],
+    "/log/update"  => ['controller' => 'Log_Controller', "method" => 'update'],
+    "/log/delete"  => ['controller' => 'Log_Controller', "method" => 'delete'],
+
+    // CRUD Appointment apis paths
+    "/appointment/create"  => ['controller' => 'Appointment_Controller', "method" => 'create'],
+    "/appointment/read"    => ['controller' => 'Appointment_Controller', "method" => 'read'],
+    "/appointment/update"  => ['controller' => 'Appointment_Controller', "method" => 'update'],
+    "/appointment/delete"  => ['controller' => 'Appointment_Controller', "method" => 'delete'],
 ];
 
 if (isset($apis[$request])) {
