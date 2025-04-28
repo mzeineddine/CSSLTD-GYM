@@ -1,0 +1,144 @@
+.login-container {
+    display: flex;
+    min-height: 100vh;
+    min-width: 100vw;
+}  
+.left-side {
+    flex: 1;
+    background: linear-gradient(180deg, #5a00d2, #7000d4);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+.right-side {
+    flex: 1;    
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+.right-side .login-form .title{
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}
+.logo-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+}
+.logo {
+    width: 30%;
+    max-width: 500px;
+}
+.tagline {
+    font-size: 14px;
+    font-weight: 300;
+}
+.illustration {
+    width: 50%;
+    max-width: 300px;
+}
+.login-form {
+    width: 80%;
+    max-width: 450px;
+}
+.login-form h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+.login-form .highlight {
+    color: #5a00d2;
+}
+.login-form h3 {
+    font-size: 18px;
+    margin: 20px 0;
+}
+.login-form input[type="email"],
+.login-form input[type="password"] {
+    color: black;
+    width: 100%;
+    padding: 12px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: transparent;
+}
+.options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 10px 0 20px;
+}
+.remember-me{
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    gap: 10px;
+}
+.toggle-switch {
+    position: relative;
+    width: 40px;
+    height: 20px;
+}
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+.slider::before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+.toggle-switch input:checked + .slider {
+    background-color: #5a00d2;
+}
+.toggle-switch input:checked + .slider::before {
+    transform: translateX(20px);
+}
+.remember-text {
+    font-size: 14px;
+}  
+.options a {
+    font-size: 14px;
+    color: #5a00d2;
+    text-decoration: none;
+}
+button {
+    width: 100%;
+    background: #5a00d2;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+}
+button:hover {
+    background: #4a00b8;
+}
