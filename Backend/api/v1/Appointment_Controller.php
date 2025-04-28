@@ -9,7 +9,7 @@
             if(!User::read($data)){
                 echo json_encode([
                     "result"=>false,
-                    "message"=>"Invalid user_id"
+                    "message"=>"Invalid user"
                 ]);
                 return false;
             }
@@ -19,7 +19,7 @@
             if(!Coach::read($data)){
                 echo json_encode([
                     "result"=>false,
-                    "message"=>"Invalid Coach"
+                    "message"=>"Invalid coach"
                 ]);
                 return false;
             }
@@ -29,7 +29,7 @@
             if(!Member::read($data)){
                 echo json_encode([
                     "result"=>false,
-                    "message"=>"Invalid Member"
+                    "message"=>"Invalid member"
                 ]);
                 return false;
             }
@@ -38,6 +38,12 @@
         // CRUD APIs Functions
         static function create(){
             $data = json_decode(file_get_contents("php://input"),true);
+            
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
+            $data['created_by']=$decoded_token->id;
             if(!Controllers_Utilities::check_params($data,['member_id','coach_id','title','color','start_date','end_date','created_by']))
                 return false;
             $modified_data = ["id"=>$data["created_by"]];
@@ -57,25 +63,33 @@
             }return false;
         }
         static function read(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             // if(!Controllers_Utilities::check_params($data,["id"]))
             //     return false;
             $class = Appointment::read($data);
             echo json_encode([
                 "result" => boolval($class),
-                "message" => $class ? "Appointment found":"no appointments found",
+                "message" => $class ? "Appointment found":"No appointments found",
                 "data" => $class
             ]);
             return boolval($class);
         }
         static function update(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["member_id","coach_id","title","color","start_date","end_date", "id"]))
                 return false;
             if(!Appointment::read($data)){
                 echo json_encode([
                     "result" => false,
-                    "message" => "No appointment found"
+                    "message" => "No appointments found"
                 ]);
                 return false;
             }
@@ -93,15 +107,18 @@
             }return false;
         }
         static function delete(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id"]))
                 return false;
             $appointment=Appointment::read($data);
             if(!$appointment){
                 echo json_encode([
-                    "result" => boolval($appointment),
-                    "message" => $appointment ? "Appointment found":"No appointment found",
-                    "data" => $appointment
+                    "result" => false,
+                    "message" => "No appointment found"
                 ]);
                 return false;
             }

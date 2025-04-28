@@ -7,7 +7,7 @@
         public static $created_on;
         public static $created_by;
         public static $is_deleted;
-        static function create_class($id, $action, $description, $created_on, $created_by, $is_deleted){
+        static function create_log($id, $action, $description, $created_on, $created_by, $is_deleted){
             self::$id=$id;
             self::$action=$action;
             self::$description=$description;

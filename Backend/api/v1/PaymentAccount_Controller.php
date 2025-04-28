@@ -7,7 +7,7 @@
             if(!User::read($data)){
                 echo json_encode([
                     "result"=>false,
-                    "message"=>"Invalid user_id"
+                    "message"=>"Invalid user"
                 ]);
                 return false;
             }
@@ -16,6 +16,11 @@
         // CRUD APIs Functions
         static function create(){
             $data = json_decode(file_get_contents("php://input"),true);
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
+            $data['created_by']=$decoded_token->id;
             if(!Controllers_Utilities::check_params($data,["name", "description", "created_by"]))
                 return false;
             $modified_data = ["id"=>$data["created_by"]];
@@ -30,6 +35,10 @@
             return false;
         }
         static function read(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             // if(!Controllers_Utilities::check_params($data,["id"]))
             //     return false;
@@ -42,6 +51,10 @@
             return boolval($payment_account);
         }
         static function update(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id","name","description"]))
                 return false;
@@ -60,15 +73,18 @@
             return $updated;
         }
         static function delete(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id"]))
                 return false;
             $payment_account=PaymentAccount::read($data);
             if(!$payment_account){
                 echo json_encode([
-                    "result" => boolval($payment_account),
-                    "message" => $payment_account ? "Payment account found":"no payment accounts found",
-                    "data" => $payment_account
+                    "result" => false,
+                    "message" => "No payment accounts found"
                 ]);
                 return false;
             }

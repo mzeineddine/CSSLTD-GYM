@@ -7,7 +7,7 @@
             if(!User::read($data)){
                 echo json_encode([
                     "result"=>false,
-                    "message"=>"Invalid user_id"
+                    "message"=>"Invalid user"
                 ]);
                 return false;
             }
@@ -16,7 +16,12 @@
         // CRUD APIs Functions
         static function create(){
             $data = json_decode(file_get_contents("php://input"),true);
-            if(!Controllers_Utilities::check_params($data,["name","price","created_by"]))
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
+            $data['created_by']=$decoded_token->id;
+            if(!Controllers_Utilities::check_params($data,["name","price", 'created_by']))
                 return false;
             $modified_data = ["id"=>$data["created_by"]];
             if(self::check_created_by($modified_data)){
@@ -30,19 +35,27 @@
             return false;
         }
         static function read(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             // if(!Controllers_Utilities::check_params($data,["id"]))
             //     return false;
             $category = Category::read($data);
             echo json_encode([
                 "result" => boolval($category),
-                "message" => $category ? "Expense payment found":"no expense payments found",
+                "message" => $category ? "Category found":"No categories found",
                 "data" => $category
             ]);
             return boolval($category);
         }
         static function update(){
             $data = json_decode(file_get_contents("php://input"),true);
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             if(!Controllers_Utilities::check_params($data,["id","name","price"]))
                 return false;
             if(!Category::read($data)){
@@ -61,14 +74,17 @@
         }
         static function delete(){
             $data = json_decode(file_get_contents("php://input"),true);
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             if(!Controllers_Utilities::check_params($data,["id"]))
                 return false;
             $category=Category::read($data);
             if(!$category){
                 echo json_encode([
-                    "result" => boolval($category),
-                    "message" => $category ? "Category payment found":"no category payment found",
-                    "data" => $category
+                    "result" => false,
+                    "message" =>"No category payment found",
                 ]);
                 return false;
             }

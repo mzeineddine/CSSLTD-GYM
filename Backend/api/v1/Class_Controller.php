@@ -8,7 +8,7 @@
             if(!User::read($data)){
                 echo json_encode([
                     "result"=>false,
-                    "message"=>"Invalid user_id"
+                    "message"=>"Invalid user"
                 ]);
                 return false;
             }
@@ -18,7 +18,7 @@
             if(!Coach::read($data)){
                 echo json_encode([
                     "result"=>false,
-                    "message"=>"Invalid Coach"
+                    "message"=>"Invalid coach"
                 ]);
                 return false;
             }
@@ -27,6 +27,11 @@
         // CRUD APIs Functions
         static function create(){
             $data = json_decode(file_get_contents("php://input"),true);
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
+            $data['created_by']=$decoded_token->id;
             if(!Controllers_Utilities::check_params($data,['coach_id','title','start_date','end_date','created_by']))
                 return false;
             $modified_data = ["id"=>$data["created_by"]];
@@ -46,16 +51,24 @@
             $data = json_decode(file_get_contents("php://input"),true);
             // if(!Controllers_Utilities::check_params($data,["id"]))
             //     return false;
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $class = Classes::read($data);
             echo json_encode([
                 "result" => boolval($class),
-                "message" => $class ? "Class found":"no classes found",
+                "message" => $class ? "Class found":"No classes found",
                 "data" => $class
             ]);
             return boolval($class);
         }
         static function update(){
             $data = json_decode(file_get_contents("php://input"),true);
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             if(!Controllers_Utilities::check_params($data,["coach_id","title","start_date","end_date", "id"]))
                 return false;
             if(!Classes::read($data)){
@@ -77,14 +90,17 @@
         }
         static function delete(){
             $data = json_decode(file_get_contents("php://input"),true);
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             if(!Controllers_Utilities::check_params($data,["id"]))
                 return false;
             $class=Classes::read($data);
             if(!$class){
                 echo json_encode([
-                    "result" => boolval($class),
-                    "message" => $class ? "Class payment found":"no classes found",
-                    "data" => $class
+                    "result" => false,
+                    "message" => "No classes found",
                 ]);
                 return false;
             }

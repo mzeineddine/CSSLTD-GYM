@@ -8,7 +8,7 @@
             if(!User::read($data)){
                 echo json_encode([
                     "result"=>false,
-                    "message"=>"Invalid user_id"
+                    "message"=>"Invalid user"
                 ]);
                 return false;
             }
@@ -27,6 +27,11 @@
         // CRUD APIs Functions
         static function create(){
             $data = json_decode(file_get_contents("php://input"),true);
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
+            $data['created_by']=$decoded_token->id;
             if(!Controllers_Utilities::check_params($data,["subscription_id","amount","created_by"]))
                 return false;
             $modified_data = ["id"=>$data["created_by"]];
@@ -44,18 +49,26 @@
             return false;
         }
         static function read(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             // if(!Controllers_Utilities::check_params($data,["id"]))
             //     return false;
             $subscription_payment = SubscriptionPayment::read($data);
             echo json_encode([
                 "result" => boolval($subscription_payment),
-                "message" => $subscription_payment ? "Subscription payment found":"no subscription payments found",
+                "message" => $subscription_payment ? "Subscription payment found":"No subscription payments found",
                 "data" => $subscription_payment
             ]);
             return boolval($subscription_payment);
         }
         static function update(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id","amount"]))
                 return false;
@@ -77,15 +90,18 @@
             // }return false;
         }
         static function delete(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id"]))
                 return false;
             $subscription_payment=SubscriptionPayment::read($data);
             if(!$subscription_payment){
                 echo json_encode([
-                    "result" => boolval($subscription_payment),
-                    "message" => $subscription_payment ? "Subscription payment found":"no subscription payment found",
-                    "data" => $subscription_payment
+                    "result" => false,
+                    "message" => "No subscription payment found"
                 ]);
                 return false;
             }

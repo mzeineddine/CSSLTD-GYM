@@ -7,7 +7,7 @@
             if(!User::read($data)){
                 echo json_encode([
                     "result"=>false,
-                    "message"=>"Invalid user_id"
+                    "message"=>"Invalid user"
                 ]);
                 return false;
             }
@@ -16,6 +16,11 @@
         // CRUD APIs Functions
         static function create(){
             $data = json_decode(file_get_contents("php://input"),true);
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
+            $data['created_by']=$decoded_token->id;
             if(!Controllers_Utilities::check_params($data,["action","description","created_by"]))
                 return false;
             $modified_data = ["id"=>$data["created_by"]];
@@ -29,17 +34,25 @@
             return false;
         }
         static function read(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             // if(!Controllers_Utilities::check_params($data,["id"]))
             //     return false;
             $log = Log::read($data);
             echo json_encode([
                 "result" => boolval($log),
-                "message" => $log ? "log found":"no logs found",
+                "message" => $log ? "Log found":"No logs found",
                 "data" => $log
             ]);
         }
         static function update(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id","action","description"]))
                 return false;
@@ -55,29 +68,33 @@
                 $updated = Log::update($data);
                 echo json_encode([
                     "result" => $updated,
-                    "message" => $updated?"Log updated successfully":"log not updated",
+                    "message" => $updated?"Log updated successfully":"Log not updated",
                 ]);
             // }
             return $updated;
         }
         static function delete(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id"]))
                 return false;
             $log=Log::read($data);
             if(!$log){
                 echo json_encode([
-                    "result" => boolval($log),
-                    "message" => $log ? "log found":"no logs found",
-                    "data" => $log
+                    "result" => false,
+                    "message" => "No logs found"
                 ]);
                 return false;
             }
             $deleted = log::delete($data);
             echo json_encode([
                 "result" => $deleted,
-                "message" => $deleted?"Log deleted successfully":"log  not deleted",
+                "message" => $deleted?"Log deleted successfully":"Log  not deleted",
             ]);
+            return $deleted;
         }
     }
 ?>
