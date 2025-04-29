@@ -10,7 +10,7 @@
         public static $created_by;
         public static $is_deleted;
         // id, full_name, contact, address, dob, created_on,created_by, is_deleted
-        static function create_class($id, $coach_id, $title, $start_date,$end_date, $created_on,$created_by, $is_deleted){
+        static function create_Skeleton($id, $coach_id, $title, $start_date,$end_date, $created_on,$created_by, $is_deleted){
             self::$id=$id;
             self::$coach_id=$coach_id;
             self::$title=$title;

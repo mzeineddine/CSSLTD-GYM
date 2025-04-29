@@ -8,7 +8,7 @@
         public static $created_on;
         public static $created_by;
         public static $is_deleted;
-        static function create_class($id, $class_member_id, $class_date,$member_attend, $created_on,$created_by, $is_deleted){
+        static function create_classMemberAttendance($id, $class_member_id, $class_date,$member_attend, $created_on,$created_by, $is_deleted){
             self::$id=$id;
             self::$class_member_id=$class_member_id;
             self::$class_date=$class_date;

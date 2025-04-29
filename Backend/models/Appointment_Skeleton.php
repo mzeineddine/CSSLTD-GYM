@@ -11,7 +11,7 @@
         public static $created_on;
         public static $created_by;
         public static $is_deleted;
-        static function create_class($id,$member_id, $coach_id,$title,$color, $start_date, $end_date, $created_on, $created_by, $is_deleted){
+        static function create_appointment($id,$member_id, $coach_id,$title,$color, $start_date, $end_date, $created_on, $created_by, $is_deleted){
             self::$id=$id;
             self::$member_id=$member_id;
             self::$coach_id=$coach_id;
