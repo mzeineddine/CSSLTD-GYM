@@ -3,7 +3,7 @@ import './login.css'
 import Logo from './../../assets/logo.png'
 import Land_image from './../../assets/land_image.png' 
 import axios from "axios";
-import { Link } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 const LoginPage = () => {
     const logo = Logo;
     const gym_description = "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fuga, rerum corporis voluptas unde, aspernatur maiores debitis tenetur ab veniam optio sit laborum, dolores maxime? Accusantium iure similique ipsam ipsa explicabo.";
@@ -11,6 +11,8 @@ const LoginPage = () => {
     const gym_name="CSSLTD";
 
     const [form, setForm] = useState({email:"",password:"",is_remember:false});
+
+    const navigate = useNavigate();
     const onSubmit_handler = async(event) => {
         event.preventDefault(); 
         console.log(form)
@@ -24,7 +26,15 @@ const LoginPage = () => {
         }).catch(err => {
             console.log(err);
         });
-        console.log(response.data)
+        if(response.data.result){
+            console.log(response.data.token)
+            localStorage.setItem("access-token",response.data.token)
+            navigate("/home")
+        }
+        if(form.is_remember){
+            localStorage.setItem("email", form.email)
+            localStorage.setItem("password", form.password)
+        }
         setForm({email:"",password:"",is_remember:false});
     }
     return (
