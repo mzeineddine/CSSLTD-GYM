@@ -8,7 +8,7 @@
             if(!User::read($data)){
                 echo json_encode([
                     "result"=>false,
-                    "message"=>"Invalid user_id"
+                    "message"=>"Invalid user"
                 ]);
                 return false;
             }
@@ -27,6 +27,11 @@
         // CRUD APIs Functions
         static function create(){
             $data = json_decode(file_get_contents("php://input"),true);
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
+            $data['created_by']=$decoded_token->id;
             if(!Controllers_Utilities::check_params($data,["expense_id","amount","created_by"]))
                 return false;
             $modified_data = ["id"=>$data["created_by"]];
@@ -44,18 +49,26 @@
             return false;
         }
         static function read(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             // if(!Controllers_Utilities::check_params($data,["id"]))
             //     return false;
             $expense_payment = ExpensePayment::read($data);
             echo json_encode([
                 "result" => boolval($expense_payment),
-                "message" => $expense_payment ? "Expense payment found":"no expense payments found",
+                "message" => $expense_payment ? "Expense payment found":"No expense payments found",
                 "data" => $expense_payment
             ]);
             return boolval($expense_payment);
         }
         static function update(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id","amount","expense_id"]))
                 return false;
@@ -71,21 +84,24 @@
                 $updated = ExpensePayment::update($data);
                 echo json_encode([
                     "result" => $updated,
-                    "message" => $updated?"Expense updated successfully":"Expense not updated",
+                    "message" => $updated?"Expense payment updated successfully":"Expense payment not updated",
                 ]);
                 return $updated;
             }return false;
         }
         static function delete(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id"]))
                 return false;
             $expense=ExpensePayment::read($data);
             if(!$expense){
                 echo json_encode([
-                    "result" => boolval($expense),
-                    "message" => $expense ? "Expense payment found":"no expense payment found",
-                    "data" => $expense
+                    "result" => false,
+                    "message" => "No expense payment found"
                 ]);
                 return false;
             }

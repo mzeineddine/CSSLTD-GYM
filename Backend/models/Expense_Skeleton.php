@@ -9,7 +9,7 @@
         public static $created_on;
         public static $created_by;
         public static $is_deleted;
-        static function create_user($id, $date, $account_id, $bill_amount, $paid_amount, $comment, $created_on, $created_by, $is_deleted){
+        static function create_expense($id, $date, $account_id, $bill_amount, $paid_amount, $comment, $created_on, $created_by, $is_deleted){
             self::$id=$id;
             self::$date = $date;
             self::$account_id = $account_id;

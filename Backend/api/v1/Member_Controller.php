@@ -7,7 +7,7 @@
             if(!User::read($data)){
                 echo json_encode([
                     "result"=>false,
-                    "message"=>"Invalid user_id"
+                    "message"=>"Invalid user"
                 ]);
                 return false;
             }
@@ -16,6 +16,11 @@
         // CRUD APIs Functions
         static function create(){
             $data = json_decode(file_get_contents("php://input"),true);
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
+            $data['created_by']=$decoded_token->id;
             if(!Controllers_Utilities::check_params($data,["full_name","contact","address","dob", "created_by"]))
                 return false;
             $modified_data = ["id"=>$data["created_by"]];
@@ -29,17 +34,25 @@
             return false;
         }
         static function read(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             // if(!Controllers_Utilities::check_params($data,["id"]))
             //     return false;
             $member = Member::read($data);
             echo json_encode([
                 "result" => boolval($member),
-                "message" => $member ? "member/s found":"no members found",
+                "message" => $member ? "Member found":"No members found",
                 "data" => $member
             ]);
         }
         static function update(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id","full_name","contact","address","dob"]))
                 return false;
@@ -61,15 +74,18 @@
             return $updated;
         }
         static function delete(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id"]))
                 return false;
             $member=Member::read($data);
             if(!$member){
                 echo json_encode([
-                    "result" => boolval($member),
-                    "message" => $member ? "member found":"no members found",
-                    "data" => $member
+                    "result" => false,
+                    "message" => "No members found"
                 ]);
                 return false;
             }
@@ -78,6 +94,7 @@
                 "result" => $deleted,
                 "message" => $deleted?"Member deleted successfully":"Member not deleted",
             ]);
+            return $deleted;
         }
     }
 ?>

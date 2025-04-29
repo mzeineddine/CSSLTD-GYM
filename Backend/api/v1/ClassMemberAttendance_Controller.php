@@ -8,7 +8,7 @@
             if(!User::read($data)){
                 echo json_encode([
                     "result"=>false,
-                    "message"=>"Invalid user_id"
+                    "message"=>"Invalid user"
                 ]);
                 return false;
             }
@@ -27,6 +27,11 @@
         // CRUD APIs Functions
         static function create(){
             $data = json_decode(file_get_contents("php://input"),true);
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
+            $data['created_by']=$decoded_token->id;
             if(!Controllers_Utilities::check_params($data,['class_member_id','class_date','member_attend','created_by']))
                 return false;
             $modified_data = ["id"=>$data["created_by"]];
@@ -43,18 +48,26 @@
             }return false;
         }
         static function read(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             // if(!Controllers_Utilities::check_params($data,["id"]))
             //     return false;
             $class_member_attendance = ClassMemberAttendance::read($data);
             echo json_encode([
                 "result" => boolval($class_member_attendance),
-                "message" => $class_member_attendance ? "Class member attendance found":"no class member attendance found",
+                "message" => $class_member_attendance ? "Class member attendance found":"No class member attendances found",
                 "data" => $class_member_attendance
             ]);
             return boolval($class_member_attendance);
         }
         static function update(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,['class_member_id','class_date','member_attend', "id"]))
                 return false;
@@ -76,15 +89,18 @@
             }return false;
         }
         static function delete(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id"]))
                 return false;
             $classMemberAttendance=ClassMemberAttendance::read($data);
             if(!$classMemberAttendance){
                 echo json_encode([
-                    "result" => boolval($classMemberAttendance),
-                    "message" => $classMemberAttendance ? "Class member attendance found":"no class member attendances found",
-                    "data" => $classMemberAttendance
+                    "result" => false,
+                    "message" => "No class member attendances found",
                 ]);
                 return false;
             }

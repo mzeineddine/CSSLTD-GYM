@@ -6,7 +6,7 @@
         public static $created_on;
         public static $created_by;
         public static $is_deleted;
-        static function create_expense_payment($id, $subscription_id, $amount, $created_on, $created_by, $is_deleted){
+        static function create_subscriptionPayment($id, $subscription_id, $amount, $created_on, $created_by, $is_deleted){
             self::$id=$id;
             self::$subscription_id=$subscription_id;
             self::$amount=$amount;

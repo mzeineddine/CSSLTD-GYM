@@ -8,17 +8,25 @@
             User::create($data);
         }
         static function read(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             // if(!Controllers_Utilities::check_params($data,["id","username","email","password","title", "access_level","contact", "address"]))
             //     return false;
             $user = User::read($data);
             echo json_encode([
                 "result" => boolval($user),
-                "message" => $user ? "user/s found":"no users found",
+                "message" => $user ? "User found":"No users found",
                 "data" => $user
             ]);
         }
         static function update(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id","username","email","password","title", "access_level","contact", "address"]))
                 return false;
@@ -44,6 +52,10 @@
             ]);
         }
         static function delete(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["id"]))
                 return false;
@@ -52,6 +64,7 @@
                 "result" => $deleted,
                 "message" => $deleted?"User deleted successfully":"User not deleted",
             ]);
+            return $deleted;
         }
         //
         static function login(){
@@ -60,10 +73,12 @@
                 return false;
             $user = User::read($data);
             if ($user && password_verify($data['password'], $user['password'])) {
+                // Controllers_Utilities::generate_jwt($user);
                 echo json_encode([
                     "result" => true,
                     "message" => "Login successful",
-                    "data" => $user
+                    "data" => $user,
+                    "token"=> Controllers_Utilities::generate_jwt($user)
                 ]);
             } else {
                 http_response_code(401);
@@ -74,6 +89,10 @@
             }
         }
         static function signup(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["username","email","password","title", "access_level","contact", "address"]))
                 return false;
