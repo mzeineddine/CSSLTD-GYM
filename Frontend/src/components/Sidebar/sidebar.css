@@ -35,6 +35,9 @@ a:has(.logo-img){
     background-color: blueviolet;
     color: white;
 }
+.sideBar a:not(:first-child):hover .icon-img{
+    filter: invert(100%);
+}
 .icon{
     width: 1.5em;
     height: 1.5em;
@@ -47,7 +50,9 @@ a:has(.logo-img){
 img{
     width: 100%;
     height: 100%;
-    color: #828282;
+}
+.icon-img{
+    filter: invert(55%) sepia(6%) saturate(200%) hue-rotate(170deg) brightness(94%) contrast(90%);
 }
 
 .text{

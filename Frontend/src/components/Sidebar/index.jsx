@@ -33,14 +33,14 @@ const Sidebar = () => {
         <>
             <div className="sideBar shorten" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
                 <Link to="/">  <span className="logo-img"><img className="logo-img" src={logo_icon} alt="logo" /></span><span className="text hidden"></span></Link>
-                <Link to="staff">   <span className="icon"><img src={member_icon} alt="member" /></span>      <span className="text hidden">Member</span></Link>
-                <Link to="calendar"><span className="icon"><img src={calendar_icon} alt="calendar" /></span><span className="text hidden">Calendar</span></Link>
-                <Link to="staff">   <span className="icon"><img src={staff_icon} alt="staff" /></span>      <span className="text hidden">Staff</span></Link>
-                <Link to="balance"> <span className="icon"><img src={balance_icon} alt="balance" /></span>  <span className="text hidden">Balance</span></Link>
-                <Link to="expense"> <span className="icon"><img src={expense_icon} alt="expense" /></span>  <span className="text hidden">Expense</span></Link>
+                <Link to="staff">   <span className="icon"><img className="icon-img" src={member_icon} alt="member" /></span>      <span className="text hidden">Member</span></Link>
+                <Link to="calendar"><span className="icon"><img className="icon-img" src={calendar_icon} alt="calendar" /></span><span className="text hidden">Calendar</span></Link>
+                <Link to="staff">   <span className="icon"><img className="icon-img" src={staff_icon} alt="staff" /></span>      <span className="text hidden">Staff</span></Link>
+                <Link to="balance"> <span className="icon"><img className="icon-img" src={balance_icon} alt="balance" /></span>  <span className="text hidden">Balance</span></Link>
+                <Link to="expense"> <span className="icon"><img className="icon-img" src={expense_icon} alt="expense" /></span>  <span className="text hidden">Expense</span></Link>
                 <hr/>
-                <Link to="balance"> <span className="icon"><img src={setting_icon} alt="settings" /></span>  <span className="text hidden">Settings</span></Link>
-                <Link to="expense"> <span className="icon"><img src={logout_icon} alt="logout" /></span>  <span className="text hidden">Logout</span></Link>
+                <Link to="balance"> <span className="icon"><img className="icon-img" src={setting_icon} alt="settings" /></span>  <span className="text hidden">Settings</span></Link>
+                <Link to="expense"> <span className="icon"><img className="icon-img" src={logout_icon} alt="logout" /></span>  <span className="text hidden">Logout</span></Link>
             </div>
         </>
     );
