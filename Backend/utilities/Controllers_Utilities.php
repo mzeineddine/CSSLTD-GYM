@@ -40,7 +40,10 @@
                         return $decoded;
                     } catch (Exception $e) {
                         // http_response_code(401);
-                        echo json_encode(["message" => "Access denied.", "error" => $e->getMessage()]);
+                        echo json_encode([
+                            "result"    => false,
+                            "message"   => "Access denied.", 
+                            "error"     => $e->getMessage()]);
                         return false;
                     }
                 }
