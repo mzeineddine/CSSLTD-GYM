@@ -11,6 +11,13 @@
     flex-direction: column;
     justify-content: start;
     align-items: start;
+    width: 100%;
     /* width: 100vw;
     height: 100vh; */
+}
+
+.main-content{
+    width: 100%;
+    min-height: 100vh;
+    background-color: rgb(225, 225, 225);
 }
