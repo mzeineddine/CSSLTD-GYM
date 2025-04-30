@@ -4,6 +4,8 @@ import DashboardStatCard from "../../components/DashboardStatCard";
 import "./dashboard.css"
 import icon from "../../assets/icons/member_icon.svg"
 import Table from "../../components/Table";
+import Graph from "../../components/Graph";
+import PiChart from "../../components/PiChart";
 const Dashboard = () => {
     const effectFunction = () =>{
         const getData = async () =>{
@@ -42,8 +44,8 @@ const Dashboard = () => {
                 <Table headers={headers} data={data} />
             </div>
             <div className="graphs">
-                {/* <Graph/>
-                <PiChart/> */}
+                <Graph />
+                <PiChart/>
             </div>
         </div>
     );

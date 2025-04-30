@@ -6,6 +6,20 @@
     flex-wrap: wrap;
     gap: 1em;
 }
+.graphs{
+    margin: 2%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 1em;
+    height: 275px;
+}
+.graphs .graph{
+    flex: 2;
+}
+.graphs .piChart{
+    flex: 1;
+}
 /* .dashboardStatCards .dashboardStatCard{
     margin:0px 3%;
 }
