@@ -9,7 +9,6 @@
     flex-direction: row;
     justify-content: space-between;
 }
-
 .graph .graph-info .graph-legend{
     display: flex;
     flex-direction: row;

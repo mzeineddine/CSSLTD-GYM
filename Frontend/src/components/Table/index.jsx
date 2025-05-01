@@ -1,11 +1,20 @@
 import "./table.css"
-
+import { Link } from "react-router-dom";
 const Table = (props) => {
     const {headers, data} = props;
     console.log(headers);
     console.log(data);
+    const title = "Upcoming Appointment"
     return (
         <div className="table">
+            <div className="info">
+                <p>{title}</p>
+                {/* <Link to="appointments">See All</Link> */}
+                <div>
+                    <Link to="appointments">See All</Link>
+                </div>
+                {/* <p>See All</p> */}
+            </div>
             <div className="headers">
                 {
                     headers.map((header, index) => (

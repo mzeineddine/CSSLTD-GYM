@@ -16,11 +16,10 @@
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    width: 40%;
-    flex-wrap: wrap;
+    /* flex-wrap: wrap; */
 }
 
-.piChart .piChard-and-legend{
+.piChart .piChart-and-legend{
     height: 80%;
     display: flex;
     flex-direction: row;
@@ -28,9 +27,22 @@
     align-items: center;
     gap: 1em;
 }
-
-.piChart .piChard-and-legend .graph-legend{
+.piChart .piChart-and-legend .piChart-graph{
     height: 90%;
+    width: 100%;
+    flex: 1;
+}
+.piChart .piChart-and-legend .graph-legend-values{
+    height: 90%;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    gap: 0.5em;
+    flex: 1;
+}
+.piChart .piChart-and-legend .graph-legend-values .graph-legend{
+    height: 80%;
     display: flex;
     flex-direction: column;
     justify-content: center;
