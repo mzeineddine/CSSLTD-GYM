@@ -1,0 +1,14 @@
+.member .graphs{
+    margin: 2%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 1em;
+    height: 275px;
+}
+.member .graphs .graph{
+    flex: 2;
+}
+.member .graphs .piChart{
+    flex: 1;
+}

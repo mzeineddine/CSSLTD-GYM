@@ -4,6 +4,8 @@ import Login from './pages/Login'
 import Dashboard from './pages/Dashboard'
 import NoSidebarLayout from './components/NoSideBarLayout'
 import WithSidebarLayout from './components/WithSideBarLayout'
+import Member from './pages/Member'
+import Staff from './pages/Staff'
 
 
 function App() {
@@ -15,9 +17,9 @@ function App() {
 
         <Route element={<WithSidebarLayout />}>
           <Route path="/home" element={<Dashboard />} />
-          {/* <Route path="/member" element={<Member />} /> */}
+          <Route path="/member" element={<Member />} />
           {/* <Route path="/home" element={<Calendar />} /> */}
-          {/* <Route path="/staff" element={<Staff />} /> */}
+          <Route path="/staff" element={<Staff />} />
           {/* <Route path="/balance" element={<Balance />} /> */}
           {/* <Route path="/expense" element={<Expense />} /> */}
           {/* <Route path="/settings" element={<Settings />} /> */}

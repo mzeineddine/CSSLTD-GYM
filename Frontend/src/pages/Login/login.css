@@ -55,7 +55,7 @@
     margin-bottom: 10px;
 }
 .login-form .highlight {
-    color: #5a00d2;
+    color: blueviolet;
 }
 .login-form h3 {
     font-size: 18px;
@@ -116,7 +116,7 @@
     border-radius: 50%;
 }
 .toggle-switch input:checked + .slider {
-    background-color: #5a00d2;
+    background-color: blueviolet;
 }
 .toggle-switch input:checked + .slider::before {
     transform: translateX(20px);
@@ -126,12 +126,12 @@
 }  
 .options a {
     font-size: 14px;
-    color: #5a00d2;
+    color: blueviolet;
     text-decoration: none;
 }
 button {
     width: 100%;
-    background: #5a00d2;
+    background: blueviolet;
     color: white;
     padding: 14px;
     border: none;
@@ -140,5 +140,5 @@ button {
     cursor: pointer;
 }
 button:hover {
-    background: #4a00b8;
+    background: rgb(150, 55, 240);
 }

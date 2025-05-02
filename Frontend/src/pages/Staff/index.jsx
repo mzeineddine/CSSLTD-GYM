@@ -1,12 +1,12 @@
 import axios from "axios";
-import { useEffect } from "react";
-import DashboardStatCard from "../../components/DashboardStatCard";
-import "./dashboard.css"
-import icon from "../../assets/icons/member_icon.svg"
-import Table from "../../components/Table";
 import Graph from "../../components/Graph";
 import PiChart from "../../components/PiChart";
-const Dashboard = () => {
+import Table from "../../components/Table";
+import { useEffect } from "react";
+import "./staff.css"
+import Page_Title_Add from "../../components/Page_Title_Add";
+
+const Staff = () => {
     const effectFunction = () =>{
         const getData = async () =>{
             console.log("in getData")
@@ -31,23 +31,16 @@ const Dashboard = () => {
         [1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5]
     ];
     return(
-        <div className="dashboard">
-            <div className="dashboardStatCards">
-                <DashboardStatCard icon={icon} title="Patients" count="270"/>
-                <DashboardStatCard icon={icon} title="Patients" count="270"/>
-                <DashboardStatCard icon={icon} title="Patients" count="270"/>
-                {/* <DashboardStatCard icon={icon} title="Patients" count="270"/> */}
-                {/* <DashboardStatCard icon={icon} title="Patients" count="270"/> */}
-                {/* <DashboardStatCard icon={icon} title="Patients" count="270"/> */}
-            </div>
-            <div className="appointment-table">
-                <Table headers={headers} data={data} />
-            </div>
+        <div className="staff">
             <div className="graphs">
                 <Graph />
                 <PiChart/>
             </div>
+            <Page_Title_Add name="staff"/>
+            <div className="appointment-table">
+                <Table headers={headers} data={data} />
+            </div>
         </div>
     );
 }
-export default Dashboard;
+export default Staff

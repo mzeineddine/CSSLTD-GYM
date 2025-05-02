@@ -1,0 +1,50 @@
+.table-search-export{
+    margin: 2%;
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    gap: 1em;
+}
+.table-search-export .search {
+    width: 40%;
+}
+.table-search-export .search input{
+    width: 100%;
+    background-color: rgb(250, 250, 250);
+    padding: 1em;
+}
+.table-search-export .buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+    width: 24em;
+    gap: 1em;
+}
+.table-search-export .buttons button{
+    padding: 0.5em;
+    color: black;
+    background-color: rgb(250, 250,250);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1em;
+}
+
+.table-search-export .buttons button .button-icon{
+    width: 2em;
+    height: 2em;
+}
+
+.table-search-export .buttons button .button-icon img{
+    /* filter: brightness(180%) invert(15%) sepia(100%) saturate(6000%) hue-rotate(269deg) contrast(500%); */
+}
+
+.table-search-export .buttons button:hover {
+    background-color: rgb(138, 43, 226);
+    color: rgb(250,250,250);
+}
+.table-search-export .buttons button:hover .button-icon img{
+    filter: invert(100%);
+}

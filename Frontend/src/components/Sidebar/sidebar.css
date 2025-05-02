@@ -10,6 +10,7 @@ body{
     align-items: center;
     border-radius: 5px;
     transition: all 0.5s ease;
+    background-color: rgb(250, 250, 250);
 }
 a{  
     display: flex;
@@ -22,6 +23,10 @@ a{
     margin: 10px;
     border-radius: 5px;
     width: 80%;
+}
+.logo{
+    padding: 0px;
+    margin: 5px;
 }
 .shorten a{
     justify-content: center;
@@ -44,8 +49,8 @@ a:has(.logo-img){
     margin: 0px 8px;
 }
 .logo-img{
-    width: 4.5em;
-    height: 4.5em;
+    width: 3em;
+    height: 3em;
 }
 img{
     width: 100%;

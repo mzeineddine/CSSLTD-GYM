@@ -1,12 +1,12 @@
-.dashboard .dashboardStatCards{
+/* .member{
     margin: 2%;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 1em;
-}
-.dashboard .graphs{
+} */
+.staff .graphs{
     margin: 2%;
     display: flex;
     flex-direction: row;
@@ -14,9 +14,9 @@
     gap: 1em;
     height: 275px;
 }
-.dashboard .graphs .graph{
+.staff .graphs .graph{
     flex: 2;
 }
-.dashboard .graphs .piChart{
+.staff .graphs .piChart{
     flex: 1;
 }
