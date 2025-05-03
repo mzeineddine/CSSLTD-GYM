@@ -20,4 +20,5 @@
     width: 100%;
     min-height: 100vh;
     background-color: rgb(225, 225, 225);
+    border-radius: 10px;
 }

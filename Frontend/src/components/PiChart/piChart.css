@@ -1,6 +1,5 @@
 .piChart{
     width: 100%;
-    height: 100%;
     background-color: rgb(250,250,250);
     border-radius: 15px;
 }
@@ -47,5 +46,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: start;
+    white-space: nowrap;
     gap: 0.5em;
 }

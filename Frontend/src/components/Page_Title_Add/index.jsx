@@ -14,7 +14,7 @@ const Page_Title_Add = (props) => {
             <div className="title"><h2>{name}</h2></div>
             <div className="add">
                 <button onClick={handleOnClick}><p>+</p><p>Add {name}</p></button>
-                {showModal && <Add_Popup onClose={() => setShowModal(false)} />}
+                {showModal && <Add_Popup onClose={() => setShowModal(false)} fields={props.fields} name={name}/>}
             </div>
         </div>
     );

@@ -2,23 +2,18 @@ import { PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
 import "./piChart.css"
 import { useEffect, useRef, useState } from 'react';
 
-const PiChart = () => {
-    const data = [
-        { name: '0-12', value: 400 },
-        { name: '13-29', value: 300 },
-        { name: '30-59', value: 200 },
-        { name: '+60', value: 100 },
-    ];
-    const COLORS = ['red', 'yellow', 'green', 'blue'];
-    const styles = COLORS.map((color) => ({
+const PiChart = (props) => {
+    const data = props.data
+    const colors = props.colors
+    const styles = colors.map((color) => ({
         color: color,
     }));
-    const key = "value"
-    const title="Members by Age Group"
+    const key = props.chart_key
+    const title=props.title
     const total = data.reduce((sum, item) => sum + item.value, 0);
     const dataWithPercentages = data.map(item => ({
         ...item,
-        percent: ((item.value / total) * 100).toFixed(1), // Stored as string (e.g. "25.0")
+        percent: ((item.value / total) * 100).toFixed(1),
     }));
     
     const [size, setSize] = useState({ width: 0, height: 0 });
@@ -42,7 +37,7 @@ const PiChart = () => {
             </div>
             <div className='piChart-and-legend'>
                 <div className='piChart-graph'  ref={containerRef}>
-                    <ResponsiveContainer width="100%">
+                    <ResponsiveContainer width="100%" height="100%">
                         <PieChart>
                             <Pie
                                 data={data}
@@ -53,7 +48,7 @@ const PiChart = () => {
                                 // label={({ percent }) => `${(percent * 100).toFixed(0)}%`}
                             >
                             {data.map((_, index) => (
-                                <Cell key={{index}} fill={COLORS[index % COLORS.length]} />
+                                <Cell key={{index}} fill={colors[index % colors.length]} />
                             ))}
                             </Pie>
                         </PieChart>

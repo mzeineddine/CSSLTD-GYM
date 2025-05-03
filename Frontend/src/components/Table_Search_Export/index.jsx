@@ -1,6 +1,6 @@
 import pdf_icon from "../../assets/icons/pdf_icon.svg"
 import excel_icon from "../../assets/icons/xls_icon.svg"
-import "./sable_search_export.css"
+import "./table_search_export.css"
 const Table_Search_Export = () =>{
     return(
         <div className="table-search-export">

@@ -12,18 +12,19 @@
 .table-search-export .search input{
     width: 100%;
     background-color: rgb(250, 250, 250);
-    padding: 1em;
+    padding: 0.5em;
+    font-size: 1.25em;
 }
 .table-search-export .buttons{
     display: flex;
     flex-direction: row;
     justify-content: start;
     align-items: center;
-    width: 24em;
+    min-width: 24em;
     gap: 1em;
 }
 .table-search-export .buttons button{
-    padding: 0.5em;
+    padding: 0.25em;
     color: black;
     background-color: rgb(250, 250,250);
     display: flex;

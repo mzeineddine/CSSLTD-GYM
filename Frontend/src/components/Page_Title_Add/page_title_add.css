@@ -4,18 +4,18 @@
     justify-content: space-between;
     align-items: center;
     margin: 2%;
-    border-radius: 15px;
 }
 .add {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    width: 15%;
 }
 .add button{
     display: flex;
     flex-direction: row;
     justify-content: space-around;
     align-items: center;
+    object-fit: cover;
+    white-space: nowrap;
 }

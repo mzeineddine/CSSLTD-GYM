@@ -57,6 +57,9 @@
     border-radius: 5px;
     background-color: transparent;
 }
+.add-popup .form-container form .inputs .input-label input[type="date"]{
+    color: rgb(73, 73, 73);
+}
 .add-popup .form-container form .buttons-container{
     display: flex;
     justify-content: end;

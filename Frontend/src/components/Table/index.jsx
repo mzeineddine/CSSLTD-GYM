@@ -2,11 +2,18 @@ import "./table.css"
 import { Link } from "react-router-dom";
 const Table = (props) => {
     const {headers, data} = props;
-    console.log(headers);
-    console.log(data);
+    // console.log(headers);
+    // console.log(data);
     const title = "Upcoming Appointment"
+    let need_info=false;
+    let table_top_margin = "2%"
+    if(props.info){
+        need_info=true
+        table_top_margin = "0px"
+    }
     return (
         <div className="table">
+            {need_info &&
             <div className="info">
                 <p>{title}</p>
                 {/* <Link to="appointments">See All</Link> */}
@@ -15,7 +22,8 @@ const Table = (props) => {
                 </div>
                 {/* <p>See All</p> */}
             </div>
-            <div className="headers">
+            }
+            <div className="headers" style={{"marginTop": table_top_margin}}>
                 {
                     headers.map((header, index) => (
                         <div className="header" key={index}>

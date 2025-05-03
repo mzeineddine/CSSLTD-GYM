@@ -32,7 +32,7 @@ const Sidebar = () => {
     return(
         <>
             <div className="sideBar shorten" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                <Link to="/" className="logo">  <span className="logo-img"><img className="logo-img" src={logo_icon} alt="logo" /></span><span className="text hidden"></span></Link>
+                <Link to="/home" className="logo">  <span className="logo-img"><img className="logo-img" src={logo_icon} alt="logo" /></span><span className="text hidden"></span></Link>
                 <Link to="member">   <span className="icon"><img className="icon-img" src={member_icon} alt="member" /></span>      <span className="text hidden">Member</span></Link>
                 <Link to="calendar"><span className="icon"><img className="icon-img" src={calendar_icon} alt="calendar" /></span><span className="text hidden">Calendar</span></Link>
                 <Link to="staff">   <span className="icon"><img className="icon-img" src={staff_icon} alt="staff" /></span>      <span className="text hidden">Staff</span></Link>
