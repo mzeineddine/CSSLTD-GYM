@@ -20,3 +20,6 @@
 .dashboard .graphs .piChart{
     flex: 1;
 }
+.appointment-table{
+    margin: 2%;
+}

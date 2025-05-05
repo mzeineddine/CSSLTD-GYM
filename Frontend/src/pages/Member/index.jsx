@@ -77,8 +77,8 @@ const Member = () => {
                     colors={chart_colors}
                 />
             </div>
-            <Page_Title_Add name="member" fields={{"fullName": "text","contact": "text","address":"text","date_of_birth":"date"}}/>
-            <Table_Search_Export />
+            {/* <Page_Title_Add name="member" fields={{"fullName": "text","contact": "text","address":"text","date_of_birth":"date"}}/> */}
+            {/* <Table_Search_Export /> */}
             <div className="appointment-table">
                 <Table headers={headers} data={data}/>
             </div>
