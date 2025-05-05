@@ -1,12 +1,12 @@
 import axios from "axios";
-import { useEffect } from "react";
-import DashboardStatCard from "../../components/DashboardStatCard";
-import "./dashboard.css"
-import icon from "../../assets/icons/member_icon.svg"
-import Table from "../../components/Table";
 import Graph from "../../components/Graph";
 import PiChart from "../../components/PiChart";
-const Dashboard = () => {
+import Table from "../../components/Table";
+import { useEffect } from "react";
+import "./staff.css"
+import Page_Title_Add from "../../components/Page_Title_Add";
+
+const Staff = () => {
     const effectFunction = () =>{
         const getData = async () =>{
             console.log("in getData")
@@ -30,7 +30,6 @@ const Dashboard = () => {
     const data = [
         [1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5]
     ];
-
     const graph_data = [
         {"month": "Jan", "left":4000, "new": 2400},
         {"month": "Feb", "left":3000, "new": 1398},
@@ -62,25 +61,14 @@ const Dashboard = () => {
     const chart_key="value"
     const chart_colors = ['red', 'yellow', 'green', 'blue']
     return(
-        <div className="dashboard">
-            <div className="dashboardStatCards">
-                <DashboardStatCard icon={icon} title="Patients" count="270"/>
-                <DashboardStatCard icon={icon} title="Patients" count="270"/>
-                <DashboardStatCard icon={icon} title="Patients" count="270"/>
-                {/* <DashboardStatCard icon={icon} title="Patients" count="270"/> */}
-                {/* <DashboardStatCard icon={icon} title="Patients" count="270"/> */}
-                {/* <DashboardStatCard icon={icon} title="Patients" count="270"/> */}
-            </div>
-            <div className="appointment-table">
-                <Table headers={headers} data={data} info={true}/>
-            </div>
+        <div className="staff">
             <div className="graphs">
                 <Graph 
                     data={graph_data}
                     title={graph_title}
                     key_x={key_x}
                     lines_data={lines_data}
-                />
+                    />
                 <PiChart
                     data={chart_data}
                     title={chart_title}
@@ -88,7 +76,18 @@ const Dashboard = () => {
                     colors={chart_colors}
                 />
             </div>
+            <Page_Title_Add name="staff" fields={{
+                "username": "text",
+                "access_level": "number",
+                "title":"text",
+                "contact":"text",
+                "address":"text",
+                "status":"number"   
+            }}/>
+            <div className="appointment-table">
+                <Table headers={headers} data={data} />
+            </div>
         </div>
     );
 }
-export default Dashboard;
+export default Staff

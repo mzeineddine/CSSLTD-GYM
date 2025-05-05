@@ -1,0 +1,22 @@
+.dashboard .dashboardStatCards{
+    margin: 2%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1em;
+}
+.dashboard .graphs{
+    margin: 2%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 1em;
+    max-height: 200px;
+}
+.dashboard .graphs .graph{
+    flex: 2;
+}
+.dashboard .graphs .piChart{
+    flex: 1;
+}

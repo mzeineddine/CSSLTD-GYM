@@ -1,0 +1,82 @@
+.add-popup {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000,
+}
+.add-popup .form-container {
+    background-color: rgb(250,250,250);
+    padding: 2em;
+    border-radius: 15px;
+    width: 60%;
+    overflow-y: auto;
+}
+.add-popup .form-container .title{
+    margin-bottom: 1em;
+}
+.add-popup .form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    width: 100%;
+}
+.add-popup .form-container form .inputs{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    gap: 1em;
+}
+.add-popup .form-container form .inputs .input-label{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: start;
+    width: 45%;
+}
+.add-popup .form-container form .inputs .input-label input{
+    color: black;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: start;
+    width: 100%;
+    padding: 0.75em;
+    border: solid 0.15em gray;
+    border-radius: 5px;
+    background-color: transparent;
+}
+.add-popup .form-container form .inputs .input-label input[type="date"]{
+    color: rgb(73, 73, 73);
+}
+.add-popup .form-container form .buttons-container{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+}
+.add-popup .form-container form .buttons-container .buttons{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 1em;
+    margin-top: 2em;
+    width: 50%;
+}
+
+.add-popup .form-container form .buttons .cancel-button{
+    background-color: rgb(250,250,250);
+    color: blueviolet;
+    border: solid 0.15em;
+    border-color: blueviolet;
+}
