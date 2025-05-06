@@ -1,0 +1,22 @@
+/* .member{
+    margin: 2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1em;
+} */
+.coach .graphs{
+    margin: 2%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    gap: 1em;
+    height: 275px;
+}
+.coach .graphs .graph{
+    flex: 2;
+}
+.coach .graphs .piChart{
+    flex: 1;
+}
