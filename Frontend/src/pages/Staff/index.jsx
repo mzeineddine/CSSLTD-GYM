@@ -76,16 +76,25 @@ const Staff = () => {
                     colors={chart_colors}
                 />
             </div>
-            <Page_Title_Add name="staff" fields={{
+            {/* <Page_Title_Add name="staff" fields={{
                 "username": "text",
                 "access_level": "number",
                 "title":"text",
                 "contact":"text",
                 "address":"text",
                 "status":"number"   
-            }}/>
+            }}/> */}
             <div className="appointment-table">
-                <Table headers={headers} data={data} />
+                <Table 
+                    headers={headers} 
+                    data={data} 
+                    title="Staff"
+                    info={true}
+                    searchable={true}
+                    paging={true}
+                    exportable={true}
+                    visible={false}
+                />
             </div>
         </div>
     );

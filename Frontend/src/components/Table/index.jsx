@@ -5,23 +5,33 @@ import { DataTable, exportCSV, exportJSON, exportTXT } from "simple-datatables";
 import "simple-datatables/dist/style.css";
 
 const Table = (props) => {
-    const {headers, data} = props;
-    // // console.log(headers);
-    // // console.log(data);
-    // const title = "Upcoming Appointment"
-    // let need_info=false;
-    // let table_top_margin = "2%"
-    // if(props.info){
-    //     need_info=true
-    //     table_top_margin = "0px"
-    // }
+    let {headers, data, title, info, searchable,paging,exportable,visible} = props;
+    // console.log(headers);
+    // console.log(data);
+    if(visible){
+        data = data.slice(0, visible)
+    }
     const [exportFormat, setExportFormat] = useState('csv');
-    let table;
-
+    const [table, setTable] = useState(null)
     useEffect(() => {
         const tableElement = document.getElementById('export-table');
         if (tableElement && typeof DataTable !== 'undefined') {
-            table = new DataTable("#export-table");
+            setTable(new DataTable("#export-table",  {
+                paging: paging,
+                perPage: 5,
+                perPageSelect: [5, 10, 20, 50],
+                firstLast: true, 
+                nextPrev: true, 
+                searchable: searchable,       
+                sensitivity: "base",
+                searchQuerySeparator: " ",
+                sortable: true,
+                numeric: true,
+                caseFirst: "false",
+                ignorePunctuation: true,
+                data:{"headings":headers, "data":data},
+                // caption: "Appointment",
+            }))
         }
     }, []);
 
@@ -49,51 +59,46 @@ const Table = (props) => {
     };
     return (
         <div>
-            <div className="flex gap-2 justify-center items-center p-px">
-                <select 
-                    value={exportFormat}
-                    onChange={(e) => {
-                        setExportFormat(e.target.value)
-                    }}
-                    className="h-full border rounded flex-1"
-                >
-                    <option value="csv" className="p-12">CSV</option>
-                    <option value="json" className="p-12">JSON</option>
-                    <option value="pdf" className="p-12">PDF</option>
-                    <option value="txt" className="p-12">TXT</option>
-                </select>
-                <div className="flex-3 p-0">
-                    <button
-                        onClick={exportData}
-                        className="py-0 rounded w-full"
-                    >
-                        Export
-                    </button>
+            <div className="overflow-x-auto bg-gray-50 rounded-2xl">
+                {info &&
+                    <div className="info flex justify-between rounded-t-2xl items-center bg-gray-50 px-1">
+                        <p className="h-full inline justify-content-center align-items-center">{title}</p>
+                        <div>
+                            <Link to="appointments">See All</Link>
+                        </div>
+                        {/* <p>See All</p> */}
+                    </div>
+                }
+                {exportable&&
+                    <div className="mt-1 flex justify-end gap-1 items-center mx-1">
+                        <select 
+                            className="p-0.25 border rounded"
+                            value={exportFormat}
+                            onChange={(e) => {
+                                setExportFormat(e.target.value)
+                            }}
+                        >
+                            <option value="csv" className="p-12">CSV</option>
+                            <option value="json" className="p-12">JSON</option>
+                            {/* <option value="pdf" className="p-12">PDF</option> */}
+                            <option value="txt" className="p-12">TXT</option>
+                        </select>
+                        <div className="min-w-10 max-w-full">
+                            <button
+                                onClick={exportData}
+                                className="p-0.25 rounded w-full"
+                            >
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                }
+                <div className="mx-1 my-0">
+                    <table id="export-table" className="min-w-full text-sm text-left text-gray-500 py-0"></table>
                 </div>
             </div>
-            <div className="overflow-x-auto">
-                <table id="export-table" className="min-w-full text-sm text-left text-gray-500">
-                    <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                    <tr>
-                        {
-                        headers.map((value, index) => (
-                            <th key={index}>{value}</th>
-                        ))
-                        }
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {data.map((row, i) => (
-                        <tr key={i} className="hover:bg-gray-100">
-                            {row.map((cell_data, index) => (
-                                <td key={i+index}>{cell_data}</td>
-                            ))}
-                        </tr>
-                    ))}
-                    </tbody>
-                </table>
-            </div>
         </div>
+        
         // <div className="table">
         //     {need_info &&
         //     <div className="info">

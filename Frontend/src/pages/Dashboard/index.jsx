@@ -75,7 +75,16 @@ const Dashboard = () => {
                 {/* <DashboardStatCard icon={icon} title="Patients" count="270"/> */}
             </div>
             <div className="appointment-table">
-                <Table headers={headers} data={data} info={true}/>
+                <Table 
+                    headers={headers} 
+                    data={data} 
+                    title="Appointment"
+                    info={true}
+                    searchable={false}
+                    paging={false}
+                    exportable={false}
+                    visible={5}
+                />
             </div>
             <div className="graphs">
                 <Graph 
