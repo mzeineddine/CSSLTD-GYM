@@ -3,9 +3,9 @@ import Graph from "../../components/Graph";
 import PiChart from "../../components/PiChart";
 import Table from "../../components/Table";
 import { useEffect } from "react";
-import "./coach.css"
+import "./appointment_calendar.css"
 import Page_Title_Add from "../../components/Page_Title_Add";
-import CalendarComponent from "../../components/Calendar";
+import Calendar from "../../components/Calendar";
 
 const Appointment_Calendar = () => {
     const effectFunction = () =>{
@@ -28,8 +28,9 @@ const Appointment_Calendar = () => {
     useEffect(effectFunction,[])
 
     return(
-        <div className="appointment-calendar">
-            <CalendarComponent/>
+        <div className="appointment-calendar m-[2%]">
+            <h1 className="font-bold w-full text-left text-3xl my-1">Calendar</h1>
+            <Calendar/>
         </div>
     );
 }

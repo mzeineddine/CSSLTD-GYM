@@ -8,6 +8,7 @@ import Member from './pages/Member'
 import Staff from './pages/Staff'
 import Coach from './pages/Coach'
 import CalendarComponent from './components/Calendar'
+import Appointment_Calendar from './pages/Appointmnet_Calendar'
 
 
 function App() {
@@ -22,7 +23,7 @@ function App() {
           <Route path="/member" element={<Member />} />
           <Route path="/staff" element={<Staff />} />
           <Route path="/coach" element={<Coach />} />
-          <Route path="/calendar" element={<CalendarComponent />} />
+          <Route path="/calendar" element={<Appointment_Calendar />} />
           {/* <Route path="/balance" element={<Balance />} /> */}
           {/* <Route path="/expense" element={<Expense />} /> */}
           {/* <Route path="/settings" element={<Settings />} /> */}

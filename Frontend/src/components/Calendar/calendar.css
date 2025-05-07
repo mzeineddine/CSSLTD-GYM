@@ -1,0 +1,48 @@
+button {
+  width: auto;
+  background-color: none;
+}
+button:hover {
+  background: inherit;
+}
+/* Center the header, space out left and right sections */
+.rsc-header {
+  display: flex !important;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background-color: #f9fafb;
+  font-family: "Inter", sans-serif;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+/* Navigation (left: arrows + date) */
+.rsc-header-navigation {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e3a8a;
+}
+
+/* View selectors (right) */
+.rsc-header-buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.rsc-header-buttons button {
+  background: none;
+  border: none;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  color: #6b7280;
+  transition: color 0.2s;
+}
+
+.rsc-header-buttons button:hover,
+.rsc-header-buttons button.rsc-active {
+  color: #3b82f6;
+}
