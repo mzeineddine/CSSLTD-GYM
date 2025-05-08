@@ -1,3 +1,13 @@
+/* .inputs{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    gap: 1em;
+} */
+
 .add-popup {
     position: fixed;
     top: 0;
@@ -36,6 +46,7 @@
     width: 100%;
     gap: 1em;
 }
+
 .add-popup .form-container form .inputs .input-label{
     display: flex;
     flex-direction: column;
@@ -44,7 +55,20 @@
     align-items: start;
     width: 45%;
 }
-.add-popup .form-container form .inputs .input-label input{
+.add-popup .form-container form .inputs .input-label input, .add-popup .form-container form .inputs .input-label select{
+    color: black;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: start;
+    width: 100%;
+    padding: 0.75em;
+    border: solid 0.15em gray;
+    border-radius: 5px;
+    background-color: transparent;
+}
+.add-popup .form-container form .inputs .input-label textarea{
     color: black;
     display: flex;
     flex-direction: column;

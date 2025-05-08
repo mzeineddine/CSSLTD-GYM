@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { TextField, Button, DialogActions, Select, MenuItem } from "@mui/material";
+import { TextField, Button, DialogActions, Select, MenuItem, InputLabel } from "@mui/material";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs, { Dayjs } from 'dayjs';
@@ -106,27 +106,29 @@ const Custom_Editor = ({ scheduler, coaches }) => {
                         end={state.end_date_time}
                         required
                     />
-                    <Select 
+                    <TextField 
                         label="Coach"
                         value={state.coach}
                         onChange={(e) => handleChange(e.target.value, "coach")}
                         required
+                        select
                     >
                         {coaches.map((value) => {
                             return(<MenuItem value={value}>{value}</MenuItem>);
                         })}
-                    </Select>
+                    </TextField>
 
-                    <Select 
+                    <TextField 
                         label="Color"
                         value={state.color}
                         onChange={(e) => handleChange(e.target.value, "color")}
                         required
+                        select
                     >
                         <MenuItem value={"red"}>Red</MenuItem>
                         <MenuItem value={"green"}>Green</MenuItem>
                         <MenuItem value={"blue"}>Blue</MenuItem>
-                    </Select>
+                    </TextField>
                 </DemoContainer>
             </div>
             <DialogActions>

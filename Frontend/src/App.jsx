@@ -9,6 +9,7 @@ import Staff from './pages/Staff'
 import Coach from './pages/Coach'
 import CalendarComponent from './components/Calendar'
 import Appointment_Calendar from './pages/Appointmnet_Calendar'
+import Expense from './pages/Expense'
 
 
 function App() {
@@ -25,7 +26,7 @@ function App() {
           <Route path="/coach" element={<Coach />} />
           <Route path="/calendar" element={<Appointment_Calendar />} />
           {/* <Route path="/balance" element={<Balance />} /> */}
-          {/* <Route path="/expense" element={<Expense />} /> */}
+          <Route path="/expense" element={<Expense />} />
           {/* <Route path="/settings" element={<Settings />} /> */}
           {/* <Route path="/logout" element={<Logout />} /> */}
           {/* <Route path="/profile" element={<Profile />} /> */}

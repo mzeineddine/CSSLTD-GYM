@@ -1,0 +1,7 @@
+.appointment-calendar button {
+  width: auto;
+  background-color: none;
+}
+.appointment-calendar button:hover {
+  background: inherit;
+}
