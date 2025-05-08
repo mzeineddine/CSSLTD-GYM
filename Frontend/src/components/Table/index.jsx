@@ -5,8 +5,7 @@ import { DataTable, exportCSV, exportJSON, exportTXT } from "simple-datatables";
 import "simple-datatables/dist/style.css";
 
 const Table = (props) => {
-  let { headers, data, title, info, searchable, paging, exportable, visible } =
-    props;
+  let { data, title, info, searchable, paging, exportable, visible } = props;
   // console.log(headers);
   // console.log(data);
   if (visible) {
@@ -15,10 +14,14 @@ const Table = (props) => {
   const [exportFormat, setExportFormat] = useState("csv");
   const [table, setTable] = useState(null);
   useEffect(() => {
+    console.log(Object.keys(data))
+    console.log(Object.values(data))
     const tableElement = document.getElementById("export-table");
     if (tableElement && typeof DataTable !== "undefined") {
       setTable(
         new DataTable("#export-table", {
+          // rowRender: DataTable,
+          destroy:true,
           paging: paging,
           perPage: 5,
           perPageSelect: [5, 10, 20, 50],
@@ -31,7 +34,7 @@ const Table = (props) => {
           numeric: true,
           caseFirst: "false",
           ignorePunctuation: true,
-          data: { headings: headers, data: data },
+          data: { headings: Object.keys(data[0]), data: Object.values(data) },
           // caption: "Appointment",
         })
       );

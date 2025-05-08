@@ -5,7 +5,6 @@ const Page_Title_Add = (props) => {
     // const navigate = new useNavigate();
     const name = props.name.charAt(0).toUpperCase() + props.name.slice(1).toLowerCase()
     const handleOnClick = () => {
-        console.log("add",name)
         setShowModal(true)
     }
     const [showModal, setShowModal] = useState(false);

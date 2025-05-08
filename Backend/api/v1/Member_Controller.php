@@ -28,7 +28,7 @@
                 $created = Member::create($data);
                 echo json_encode([
                     "result" => $created,
-                    "message" => $created?"Member created successfully":"Member not updated",
+                    "message" => $created?"Member created successfully":"Member not created",
                 ]);
             }
             return false;
