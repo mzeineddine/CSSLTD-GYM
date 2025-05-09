@@ -1,27 +1,59 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./table.css";
 import { Link } from "react-router-dom";
 import { DataTable, exportCSV, exportJSON, exportTXT } from "simple-datatables";
 import "simple-datatables/dist/style.css";
+import { Members_Context } from "../../context/Members_Context.jsx";
+import { Staffs_Context } from "../../context/Staffs_Context.jsx";
+import { Coaches_Context } from "../../context/Coaches_Context.jsx";
+import { Expenses_Context } from "../../context/Expenses_Context.jsx";
 
 const Table = (props) => {
-  let { data, title, info, searchable, paging, exportable, visible } = props;
+  const { members, update_members } = useContext(Members_Context);
+  const { staffs, update_staffs } = useContext(Staffs_Context);
+  const { coaches, update_coaches } = useContext(Coaches_Context);
+  const { expenses, update_expenses } = useContext(Expenses_Context);
+
+  let { title, info, searchable, paging, exportable, visible } = props;
   // console.log(headers);
   // console.log(data);
-  if (visible) {
-    data = data.slice(0, visible);
-  }
+
   const [exportFormat, setExportFormat] = useState("csv");
   const [table, setTable] = useState(null);
+  // let [data_name, setDataName] = useState(null);
+  let data;
   useEffect(() => {
-    console.log(Object.keys(data))
-    console.log(Object.values(data))
-    const tableElement = document.getElementById("export-table");
-    if (tableElement && typeof DataTable !== "undefined") {
-      setTable(
-        new DataTable("#export-table", {
-          // rowRender: DataTable,
-          destroy:true,
+    if (props.title == "member") {
+      data = members;
+    } else if (props.title == "staff") {
+      data = staffs;
+    } else if (props.title == "coach") {
+      data = coaches;
+    } else if (props.title == "expense") {
+      data = expenses;
+    }
+    if (!data) {
+      if (props.title == "member") {
+        update_members();
+      } else if (props.title == "staff") {
+        update_staffs();
+      } else if (props.title == "coach") {
+        update_coaches();
+      } else if (props.title == "expense") {
+        update_expenses();
+      }
+    } else {
+      data.forEach((data) => {
+        delete data.password;
+        delete data.is_deleted;
+      });
+      if (visible) {
+        data = data.slice(0, visible);
+      }
+      const tableElement = document.getElementById("export-table");
+      if (data.length > 0 && tableElement && typeof DataTable !== "undefined") {
+        const tableInstance = new DataTable("#export-table", {
+          destroy: true,
           paging: paging,
           perPage: 5,
           perPageSelect: [5, 10, 20, 50],
@@ -33,13 +65,21 @@ const Table = (props) => {
           sortable: true,
           numeric: true,
           caseFirst: "false",
-          ignorePunctuation: true,
-          data: { headings: Object.keys(data[0]), data: Object.values(data) },
-          // caption: "Appointment",
-        })
-      );
+          fixedColumns: true,
+          data: {
+            headings: Object.keys(data[0]),
+            data: data.map(Object.values),
+          },
+        });
+
+        setTable(tableInstance);
+
+        return () => {
+          tableInstance.destroy(); // Clean up old instance
+        };
+      }
     }
-  }, []);
+  }, [members, staffs, coaches, expenses]);
 
   const exportData = () => {
     console.log("export");

@@ -49,7 +49,7 @@
                 }
             } else {
                 // http_response_code(401);
-                // echo json_encode(["message" => "Authorization header not found."]);
+                echo json_encode(["message" => "Authorization header not found."]);
                 return false;
             }
         }

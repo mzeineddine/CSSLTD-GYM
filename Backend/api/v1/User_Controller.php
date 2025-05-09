@@ -96,7 +96,7 @@
             $data = json_decode(file_get_contents("php://input"),true);
             if(!Controllers_Utilities::check_params($data,["username","email","password","title", "access_level","contact", "address"]))
                 return false;
-            $user = User::read($data);
+            $user = User::read($data); 
             if($user){
                 echo json_encode([
                     "result"=>false,

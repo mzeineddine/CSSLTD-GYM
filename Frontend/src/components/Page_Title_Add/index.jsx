@@ -1,9 +1,10 @@
 import { useState } from "react"
 import "./page_title_add.css"
 import Add_Popup from "../Add_Popup"
+import { Members_Context } from "../../context/Members_Context"
 const Page_Title_Add = (props) => {
     // const navigate = new useNavigate();
-    const name = props.name.charAt(0).toUpperCase() + props.name.slice(1).toLowerCase()
+    const name = props.name.toLowerCase() != "user" ? props.name.charAt(0).toUpperCase() + props.name.slice(1).toLowerCase():"Staff"
     const handleOnClick = () => {
         setShowModal(true)
     }

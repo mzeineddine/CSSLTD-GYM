@@ -1,33 +1,30 @@
 import Graph from "../../components/Graph";
 import PiChart from "../../components/PiChart";
 import Table from "../../components/Table";
-import { useEffect, useState } from "react";
 import "./member.css";
 import Page_Title_Add from "../../components/Page_Title_Add";
-import { useNavigate } from "react-router-dom";
-import { axios_function } from "../../utilities/axios";
+import { Members_Context, Members_Provider } from "../../context/Members_Context.jsx";
 
 const Member = () => {
-  const navigate = useNavigate();
-  const [data, setData] = useState(null);
-  const effectFunction = () => {
-    const getData = async () => {
-      console.log("in getData");
-      let response = await axios_function(
-        "GET",
-        "http://localhost/Projects/CSSLTD-GYM/Backend/member/read"
-      );
-      if (response.message == "Access denied.") {
-        console.log("Should Go login");
-        navigate("/");
-      }
-      if (Object.prototype.hasOwnProperty.call(response, "data")) {
-        setData(response.data);
-      }
-    };
-    getData();
-  };
-  useEffect(effectFunction, []);
+  // const navigate = useNavigate();  
+  // const effectFunction = () => {
+  //   // const getData = async () => {
+  //   //   console.log("in getData");
+  //   //   let response = await axios_function(
+  //   //     "GET",
+  //   //     "http://localhost/Projects/CSSLTD-GYM/Backend/member/read"
+  //   //   );
+  //   //   if (response.message == "Access denied.") {
+  //   //     console.log("Should Go login");
+  //   //     navigate("/");
+  //   //   }
+  //   //   if (Object.prototype.hasOwnProperty.call(response, "data")) {
+  //   //     update_members(response.data)
+  //   //   }
+  //   // };
+  //   // getData();
+  // };
+  // useEffect(effectFunction, []);
 
   // const headers = ["FullName", "Contact", "Address", "Date of Birth", "Created On", "Created By"];
   // const data = [
@@ -82,22 +79,21 @@ const Member = () => {
           colors={chart_colors}
         />
       </div>
-      <Page_Title_Add
-        name="member"
-        fields={{
-          full_name: "text",
-          contact: "text",
-          address: "text",
-          dob: "date",
-        }}
-      />
+        <Page_Title_Add
+          name="member"
+          fields={{
+            full_name: "text",
+            contact: "text",
+            address: "text",
+            dob: "date",
+          }}
+        />
       {/* <Table_Search_Export /> */}
       <div className="appointment-table">
-        {console.log(data)}
-        {data&&<Table
+        {<Table
           // headers={headers}
-          data={data}
-          title="Member"
+          // data={members}
+          title="member"
           info={false}
           searchable={true}
           paging={true}

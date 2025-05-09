@@ -16,7 +16,7 @@ if ($request == '') {
 
 $apis = [
     //CRUD User apis paths
-    "/user/create"  => ['controller' => 'User_Controller', "method" => 'create'],
+    "/user/create"  => ['controller' => 'User_Controller', "method" => 'signup'],
     "/user/read"    => ['controller' => 'User_Controller', "method" => 'read'],
     "/user/update"  => ['controller' => 'User_Controller', "method" => 'update'],
     "/user/delete"  => ['controller' => 'User_Controller', "method" => 'delete'],

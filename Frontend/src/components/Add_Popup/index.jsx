@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import "./add_popup.css";
 import React from "react";
 import {
@@ -10,6 +10,7 @@ import {
   Button,
   TextField,
   MenuItem,
+  Box,
 } from "@mui/material";
 import Textarea from "@mui/joy/Textarea";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -19,6 +20,10 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { axios_function } from "../../utilities/axios";
+import { Members_Context } from "../../context/Members_Context";
+import { Staffs_Context } from "../../context/Staffs_Context";
+import { Coaches_Context } from "../../context/Coaches_Context";
+import { Expenses_Context } from "../../context/Expenses_Context";
 
 // import CloseIcon from '@mui/icons-material';
 const Add_Popup = (props) => {
@@ -31,16 +36,39 @@ const Add_Popup = (props) => {
     default_values[key] = "";
   }
   const [formData, setFormData] = useState(default_values);
-  console.log(formData["date"]);
-  const handleSubmit = (e) => {
+  const { update_members } = useContext(Members_Context);
+  const { update_staffs } = useContext(Staffs_Context);
+  const { update_coaches } = useContext(Coaches_Context);
+  const { update_expenses } = useContext(Expenses_Context);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    axios_function("POST", "http://localhost/Projects/CSSLTD-GYM/Backend/"+props.name.toLowerCase()+"/create",formData)
+    let name = props.name;
+    if (props.name == "staff") {
+      name = "user";
+    }
+    await axios_function(
+      "POST",
+      "http://localhost/Projects/CSSLTD-GYM/Backend/" +
+        name.toLowerCase() +
+        "/create",
+      formData
+    );
     console.log("form submitted");
+    if (props.name.toLowerCase() == "member") {
+      update_members();
+    } else if (props.name.toLowerCase() == "user") {
+      update_staffs();
+    } else if (props.name.toLowerCase() == "coach") {
+      update_coaches();
+    } else if (props.name.toLowerCase() == "expense") {
+      update_expenses();
+    }
+    setFormData(default_values);
     props.onClose();
   };
-  const title = "Add " + props.name;
+  const title = "Add " + props.name == "User" ? "Staff" : props.name;
   const options = props.options;
-  console.log(options);
   return (
     <Dialog open={props.open}>
       <DialogTitle>
@@ -55,7 +83,13 @@ const Add_Popup = (props) => {
             let isTextArea = false;
             let isNumber = false;
             let isDate = false;
-            if (v == "select") {
+            let isEmail = false;
+            let isPassword = false;
+            if (v == "email") {
+              isEmail = true;
+            } else if (v == "password") {
+              isPassword = true;
+            } else if (v == "select") {
               isSelect = true;
             } else if (v == "text-area") {
               isTextArea = true;
@@ -65,77 +99,105 @@ const Add_Popup = (props) => {
               isNumber = true;
             }
             return (
-              <div
-                key={k}
-                className="w-[49%] flex-1/3"
-              >
-                {isDate ? (
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={["DateTimePicker"]}>
-                      <DatePicker
-                        label="Start Date Time"
-                        value={formData[k]}
-                        onChange={(newValue) => {
-                          setFormData({ ...formData, [k]: newValue });
-                        }}
-                      />
-                    </DemoContainer>
-                  </LocalizationProvider>
-                ) : isTextArea ? (
-                  <Textarea
-                    minRows={2}
-                    label={k}
-                    value={formData[k]}
-                    onChange={(e) => {
-                      setFormData({ ...formData, [k]: e.target.value });
-                    }}
-                    required
-                    placeholder="Comment"
-                  />
-                ) : isNumber ? (
-                  <TextField
-                    fullWidth
-                    label={k}
-                    type="number"
-                    value={formData[k]}
-                    onChange={(e) => {
-                      setFormData({ ...formData, [k]: e.target.value });
-                    }}
-                    required
-                  ></TextField>
-                ) : isSelect ? (
-                  <TextField
-                    fullWidth
-                    label={k}
-                    value={formData[k]}
-                    onChange={(e) => {
-                      setFormData({ ...formData, [k]: e.target.value });
-                    }}
-                    required
-                    select
-                  >
-                    {options.map((value) => {
-                      return <MenuItem value={value}>{value}</MenuItem>;
-                    })}
-                  </TextField>
-                ) : (
-                  <TextField
-                    fullWidth
-                    label={k}
-                    value={formData[k]}
-                    onChange={(e) => {
-                      setFormData({ ...formData, [k]: e.target.value });
-                    }}
-                    required
-                  ></TextField>
-                )}
+              <div key={k} className="w-[49%] flex-1/3">
+                <Box component="form" autoComplete="off">
+                  {isEmail ? (
+                    <TextField
+                      fullWidth
+                      label={k}
+                      type="email"
+                      value={formData[k]}
+                      onChange={(e) => {
+                        setFormData({ ...formData, [k]: e.target.value });
+                      }}
+                      required
+                    ></TextField>
+                  ) : isPassword ? (
+                    <TextField
+                      fullWidth
+                      label={k}
+                      type="password"
+                      value={formData[k]}
+                      onChange={(e) => {
+                        setFormData({ ...formData, [k]: e.target.value });
+                      }}
+                      required
+                    />
+                  ) : isDate ? (
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DemoContainer components={["DateTimePicker"]}>
+                        <DatePicker
+                          label="Start Date Time"
+                          value={formData[k]}
+                          onChange={(newValue) => {
+                            setFormData({ ...formData, [k]: newValue });
+                          }}
+                        />
+                      </DemoContainer>
+                    </LocalizationProvider>
+                  ) : isTextArea ? (
+                    <Textarea
+                      minRows={2}
+                      label={k}
+                      value={formData[k]}
+                      onChange={(e) => {
+                        setFormData({ ...formData, [k]: e.target.value });
+                      }}
+                      required
+                      placeholder="Comment"
+                    />
+                  ) : isNumber ? (
+                    <TextField
+                      fullWidth
+                      label={k}
+                      type="number"
+                      value={formData[k]}
+                      onChange={(e) => {
+                        setFormData({ ...formData, [k]: e.target.value });
+                      }}
+                      required
+                    ></TextField>
+                  ) : isSelect ? (
+                    <TextField
+                      fullWidth
+                      label={k}
+                      value={formData[k]}
+                      onChange={(e) => {
+                        setFormData({ ...formData, [k]: e.target.value });
+                      }}
+                      required
+                      select
+                    >
+                      {options.map((value) => {
+                        return <MenuItem value={value}>{value}</MenuItem>;
+                      })}
+                    </TextField>
+                  ) : (
+                    <TextField
+                      fullWidth
+                      label={k}
+                      value={formData[k]}
+                      onChange={(e) => {
+                        setFormData({ ...formData, [k]: e.target.value });
+                      }}
+                      required
+                    ></TextField>
+                  )}
+                </Box>
               </div>
             );
           })}
         </div>
       </DialogContent>
       <DialogActions>
-        <Button onClick={props.onClose}>Cancel</Button>
+        <Button
+          onClick={() => {
+            props.onClose();
+            setFormData(default_values);
+          }}
+        >
+          Cancel
+        </Button>
         <Button onClick={handleSubmit}>Confirm</Button>
       </DialogActions>
     </Dialog>
