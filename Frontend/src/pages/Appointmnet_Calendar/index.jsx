@@ -1,7 +1,7 @@
 import axios from "axios";
 import Graph from "../../components/Graph";
 import PiChart from "../../components/PiChart";
-import Table from "../../components/Table";
+// import Table from "../../components/Table";
 import { useEffect } from "react";
 import "./appointment_calendar.css"
 import Page_Title_Add from "../../components/Page_Title_Add";

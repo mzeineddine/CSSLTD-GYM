@@ -1,0 +1,32 @@
+.table button {
+  width: auto;
+  background: auto;
+  border: medium none;
+  color: blueviolet;
+  list-style: auto;
+  margin: auto;
+  padding: auto;
+  text-align: auto;
+  text-decoration: auto;
+  text-indent: auto;
+}
+.table input {
+  width: auto;
+  background: auto;
+  border: medium none;
+  color: blueviolet;
+  list-style: auto;
+  margin: auto;
+  padding: auto;
+  text-align: auto;
+  text-decoration: auto;
+  text-indent: auto;
+}
+.table{
+    padding: 0px;
+    margin: 0px;
+}
+.table th{
+    padding: 0px;
+    margin: 0px;
+}

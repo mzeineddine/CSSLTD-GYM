@@ -1,7 +1,7 @@
 import axios from "axios";
 import Graph from "../../components/Graph";
 import PiChart from "../../components/PiChart";
-import Table from "../../components/Table";
+// import Table from "../../components/Table";
 import { useEffect } from "react";
 import "./coach.css";
 import Page_Title_Add from "../../components/Page_Title_Add";
@@ -90,16 +90,16 @@ const Coach = () => {
       />
       <div className="appointment-table">
         {
-          <Table
-            // headers={headers}
-            // data={members}
-            title="coach"
-            info={false}
-            searchable={true}
-            paging={true}
-            exportable={true}
-            visible={false}
-          />
+          // <Table
+          //   // headers={headers}
+          //   // data={members}
+          //   title="coach"
+          //   info={false}
+          //   searchable={true}
+          //   paging={true}
+          //   exportable={true}
+          //   visible={false}
+          // />
         }
       </div>
     </div>

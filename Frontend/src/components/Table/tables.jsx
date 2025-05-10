@@ -1,202 +1,129 @@
-// import { CacheProvider, ThemeProvider } from "@emotion/react";
-// import { createTheme, FormControl, InputLabel, MenuItem, Select } from "@mui/material";
-// import MUIDataTable from "mui-datatables";
-// import createCache from "@emotion/cache";
-// import { useState } from "react";
+import { CacheProvider, ThemeProvider } from "@emotion/react";
+import { createTheme } from "@mui/material";
+import MUIDataTable from "mui-datatables";
+import createCache from "@emotion/cache";
+import { Members_Context } from "../../context/Members_Context.jsx";
+import { Staffs_Context } from "../../context/Staffs_Context.jsx";
+import { Coaches_Context } from "../../context/Coaches_Context.jsx";
+import { Expenses_Context } from "../../context/Expenses_Context.jsx";
+import { PaymentAccounts_Context } from "../../context/PaymentAccounts_Context.jsx";
+import PositionedMenu from "../Acttion_Menu/index.jsx";
+import { useContext, useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import "./tables.css";
+const Table1 = (props) => {
+  const { members, update_members } = useContext(Members_Context);
+  const { staffs, update_staffs } = useContext(Staffs_Context);
+  const { coaches, update_coaches } = useContext(Coaches_Context);
+  const { expenses, update_expenses } = useContext(Expenses_Context);
+  const { paymentAccounts, update_paymentAccounts } = useContext(
+    PaymentAccounts_Context
+  );
 
-// const Table1 = () => {
-//   const muiCache = createCache({
-//     key: "mui-datatables",
-//     prepend: true,
-//   });
-//   const [responsive, setResponsive] = useState("vertical");
-//   const [tableBodyHeight, setTableBodyHeight] = useState("400px");
-//   const [tableBodyMaxHeight, setTableBodyMaxHeight] = useState("");
-//   const [searchBtn, setSearchBtn] = useState(true);
-//   const [downloadBtn, setDownloadBtn] = useState(true);
-//   const [printBtn, setPrintBtn] = useState(true);
-//   const [viewColumnBtn, setViewColumnBtn] = useState(true);
-//   const [filterBtn, setFilterBtn] = useState(true);
+  let { title, info, searchable, paging, exportable, visible } = props;
+  const [headers, setHeaders] = useState([]);
+  const [values, setValues] = useState([]);
+  let data = [];
+  useEffect(() => {
+    if (title == "member") {
+      data = members;
+    } else if (title == "staff") {
+      data = staffs;
+    } else if (title == "coach") {
+      data = coaches;
+    } else if (title == "expense") {
+      data = expenses;
+    } else if (title == "paymentAccounts") {
+      data = paymentAccounts;
+    }
+    if (!data) {
+      if (title == "member") {
+        update_members();
+      } else if (title == "staff") {
+        update_staffs();
+      } else if (title == "coach") {
+        update_coaches();
+      } else if (title == "expense") {
+        update_expenses();
+      } else if (title == "paymentAccounts") {
+        update_paymentAccounts();
+      }
+    } else {
+      data.forEach((data) => {
+        delete data.password;
+        delete data.is_deleted;
+      });
+      if (visible) {
+        data = data.slice(0, visible);
+      }
+      setHeaders(Object.keys(data[0]));
+      // const data = data.map(Object.values)
+      setValues(data.map(Object.values));
+      //   values.forEach((value) => {
+      //     props.actions ? value.push(<PositionedMenu />) : value;
+      //   });
+      // //   setValues()
+    }
+  }, [members, staffs, coaches, expenses, paymentAccounts]);
 
-//   const columns = [
-//     { name: "Name", options: { filterOptions: { fullWidth: true } } },
-//     "Title",
-//     "Location",
-//   ];
-
-//   const options = {
-//     search: searchBtn,
-//     download: downloadBtn,
-//     print: printBtn,
-//     viewColumns: viewColumnBtn,
-//     filter: filterBtn,
-//     filterType: "dropdown",
-//     responsive,
-//     tableBodyHeight,
-//     tableBodyMaxHeight,
-//     onTableChange: (action, state) => {
-//       console.log(action);
-//       console.dir(state);
-//     },
-//   };
-
-//   const data = [
-//     ["Gabby George", "Business Analyst", "Minneapolis"],
-//     [
-//       "Aiden Lloyd",
-//       "Business Consultant for an International Company and CEO of Tony's Burger Palace",
-//       "Dallas",
-//     ],
-//     ["Jaden Collins", "Attorney", "Santa Ana"],
-//     ["Franky Rees", "Business Analyst", "St. Petersburg"],
-//     ["Aaren Rose", null, "Toledo"],
-//     ["Johnny Jones", "Business Analyst", "St. Petersburg"],
-//     ["Jimmy Johns", "Business Analyst", "Baltimore"],
-//     ["Jack Jackson", "Business Analyst", "El Paso"],
-//     ["Joe Jones", "Computer Programmer", "El Paso"],
-//     ["Jacky Jackson", "Business Consultant", "Baltimore"],
-//     ["Jo Jo", "Software Developer", "Washington DC"],
-//     ["Donna Marie", "Business Manager", "Annapolis"],
-//   ];
-//   return (
-//     <CacheProvider value={muiCache}>
-//       <ThemeProvider theme={createTheme()}>
-//         <FormControl>
-//           <InputLabel id="demo-simple-select-label">
-//             Responsive Option
-//           </InputLabel>
-//           <Select
-//             labelId="demo-simple-select-label"
-//             id="demo-simple-select"
-//             value={responsive}
-//             style={{ width: "200px", marginBottom: "10px", marginRight: 10 }}
-//             onChange={(e) => setResponsive(e.target.value)}
-//           >
-//             <MenuItem value={"vertical"}>vertical</MenuItem>
-//             <MenuItem value={"standard"}>standard</MenuItem>
-//             <MenuItem value={"simple"}>simple</MenuItem>
-
-//             <MenuItem value={"scroll"}>scroll (deprecated)</MenuItem>
-//             <MenuItem value={"scrollMaxHeight"}>
-//               scrollMaxHeight (deprecated)
-//             </MenuItem>
-//             <MenuItem value={"stacked"}>stacked (deprecated)</MenuItem>
-//           </Select>
-//         </FormControl>
-//         <FormControl>
-//           <InputLabel id="demo-simple-select-label">
-//             Table Body Height
-//           </InputLabel>
-//           <Select
-//             labelId="demo-simple-select-label"
-//             id="demo-simple-select"
-//             value={tableBodyHeight}
-//             style={{ width: "200px", marginBottom: "10px", marginRight: 10 }}
-//             onChange={(e) => setTableBodyHeight(e.target.value)}
-//           >
-//             <MenuItem value={""}>[blank]</MenuItem>
-//             <MenuItem value={"400px"}>400px</MenuItem>
-//             <MenuItem value={"800px"}>800px</MenuItem>
-//             <MenuItem value={"100%"}>100%</MenuItem>
-//           </Select>
-//         </FormControl>
-//         <FormControl>
-//           <InputLabel id="demo-simple-select-label">
-//             Max Table Body Height
-//           </InputLabel>
-//           <Select
-//             labelId="demo-simple-select-label"
-//             id="demo-simple-select"
-//             value={tableBodyMaxHeight}
-//             style={{ width: "200px", marginBottom: "10px" }}
-//             onChange={(e) => setTableBodyMaxHeight(e.target.value)}
-//           >
-//             <MenuItem value={""}>[blank]</MenuItem>
-//             <MenuItem value={"400px"}>400px</MenuItem>
-//             <MenuItem value={"800px"}>800px</MenuItem>
-//             <MenuItem value={"100%"}>100%</MenuItem>
-//           </Select>
-//         </FormControl>
-//         <FormControl>
-//           <InputLabel id="demo-simple-select-label">Search Button</InputLabel>
-//           <Select
-//             labelId="demo-simple-select-label"
-//             id="demo-simple-select"
-//             value={searchBtn}
-//             style={{ width: "200px", marginBottom: "10px" }}
-//             onChange={(e) => setSearchBtn(e.target.value)}
-//           >
-//             <MenuItem value={"true"}>{"true"}</MenuItem>
-//             <MenuItem value={"false"}>{"false"}</MenuItem>
-//             <MenuItem value={"disabled"}>disabled</MenuItem>
-//           </Select>
-//         </FormControl>
-//         <FormControl>
-//           <InputLabel id="demo-simple-select-label">Download Button</InputLabel>
-//           <Select
-//             labelId="demo-simple-select-label"
-//             id="demo-simple-select"
-//             value={downloadBtn}
-//             style={{ width: "200px", marginBottom: "10px" }}
-//             onChange={(e) => setDownloadBtn(e.target.value)}
-//           >
-//             <MenuItem value={"true"}>{"true"}</MenuItem>
-//             <MenuItem value={"false"}>{"false"}</MenuItem>
-//             <MenuItem value={"disabled"}>disabled</MenuItem>
-//           </Select>
-//         </FormControl>
-//         <FormControl>
-//           <InputLabel id="demo-simple-select-label">Print Button</InputLabel>
-//           <Select
-//             labelId="demo-simple-select-label"
-//             id="demo-simple-select"
-//             value={printBtn}
-//             style={{ width: "200px", marginBottom: "10px" }}
-//             onChange={(e) => setPrintBtn(e.target.value)}
-//           >
-//             <MenuItem value={"true"}>{"true"}</MenuItem>
-//             <MenuItem value={"false"}>{"false"}</MenuItem>
-//             <MenuItem value={"disabled"}>disabled</MenuItem>
-//           </Select>
-//         </FormControl>
-//         <FormControl>
-//           <InputLabel id="demo-simple-select-label">
-//             View Column Button
-//           </InputLabel>
-//           <Select
-//             labelId="demo-simple-select-label"
-//             id="demo-simple-select"
-//             value={viewColumnBtn}
-//             style={{ width: "200px", marginBottom: "10px" }}
-//             onChange={(e) => setViewColumnBtn(e.target.value)}
-//           >
-//             <MenuItem value={"true"}>{"true"}</MenuItem>
-//             <MenuItem value={"false"}>{"false"}</MenuItem>
-//             <MenuItem value={"disabled"}>disabled</MenuItem>
-//           </Select>
-//         </FormControl>
-//         <FormControl>
-//           <InputLabel id="demo-simple-select-label">Filter Button</InputLabel>
-//           <Select
-//             labelId="demo-simple-select-label"
-//             id="demo-simple-select"
-//             value={filterBtn}
-//             style={{ width: "200px", marginBottom: "10px" }}
-//             onChange={(e) => setFilterBtn(e.target.value)}
-//           >
-//             <MenuItem value={"true"}>{"true"}</MenuItem>
-//             <MenuItem value={"false"}>{"false"}</MenuItem>
-//             <MenuItem value={"disabled"}>disabled</MenuItem>
-//           </Select>
-//         </FormControl>
-//         <MUIDataTable
-//           title={"ACME Employee list"}
-//           data={data}
-//           columns={columns}
-//           options={options}
-//         />
-//       </ThemeProvider>
-//     </CacheProvider>
-//   );
-// };
-// export default Table1;
+  const muiCache = createCache({
+    key: "mui-datatables",
+    prepend: true,
+  });
+  const options = {
+    search: searchable,
+    download: exportable,
+    print: exportable,
+    viewColumns: true,
+    filter: true,
+    filterType: "search",
+    responsive: true,
+    tableBodyHeight: true,
+    tableBodyMaxHeight: true,
+    pagination: paging,
+    rowsPerPage: 5,
+    rowsPerPageOptions: [5, 10, 15, 20],
+    onTableChange: (action, state) => {
+      console.log(action);
+      console.dir(state);
+    },
+  };
+  return (
+    <div className="table w-full rounded-2xl ">
+      <CacheProvider value={muiCache}>
+        {info && (
+          <div className="info flex justify-between rounded-t-2xl items-center bg-gray-50 px-1">
+            <p className="h-full inline justify-content-center align-items-center">
+              {title}
+            </p>
+            <div>
+              <Link to="appointments">See All</Link>
+            </div>
+            {/* <p>See All</p> */}
+          </div>
+        )}
+        <ThemeProvider theme={createTheme()}>
+          <MUIDataTable
+            // title={title}
+            data={values}
+            columns={[
+                ...headers,
+                {
+                  label: "Actions",
+                  options: {
+                    customBodyRender: (value, tableMeta) => {
+                      return (
+                        <PositionedMenu id={tableMeta ? tableMeta.rowData[0] : "NULL"} />
+                      );
+                    },
+                  },
+                },
+              ]}
+            options={options}
+          />
+        </ThemeProvider>
+      </CacheProvider>
+    </div>
+  );
+};
+export default Table1;

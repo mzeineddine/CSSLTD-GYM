@@ -1,9 +1,10 @@
 import Graph from "../../components/Graph";
 import PiChart from "../../components/PiChart";
-import Table from "../../components/Table";
+// import Table from "../../components/Table";
 import "./member.css";
 import Page_Title_Add from "../../components/Page_Title_Add";
 import { Members_Context, Members_Provider } from "../../context/Members_Context.jsx";
+import Table1 from "../../components/Table/tables.jsx";
 
 const Member = () => {
   // const navigate = useNavigate();  
@@ -90,7 +91,7 @@ const Member = () => {
         />
       {/* <Table_Search_Export /> */}
       <div className="appointment-table">
-        {<Table
+        {<Table1
           // headers={headers}
           // data={members}
           title="member"

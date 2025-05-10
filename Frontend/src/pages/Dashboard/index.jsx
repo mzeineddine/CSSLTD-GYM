@@ -1,30 +1,29 @@
-import axios from "axios";
-import { useEffect } from "react";
 import DashboardStatCard from "../../components/DashboardStatCard";
 import "./dashboard.css";
 import icon from "../../assets/icons/member_icon.svg";
-import Table from "../../components/Table";
+// import Table from "../../components/Table";
 import Graph from "../../components/Graph";
 import PiChart from "../../components/PiChart";
+import Table1 from "../../components/Table/tables";
 const Dashboard = () => {
-  const effectFunction = () => {
-    const getData = async () => {
-      console.log("in getData");
-      let response = await axios({
-        method: "post",
-        url: "http://localhost/Projects/CSSLTD-GYM/Backend/member/read",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer" + localStorage.getItem("access-token"),
-        },
-      }).catch((err) => {
-        console.log(err);
-      });
-      console.log(response.data);
-    };
-    getData();
-  };
-  useEffect(effectFunction, []);
+  // const effectFunction = () => {
+  //   const getData = async () => {
+  //     console.log("in getData");
+  //     let response = await axios({
+  //       method: "post",
+  //       url: "http://localhost/Projects/CSSLTD-GYM/Backend/member/read",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //         Authorization: "Bearer" + localStorage.getItem("access-token"),
+  //       },
+  //     }).catch((err) => {
+  //       console.log(err);
+  //     });
+  //     console.log(response.data);
+  //   };
+  //   getData();
+  // };
+  // useEffect(effectFunction, []);
 
 //   const headers = ["FullName", "Contact", "Title", "Start Date", "End Date"];
 //   const data = [
@@ -117,18 +116,23 @@ const Dashboard = () => {
         <DashboardStatCard icon={icon} title="Patients" count="270" />
         <DashboardStatCard icon={icon} title="Patients" count="270" />
         <DashboardStatCard icon={icon} title="Patients" count="270" />
-        {/* <DashboardStatCard icon={icon} title="Patients" count="270"/> */}
-        {/* <DashboardStatCard icon={icon} title="Patients" count="270"/> */}
-        {/* <DashboardStatCard icon={icon} title="Patients" count="270"/> */}
       </div>
       <div className="appointment-table">
-        <Table
+        {/* <Table
           title="member"
           info={true}
           searchable={false}
           paging={false}
           exportable={false}
           visible={5}
+        /> */}
+        <Table1
+          title="member"
+          info={true}
+          searchable={true}
+          paging={true}
+          exportable={true}
+          // visible={5}
         />
       </div>
       <div className="graphs">

@@ -16,6 +16,7 @@ export const Members_Provider = ({ children }) => {
     if (response.message === "Access denied.") {
       navigate("/");
     } else if (response.data) {
+      console.log(response.data);
       setMembers(response.data);
     }
   };

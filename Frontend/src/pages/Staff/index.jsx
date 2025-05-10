@@ -1,10 +1,11 @@
 import axios from "axios";
 import Graph from "../../components/Graph";
 import PiChart from "../../components/PiChart";
-import Table from "../../components/Table";
+// import Table from "../../components/Table";
 import { useEffect } from "react";
 import "./staff.css";
 import Page_Title_Add from "../../components/Page_Title_Add";
+import Table1 from "../../components/Table/tables";
 
 const Staff = () => {
   const effectFunction = () => {
@@ -99,7 +100,7 @@ const Staff = () => {
       />
       <div className="appointment-table">
         {
-          <Table
+          <Table1
             // headers={headers}
             // data={members}
             title="staff"

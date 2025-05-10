@@ -1,5 +1,6 @@
 import Page_Title_Add from "../../components/Page_Title_Add";
-import Table from "../../components/Table";
+import Table1 from "../../components/Table/tables";
+// import Table from "../../components/Table";
 // import Table1 from "../../components/Table/tables";
 import { PaymentAccounts_Context } from "../../context/PaymentAccounts_Context";
 import "./expense.css";
@@ -17,7 +18,7 @@ const Expense = () => {
             description: "text",
           }}
         />
-        <Table
+        <Table1
           title="paymentAccounts"
           info={false}
           searchable={true}
@@ -39,7 +40,7 @@ const Expense = () => {
             comment: "text-area",
           }}
         />
-        <Table
+        <Table1
           title="expense"
           id="expenses_table"
           info={false}
