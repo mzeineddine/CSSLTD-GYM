@@ -1,10 +1,9 @@
 <?php
     require_once __DIR__ . "/../../models/User.php";
-    require_once __DIR__ . "/../../models/Expense.php";
     require_once __DIR__ . "/../../models/ExpensePayment.php";
     require_once __DIR__ . "/../../utilities/Controllers_Utilities.php";
     class ExpensePayment_Controller{
-        static function check_created_by($data){
+        static function check_created_by($data){    
             if(!User::read($data)){
                 echo json_encode([
                     "result"=>false,
@@ -14,11 +13,11 @@
             }
             return true;
         } 
-        static function check_expense($data){
-            if(!Expense::read($data)){
+        static function check_account($data){
+            if(!PaymentAccount::read($data)){
                 echo json_encode([
                     "result"=>false,
-                    "message"=>"Invalid expense"
+                    "message"=>"Invalid account"
                 ]);
                 return false;
             }
@@ -32,12 +31,12 @@
                 return false;
             }
             $data['created_by']=$decoded_token->id;
-            if(!Controllers_Utilities::check_params($data,["expense_id","amount","created_by"]))
+            if(!Controllers_Utilities::check_params($data,["account_id","amount","created_by"]))
                 return false;
             $modified_data = ["id"=>$data["created_by"]];
             if(self::check_created_by($modified_data)){
-                $modified_data = ["id"=>$data["expense_id"]];
-                if(self::check_expense($modified_data)){
+                $modified_data = ["id"=>$data["account_id"]];
+                if(self::check_account($modified_data)){
                     $created = ExpensePayment::create($data);
                     echo json_encode([
                         "result" => $created,
@@ -70,17 +69,17 @@
                 return false;
             }
             $data = json_decode(file_get_contents("php://input"),true);
-            if(!Controllers_Utilities::check_params($data,["id","amount","expense_id"]))
+            if(!Controllers_Utilities::check_params($data,["id","amount","account_id"]))
                 return false;
-            if(!ExpensePayment::read($data)){
+            if(!PaymentAccount::read($data)){
                 echo json_encode([
                     "result" => false,
                     "message" => "No expense payment found"
                 ]);
                 return false;
             }
-            $modified_data = ["id"=>$data["expense_id"]];
-            if(self::check_expense($modified_data)){
+            $modified_data = ["id"=>$data["account_id"]];
+            if(self::check_account($modified_data)){
                 $updated = ExpensePayment::update($data);
                 echo json_encode([
                     "result" => $updated,

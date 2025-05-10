@@ -14,6 +14,7 @@ import { Members_Provider } from "./context/Members_Context";
 import { Staffs_Provider } from "./context/Staffs_Context";
 import { Coaches_Provider } from "./context/Coaches_Context";
 import { Expenses_Provider } from "./context/Expenses_Context";
+import { PaymentAccounts_Provider } from "./context/PaymentAccounts_Context";
 
 function App() {
   return (
@@ -21,23 +22,25 @@ function App() {
       <Staffs_Provider>
         <Coaches_Provider>
           <Expenses_Provider>
-            <Routes>
-              <Route element={<NoSidebarLayout />}>
-                <Route path="/" element={<Login />} />
-              </Route>
-              <Route element={<WithSidebarLayout />}>
-                <Route path="/home" element={<Dashboard />} />
-                <Route path="/member" element={<Member />} />
-                <Route path="/staff" element={<Staff />} />
-                <Route path="/coach" element={<Coach />} />
-                <Route path="/calendar" element={<Appointment_Calendar />} />
-                {/* <Route path="/balance" element={<Balance />} /> */}
-                <Route path="/expense" element={<Expense />} />
-                {/* <Route path="/settings" element={<Settings />} /> */}
-                {/* <Route path="/logout" element={<Logout />} /> */}
-                {/* <Route path="/profile" element={<Profile />} /> */}
-              </Route>
-            </Routes>
+            <PaymentAccounts_Provider>
+              <Routes>
+                <Route element={<NoSidebarLayout />}>
+                  <Route path="/" element={<Login />} />
+                </Route>
+                <Route element={<WithSidebarLayout />}>
+                  <Route path="/home" element={<Dashboard />} />
+                  <Route path="/member" element={<Member />} />
+                  <Route path="/staff" element={<Staff />} />
+                  <Route path="/coach" element={<Coach />} />
+                  <Route path="/calendar" element={<Appointment_Calendar />} />
+                  {/* <Route path="/balance" element={<Balance />} /> */}
+                  <Route path="/expense" element={<Expense />} />
+                  {/* <Route path="/settings" element={<Settings />} /> */}
+                  {/* <Route path="/logout" element={<Logout />} /> */}
+                  {/* <Route path="/profile" element={<Profile />} /> */}
+                </Route>
+              </Routes>
+            </PaymentAccounts_Provider>
           </Expenses_Provider>
         </Coaches_Provider>
       </Staffs_Provider>

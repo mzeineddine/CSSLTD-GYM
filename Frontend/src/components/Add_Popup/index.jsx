@@ -24,6 +24,7 @@ import { Members_Context } from "../../context/Members_Context";
 import { Staffs_Context } from "../../context/Staffs_Context";
 import { Coaches_Context } from "../../context/Coaches_Context";
 import { Expenses_Context } from "../../context/Expenses_Context";
+import { PaymentAccounts_Context } from "../../context/PaymentAccounts_Context";
 
 // import CloseIcon from '@mui/icons-material';
 const Add_Popup = (props) => {
@@ -40,6 +41,8 @@ const Add_Popup = (props) => {
   const { update_staffs } = useContext(Staffs_Context);
   const { update_coaches } = useContext(Coaches_Context);
   const { update_expenses } = useContext(Expenses_Context);
+  const { update_paymentAccounts } = useContext(PaymentAccounts_Context);
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -47,6 +50,7 @@ const Add_Popup = (props) => {
     if (props.name == "staff") {
       name = "user";
     }
+    console.log(name.toLowerCase())
     await axios_function(
       "POST",
       "http://localhost/Projects/CSSLTD-GYM/Backend/" +
@@ -63,6 +67,8 @@ const Add_Popup = (props) => {
       update_coaches();
     } else if (props.name.toLowerCase() == "expense") {
       update_expenses();
+    } else if (props.name.toLowerCase() == "payment_account") {
+      update_paymentAccounts();
     }
     setFormData(default_values);
     props.onClose();
@@ -168,8 +174,8 @@ const Add_Popup = (props) => {
                       required
                       select
                     >
-                      {options.map((value) => {
-                        return <MenuItem value={value}>{value}</MenuItem>;
+                      {options && options.map((value) => {
+                        return <MenuItem value={value.id}>{value.name}</MenuItem>;
                       })}
                     </TextField>
                   ) : (

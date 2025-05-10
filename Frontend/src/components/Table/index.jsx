@@ -7,16 +7,22 @@ import { Members_Context } from "../../context/Members_Context.jsx";
 import { Staffs_Context } from "../../context/Staffs_Context.jsx";
 import { Coaches_Context } from "../../context/Coaches_Context.jsx";
 import { Expenses_Context } from "../../context/Expenses_Context.jsx";
+import { PaymentAccounts_Context } from "../../context/PaymentAccounts_Context.jsx";
+import PositionedMenu from "../Acttion_Menu/index.jsx";
 
 const Table = (props) => {
   const { members, update_members } = useContext(Members_Context);
   const { staffs, update_staffs } = useContext(Staffs_Context);
   const { coaches, update_coaches } = useContext(Coaches_Context);
   const { expenses, update_expenses } = useContext(Expenses_Context);
+  const { paymentAccounts, update_paymentAccounts } = useContext(PaymentAccounts_Context);
 
   let { title, info, searchable, paging, exportable, visible } = props;
-  // console.log(headers);
-  // console.log(data);
+  let headers = [];
+  let id = "export-table"
+  if(Object.prototype.hasOwnProperty.call(props, "id")){
+    id = props.id
+  }
 
   const [exportFormat, setExportFormat] = useState("csv");
   const [table, setTable] = useState(null);
@@ -31,6 +37,8 @@ const Table = (props) => {
       data = coaches;
     } else if (props.title == "expense") {
       data = expenses;
+    } else if (props.title == "paymentAccounts") {
+      data = paymentAccounts;
     }
     if (!data) {
       if (props.title == "member") {
@@ -41,6 +49,8 @@ const Table = (props) => {
         update_coaches();
       } else if (props.title == "expense") {
         update_expenses();
+      } else if (props.title == "paymentAccounts") {
+        update_paymentAccounts();
       }
     } else {
       data.forEach((data) => {
@@ -50,9 +60,18 @@ const Table = (props) => {
       if (visible) {
         data = data.slice(0, visible);
       }
-      const tableElement = document.getElementById("export-table");
+      const tableElement = document.getElementById(id);
+      headers = Object.keys(data[0]);
+      headers = props.actions? [...headers, "action"]: headers
+      // const data = data.map(Object.values)
+      const values = data.map(Object.values)
+      values.forEach(value => {
+        props.actions ? value.push(<PositionedMenu />): value
+      });
+
+
       if (data.length > 0 && tableElement && typeof DataTable !== "undefined") {
-        const tableInstance = new DataTable("#export-table", {
+        const tableInstance = new DataTable("#"+id, {
           destroy: true,
           paging: paging,
           perPage: 5,
@@ -67,8 +86,8 @@ const Table = (props) => {
           caseFirst: "false",
           fixedColumns: true,
           data: {
-            headings: Object.keys(data[0]),
-            data: data.map(Object.values),
+            headings: headers,
+            data: values
           },
         });
 
@@ -79,7 +98,7 @@ const Table = (props) => {
         };
       }
     }
-  }, [members, staffs, coaches, expenses]);
+  }, [members, staffs, coaches, expenses, paymentAccounts]);
 
   const exportData = () => {
     console.log("export");
@@ -146,9 +165,16 @@ const Table = (props) => {
         )}
         <div className="mx-1 my-0">
           <table
-            id="export-table"
+            id={id}
             className="min-w-full text-sm text-left text-gray-500 py-0"
-          ></table>
+          >
+            <tr>
+              {
+                headers.map((value, index) => {
+                  <th key={index}>{value}</th>
+              })}
+            </tr>
+          </table>
         </div>
       </div>
     </div>

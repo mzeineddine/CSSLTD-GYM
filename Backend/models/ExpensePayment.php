@@ -4,11 +4,11 @@
     class ExpensePayment extends ExpensePayment_Skeleton{
         static function create($data){
             global $conn;
-            // id	expense_id	amount	created_on	created_by	is_deleted	
-            $sql = "INSERT INTO expense_payments (`expense_id`,`amount`,`created_by`) 
+            // id	account_id	amount	created_on	created_by	is_deleted	
+            $sql = "INSERT INTO expense_payments (`account_id`,`amount`,`created_by`) 
             VALUES (?, ?, ?)";
             $stmt = $conn->prepare($sql);
-            $stmt->execute([$data['expense_id'],$data['amount'],$data['created_by']]);
+            $stmt->execute([$data['account_id'],$data['amount'],$data['created_by']]);
             return boolval($stmt->rowCount());
         }
         static function read($data){
@@ -28,10 +28,10 @@
     
         static function update($data){
             global $conn;
-            // id	expense_id	amount	created_on	created_by	is_deleted
-            $sql = "UPDATE expense_payments SET `expense_id`=?, `amount`=? WHERE id = ?";
+            // id	account_id	amount	created_on	created_by	is_deleted
+            $sql = "UPDATE expense_payments SET `account_id`=?, `amount`=? WHERE id = ?";
             $stmt = $conn->prepare($sql);
-            $stmt->execute(params: [$data['expense_id'],$data['amount'], $data['id']]);
+            $stmt->execute(params: [$data['account_id'],$data['amount'], $data['id']]);
             return boolval($stmt->rowCount());
         }
         static function delete($data){
