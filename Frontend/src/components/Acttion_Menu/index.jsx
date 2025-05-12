@@ -5,6 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
 import Add_Popup from "../Add_Popup";
+import Edit_Popup from "../Edit_Popup";
 export default function PositionedMenu(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   // const [showEdit, setShowEdit] = useState(false);
@@ -18,6 +19,7 @@ export default function PositionedMenu(props) {
     setAnchorEl(null);
   };
   const [showAdd, setShowAdd] = useState(false);
+  const [showEdit, setShowEdit] = useState(false);
   const [function_name, setFunction_name] = useState({
     name: "text",
   });
@@ -36,6 +38,21 @@ export default function PositionedMenu(props) {
     return props.options_names[function_name];
   };
 
+  const edit_account = (function_name) => {
+    setFunction_name(function_name);
+    setShowEdit(true);
+  };
+  const edit_popup_field = () => {
+    console.log(function_name);
+    console.log(props.options_functions_field[function_name]);
+    return props.options_functions_field[function_name];
+  };
+  const edit_popup_name = () => {
+    console.log(function_name);
+    console.log(props.options_names[function_name]);
+    return props.options_names[function_name];
+  };
+
   return (
     <div>
       {showAdd && (
@@ -46,6 +63,16 @@ export default function PositionedMenu(props) {
           fields={add_popup_field()}
           name={add_popup_name()}
           filled_field={{ account_id: props.data.id }}
+        />
+      )}
+      {showEdit && (
+        <Edit_Popup
+          open={showEdit}
+          onClose={() => setShowEdit(false)}
+          options={props.options}
+          fields={edit_popup_field()}
+          name={edit_popup_name()}
+          filled_field={props.data}
         />
       )}
       <Button

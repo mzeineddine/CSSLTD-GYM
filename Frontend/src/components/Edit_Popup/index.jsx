@@ -27,7 +27,7 @@ import { Expenses_Context } from "../../context/Expenses_Context";
 import { PaymentAccounts_Context } from "../../context/PaymentAccounts_Context";
 
 // import CloseIcon from '@mui/icons-material';
-const Add_Popup = (props) => {
+const Edit_Popup = (props) => {
   const default_values = {};
   for (let [key, value] of Object.entries(props.fields)) {
     if (value == "date") {
@@ -72,7 +72,10 @@ const Add_Popup = (props) => {
       update_coaches();
     } else if (props.name.toLowerCase() == "expense") {
       update_expenses();
-    } else if (props.name.toLowerCase() == "payment_account" || props.name.toLowerCase() == "expense_payment") {
+    } else if (
+      props.name.toLowerCase() == "payment_account" ||
+      props.name.toLowerCase() == "expense_payment"
+    ) {
       update_paymentAccounts();
     }
     setFormData(default_values);
@@ -217,4 +220,4 @@ const Add_Popup = (props) => {
     </Dialog>
   );
 };
-export default Add_Popup;
+export default Edit_Popup;

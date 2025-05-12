@@ -28,7 +28,7 @@ const Expense = () => {
             { "View Payments": "view_payment" },
           ]}
           options_names={{
-            edit_account: "...",
+            edit_account: "payment_account",
             add_payment: "expense_payment",
             view_payment: "...",
           }}

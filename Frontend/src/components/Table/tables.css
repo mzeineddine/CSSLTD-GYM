@@ -10,6 +10,9 @@
   text-decoration: auto;
   text-indent: auto;
 }
+.table button:hover {
+  color: rgb(165, 91, 235);
+}
 .table input {
   width: auto;
   background: auto;
