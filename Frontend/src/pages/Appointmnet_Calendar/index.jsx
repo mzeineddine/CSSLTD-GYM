@@ -1,37 +1,58 @@
-import axios from "axios";
 import Graph from "../../components/Graph";
 import PiChart from "../../components/PiChart";
-// import Table from "../../components/Table";
-import { useEffect } from "react";
-import "./appointment_calendar.css"
+import "./appointment_calendar.css";
 import Page_Title_Add from "../../components/Page_Title_Add";
 import Calendar from "../../components/Calendar";
+import { Appointments_Context } from "../../context/Appointments_Context";
+import { useContext, useEffect, useState } from "react";
+import { Coaches_Context } from "../../context/Coaches_Context";
+import { Members_Context } from "../../context/Members_Context";
 
 const Appointment_Calendar = () => {
-    const effectFunction = () =>{
-        const getData = async () =>{
-            console.log("in getData")
-            let response = await axios({
-                method: 'post',
-                url: 'http://localhost/Projects/CSSLTD-GYM/Backend/member/read',
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer"+localStorage.getItem("access-token")
-                }, 
-            }).catch(err => {
-                console.log(err);
-            });
-                console.log(response.data)
-        }
-        getData();
-    }
-    useEffect(effectFunction,[])
+  const { appointments, update_appointments } =
+    useContext(Appointments_Context);
+  const { coaches, update_coaches } = useContext(Coaches_Context);
+  const { members, update_members } = useContext(Members_Context);
 
-    return(
-        <div className="appointment-calendar m-[2%]">
-            <h1 className="font-bold w-full text-left text-3xl my-1">Calendar</h1>
-            <Calendar/>
-        </div>
-    );
-}
-export default Appointment_Calendar
+  //   const [events, setEvents] = useState(null);
+
+  const [appointment, setAppointment] = useState(appointments);
+  const [coach, setCoach] = useState(coaches);
+  const [member, setMember] = useState(members);
+
+  const coach_data = [];
+  const member_data = [];
+  useEffect(() => {
+    if (!appointment) {
+      update_appointments();
+      setAppointment(appointments);
+    } else if (!coach) {
+      update_coaches();
+      setCoach(coaches);
+    } else if (!member) {
+      update_members();
+      setMember(members);
+    } else {
+      coaches.forEach((coach) => {
+        coach_data.push({ [coach.id]: [coach.full_name] });
+      });
+      console.log(coach_data);
+      members.forEach((member) => {
+        member_data.push({ [member.id]: [member.full_name] });
+      });
+    }
+  }, [appointments, coaches, members]);
+  return (
+    <div className="appointment-calendar m-[2%]">
+      <h1 className="font-bold w-full text-left text-3xl my-1">Calendar</h1>
+      {coach_data && member_data && appointment && (
+        <Calendar
+          members={member_data}
+          coaches={coach_data}
+          appointments={appointment}
+        />
+      )}
+    </div>
+  );
+};
+export default Appointment_Calendar;

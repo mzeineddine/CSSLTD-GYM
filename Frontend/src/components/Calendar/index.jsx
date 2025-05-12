@@ -1,21 +1,85 @@
 import { Scheduler } from "@aldabil/react-scheduler";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import MenuItem from "@mui/material/MenuItem";
 import Select from "@mui/material/Select";
 import Custom_Editor from "../Custom_Editor";
 import "./calendar.css";
 import Custom_Header from "../Custom_Header";
-const Calendar = () => {
-  // const [formData, setFormData] = useState({title:"", desc:"", color:"red"})
-  const coaches = ["Jad", "Joe", "Jak"];
+import { Appointments_Context } from "../../context/Appointments_Context";
+import { axios_function } from "../../utilities/axios";
+const Calendar = (props) => {
+  const { appointments, update_appointments } =
+    useContext(Appointments_Context);
+  const coaches = props.coaches;
+  const members = props.members;
+
+  const [formattedEvents, setFormattedEvents] = useState(
+    [props.appointments].flat().map((e) => {
+      return {
+        event_id: e.id,
+        title: e.title,
+        coach_id: e.coach_id,
+        member_id: e.member_id,
+        color: e.color,
+        start: new Date(e.start_date),
+        end: new Date(e.end_date),
+      };
+    })
+  );
+
+  // useEffect(() => {
+  //   setFormattedEvents(
+  //     [props.appointments].flat().map((e) => {
+  //       return {
+  //         event_id: e.id,
+  //         title: e.title,
+  //         coach_id: e.coach_id,
+  //         member_id: e.member_id,
+  //         color: e.color,
+  //         start: new Date(e.start_date),
+  //         end: new Date(e.end_date),
+  //       };
+  //     })
+  //   );
+  // }, [appointments]);
+
+  const update_db = async (event) => {
+    await axios_function(
+      "POST",
+      "http://localhost/Projects/CSSLTD-GYM/Backend/appointment/update",
+      event
+    );
+  };
   return (
     <Scheduler
       view="month"
       height={500}
       hideHeader={true}
-      // customHeader={(scheduler) => <Custom_Header scheduler={scheduler}/>}
+      events={formattedEvents}
+      onEventDrop={async (droppedEvent, newStart, newEnd) => {
+        await update_db({
+          id: newEnd.event_id,
+          title: newEnd.title,
+          coach_id: newEnd.coach_id,
+          member_id: newEnd.member_id,
+          color: newEnd.color,
+          start_date: newEnd.start,
+          end_date: newEnd.end,
+        });
+        setFormattedEvents((prevEvents) =>
+          prevEvents.map((event) =>
+            event.event_id === newEnd.event_id ? newEnd : event
+          )
+        );
+        update_appointments(); // optionally reload from context/backend
+      }}
+      onConfirm={update_appointments}
       customEditor={(scheduler) => (
-        <Custom_Editor scheduler={scheduler} coaches={coaches} />
+        <Custom_Editor
+          scheduler={scheduler}
+          members={members}
+          coaches={coaches}
+        />
       )}
       // fields={[
       //   {
