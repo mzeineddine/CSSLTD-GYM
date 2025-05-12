@@ -74,6 +74,22 @@ const Calendar = (props) => {
         update_appointments(); // optionally reload from context/backend
       }}
       onConfirm={update_appointments}
+      onDelete={async (deletedId) => {
+        // Call your backend to delete the event
+        await axios_function(
+          "DELETE",
+          "http://localhost/Projects/CSSLTD-GYM/Backend/appointment/delete",
+          { id: deletedId }
+        );
+
+        // Optionally remove it from the state manually
+        setFormattedEvents((prev) =>
+          prev.filter((event) => event.event_id !== deletedId)
+        );
+
+        // Or fetch updated appointments
+        update_appointments();
+      }}
       customEditor={(scheduler) => (
         <Custom_Editor
           scheduler={scheduler}

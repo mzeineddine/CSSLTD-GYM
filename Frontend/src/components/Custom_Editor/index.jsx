@@ -43,7 +43,7 @@ const Custom_Editor = ({ scheduler, coaches, members }) => {
   const event = scheduler.edited;
   // Make your own form/state
   const [state, setState] = useState({
-    id: event?.event_id,
+    id: event?.event_id || null,
     title: event?.title || "",
     // description: event?.description || "",
     color: event?.color || "",
