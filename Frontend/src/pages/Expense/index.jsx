@@ -7,7 +7,7 @@ import "./expense.css";
 import { useContext } from "react";
 
 const Expense = () => {
-  const { paymentAccounts } = useContext(PaymentAccounts_Context);
+  const add_payment = () => {};
   return (
     <div className="expense">
       <div className="accounts-table m-[2%]">
@@ -20,18 +20,48 @@ const Expense = () => {
         />
         <Table1
           title="paymentAccounts"
+          // options_names={["Edit Account", "Add Payment", "View Payments"]}
+          // options_functions = {["","",""]}
+          options={[
+            { "Edit Account": "edit_account" },
+            { "Add Payment": "add_payment" },
+            { "View Payments": "view_payment" },
+          ]}
+          options_names={{
+            edit_account: "...",
+            add_payment: "expense_payment",
+            view_payment: "...",
+          }}
+          options_functions_field={{
+            edit_account: {
+              name: "text",
+              description: "text",
+            },
+
+            add_payment: {
+              amount: "number",
+            },
+
+            view_payment: {
+              name: "text",
+              description: "text",
+            },
+          }}
           info={false}
           searchable={true}
           paging={true}
           exportable={true}
           visible={false}
-          actions={[{"Edit_Account": "edit_account()"},{'add_payment': "add_payment()"},{'view_payments': "view_payments()"}]}
+          actions={[
+            { Edit_Account: "edit_account()" },
+            { add_payment: "add_payment()" },
+            { view_payments: "view_payments()" },
+          ]}
         />
       </div>
       <div className="expenses-table m-[2%]">
         <Page_Title_Add
           name="expense"
-          options={paymentAccounts}
           fields={{
             date: "date",
             account_id: "select",

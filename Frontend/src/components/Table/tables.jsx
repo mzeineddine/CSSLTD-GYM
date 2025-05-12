@@ -11,6 +11,7 @@ import PositionedMenu from "../Acttion_Menu/index.jsx";
 import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./tables.css";
+import Add_Popup from "../Add_Popup/index.jsx";
 const Table1 = (props) => {
   const { members, update_members } = useContext(Members_Context);
   const { staffs, update_staffs } = useContext(Staffs_Context);
@@ -23,6 +24,7 @@ const Table1 = (props) => {
   let { title, info, searchable, paging, exportable, visible } = props;
   const [headers, setHeaders] = useState([]);
   const [values, setValues] = useState([]);
+  // const [ids, setIds] = useState([]);
   let data = [];
   useEffect(() => {
     if (title == "member") {
@@ -56,13 +58,40 @@ const Table1 = (props) => {
       if (visible) {
         data = data.slice(0, visible);
       }
-      setHeaders(Object.keys(data[0]));
-      // const data = data.map(Object.values)
-      setValues(data.map(Object.values));
-      //   values.forEach((value) => {
-      //     props.actions ? value.push(<PositionedMenu />) : value;
-      //   });
-      // //   setValues()
+      const [_, ...headers_without_id] = [...Object.keys(data[0])];
+      // console.log(headers_without_id)
+      setHeaders(
+        props.options ? [...headers_without_id, "actions"] : headers_without_id
+      );
+      // const rows = data.map((item, index) => {
+      //   const row = Object.values(item);
+      //   props.options &&
+      //     row.push(
+      //       <PositionedMenu data={data[index]} options={props.options} />
+      //     );
+      //   return row;
+      // });
+      const rows_without_id = data.map((item) => {
+        // const row = Object.values(item);
+        const [_, ...row] = [...Object.values(item)];
+        props.options &&
+          row.push(
+            <PositionedMenu
+              data={item}
+              options_names={props.options_names}
+              options_functions_field={props.options_functions_field}
+              options={props.options}
+            />
+          );
+        return row;
+      });
+      setValues(rows_without_id);
+
+      // setIds(
+      //   data.map((value) => {
+      //     return value["id"];
+      //   })
+      // );
     }
   }, [members, staffs, coaches, expenses, paymentAccounts]);
 
@@ -77,16 +106,16 @@ const Table1 = (props) => {
     viewColumns: true,
     filter: true,
     filterType: "search",
-    responsive: true,
     tableBodyHeight: true,
     tableBodyMaxHeight: true,
     pagination: paging,
     rowsPerPage: 5,
     rowsPerPageOptions: [5, 10, 15, 20],
-    onTableChange: (action, state) => {
-      console.log(action);
-      console.dir(state);
-    },
+    selectableRows: "none",
+    // onTableChange: (action, state) => {
+    //   // console.log(action);
+    //   // console.dir(state);
+    // },
   };
   return (
     <div className="table w-full rounded-2xl ">
@@ -99,26 +128,13 @@ const Table1 = (props) => {
             <div>
               <Link to="appointments">See All</Link>
             </div>
-            {/* <p>See All</p> */}
           </div>
         )}
         <ThemeProvider theme={createTheme()}>
           <MUIDataTable
             // title={title}
             data={values}
-            columns={[
-                ...headers,
-                {
-                  label: "Actions",
-                  options: {
-                    customBodyRender: (value, tableMeta) => {
-                      return (
-                        <PositionedMenu id={tableMeta ? tableMeta.rowData[0] : "NULL"} />
-                      );
-                    },
-                  },
-                },
-              ]}
+            columns={[...headers]}
             options={options}
           />
         </ThemeProvider>

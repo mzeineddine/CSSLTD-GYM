@@ -5,6 +5,7 @@ import PiChart from "../../components/PiChart";
 import { useEffect } from "react";
 import "./coach.css";
 import Page_Title_Add from "../../components/Page_Title_Add";
+import Table1 from "../../components/Table/tables";
 
 const Coach = () => {
   const effectFunction = () => {
@@ -90,16 +91,16 @@ const Coach = () => {
       />
       <div className="appointment-table">
         {
-          // <Table
-          //   // headers={headers}
-          //   // data={members}
-          //   title="coach"
-          //   info={false}
-          //   searchable={true}
-          //   paging={true}
-          //   exportable={true}
-          //   visible={false}
-          // />
+          <Table1
+            // headers={headers}
+            // data={members}
+            title="coach"
+            info={false}
+            searchable={true}
+            paging={true}
+            exportable={true}
+            visible={false}
+          />
         }
       </div>
     </div>

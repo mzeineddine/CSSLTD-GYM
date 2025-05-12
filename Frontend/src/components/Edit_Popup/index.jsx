@@ -60,7 +60,7 @@ const Add_Popup = (props) => {
       "POST",
       "http://localhost/Projects/CSSLTD-GYM/Backend/" +
         name.toLowerCase() +
-        "/create",
+        "/update",
       formData
     );
     console.log("form submitted");
@@ -215,75 +215,6 @@ const Add_Popup = (props) => {
         <Button onClick={handleSubmit}>Confirm</Button>
       </DialogActions>
     </Dialog>
-    // <div className='add-popup'>
-    //     <div className="form-container">
-    //     <h2 className='title'>{title}</h2>
-    //         <form onSubmit={handleSubmit}>
-    //             <div className='inputs'>
-    //                 {
-    //                     Object.entries(props.fields).map(([k,v]) => {
-    //                         let isSelect=false
-    //                         let isTextArea = false
-    //                         if(v=="select"){
-    //                             isSelect=true
-    //                         } else if(v=="text-area"){
-    //                             isTextArea=true
-    //                         }
-    //                         return(
-    //                             <div key={k} className="input-label">
-    //                                 <label htmlFor={k}>{k.toLowerCase()
-    //                                     .split('_')
-    //                                     .map((word) => {
-    //                                         return word[0].toUpperCase() + word.slice(1);
-    //                                     })
-    //                                     .join(' ')}
-    //                                 </label>
-    //                                 {
-    //                                     isSelect?
-    //                                         <select className='w-full h-full' name={k} value={formData[k]}
-    //                                             onChange={(e)=>{
-    //                                                 setFormData({...formData,[k]: e.target.value})
-    //                                                 }
-    //                                             }
-    //                                         >
-    //                                             {options.map((value) => {
-    //                                                 return <option value={value}>{value}</option>
-    //                                             })}
-    //                                         </select>
-    //                                     : isTextArea?
-    //                                         <textarea name={k} value={formData[k]}
-    //                                         onChange={(e)=>{
-    //                                             setFormData({...formData,[k]: e.target.value})
-    //                                             }
-    //                                         }
-    //                                         >
-
-    //                                         </textarea>
-    //                                     :
-    //                                         <input type={v} name={k}
-    //                                             onChange ={(e)=>{
-    //                                                 setFormData({...formData,[k]: e.target.value})
-    //                                                 }
-    //                                             }
-    //                                             value={
-    //                                                 formData[k]
-    //                                             }
-    //                                         />
-    //                                 }
-    //                             </div>
-    //                         )
-    //                     })
-    //                 }
-    //             </div>
-    //             <div className="buttons-container">
-    //                 <div className='buttons'>
-    //                     <button type="button" className='cancel-button' onClick={()=>{setFormData(default_values);props.onClose()}}>Cancel</button>
-    //                     <button type="button" className='submit-button'>Add {props}</button>
-    //                 </div>
-    //             </div>
-    //         </form>
-    //     </div>
-    // </div>
   );
 };
 export default Add_Popup;

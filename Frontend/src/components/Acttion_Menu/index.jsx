@@ -1,10 +1,15 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-
+import React from "react";
+import Button from "@mui/material/Button";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useState } from "react";
+import Add_Popup from "../Add_Popup";
 export default function PositionedMenu(props) {
-  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [anchorEl, setAnchorEl] = useState(null);
+  // const [showEdit, setShowEdit] = useState(false);
+  // const [showEdit, setShowEdit] = useState(false);
+
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -12,17 +17,45 @@ export default function PositionedMenu(props) {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  const [showAdd, setShowAdd] = useState(false);
+  const [function_name, setFunction_name] = useState({
+    name: "text",
+  });
+  const add_payment = (function_name) => {
+    setFunction_name(function_name);
+    setShowAdd(true);
+  };
+  const add_popup_field = () => {
+    console.log(function_name);
+    console.log(props.options_functions_field[function_name]);
+    return props.options_functions_field[function_name];
+  };
+  const add_popup_name = () => {
+    console.log(function_name);
+    console.log(props.options_names[function_name]);
+    return props.options_names[function_name];
+  };
 
   return (
     <div>
+      {showAdd && (
+        <Add_Popup
+          open={showAdd}
+          onClose={() => setShowAdd(false)}
+          options={props.options}
+          fields={add_popup_field()}
+          name={add_popup_name()}
+          filled_field={{ account_id: props.data.id }}
+        />
+      )}
       <Button
         id="demo-positioned-button"
-        aria-controls={open ? 'demo-positioned-menu' : undefined}
+        aria-controls={open ? "demo-positioned-menu" : undefined}
         aria-haspopup="true"
-        aria-expanded={open ? 'true' : undefined}
+        aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
       >
-        {props.id}
+        <MoreVertIcon />
       </Button>
       <Menu
         id="demo-positioned-menu"
@@ -31,17 +64,27 @@ export default function PositionedMenu(props) {
         open={open}
         onClose={handleClose}
         anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
+          vertical: "top",
+          horizontal: "left",
         }}
         transformOrigin={{
-          vertical: 'top',
-          horizontal: 'left',
+          vertical: "top",
+          horizontal: "left",
         }}
       >
-        <MenuItem onClick={handleClose}>Profile</MenuItem>
-        <MenuItem onClick={handleClose}>My account</MenuItem>
-        <MenuItem onClick={handleClose}>Logout</MenuItem>
+        {props.options.map((value, index) => {
+          // console.log(Object.keys(props.options_functions_field[0]))
+          const function_name = props.options[index][Object.keys(value)[0]];
+          console.log(function_name);
+          return (
+            <MenuItem
+              key={index}
+              onClick={() => eval(function_name)(function_name)}
+            >
+              {Object.keys(value)[0]}
+            </MenuItem>
+          );
+        })}
       </Menu>
     </div>
   );
