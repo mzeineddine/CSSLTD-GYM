@@ -6,11 +6,12 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
 import Add_Popup from "../Add_Popup";
 import Edit_Popup from "../Edit_Popup";
+import { useNavigate } from "react-router-dom";
 export default function PositionedMenu(props) {
   const [anchorEl, setAnchorEl] = useState(null);
   // const [showEdit, setShowEdit] = useState(false);
   // const [showEdit, setShowEdit] = useState(false);
-
+  const navigate = useNavigate()
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -52,6 +53,16 @@ export default function PositionedMenu(props) {
     console.log(props.options_names[function_name]);
     return props.options_names[function_name];
   };
+
+  const view_payment = () => {
+    // console.log(props.data)
+    navigate("/expense_payments", { state: props.data });
+  }
+
+  const edit_payment = (function_name) => {
+    setFunction_name(function_name);
+    setShowEdit(true);
+  }
 
   return (
     <div>

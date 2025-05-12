@@ -25,6 +25,7 @@ import { Staffs_Context } from "../../context/Staffs_Context";
 import { Coaches_Context } from "../../context/Coaches_Context";
 import { Expenses_Context } from "../../context/Expenses_Context";
 import { PaymentAccounts_Context } from "../../context/PaymentAccounts_Context";
+import { ExpensePayments_Context } from "../../context/ExpensePayments_Context";
 
 // import CloseIcon from '@mui/icons-material';
 const Edit_Popup = (props) => {
@@ -48,6 +49,8 @@ const Edit_Popup = (props) => {
   const { update_coaches } = useContext(Coaches_Context);
   const { update_expenses } = useContext(Expenses_Context);
   const { update_paymentAccounts } = useContext(PaymentAccounts_Context);
+  const { update_expensePayments } = useContext(ExpensePayments_Context);
+  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -77,6 +80,8 @@ const Edit_Popup = (props) => {
       props.name.toLowerCase() == "expense_payment"
     ) {
       update_paymentAccounts();
+    } if ( props.name.toLowerCase() == "expense_payment"){
+      update_expensePayments()
     }
     setFormData(default_values);
     props.onClose();

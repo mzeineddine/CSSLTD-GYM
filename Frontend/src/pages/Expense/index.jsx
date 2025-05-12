@@ -30,7 +30,7 @@ const Expense = () => {
           options_names={{
             edit_account: "payment_account",
             add_payment: "expense_payment",
-            view_payment: "...",
+            view_payment: "expense_payment"
           }}
           options_functions_field={{
             edit_account: {

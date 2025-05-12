@@ -8,13 +8,15 @@ const Page_Title_Add = (props) => {
     const handleOnClick = () => {
         setShowModal(true)
     }
+    const data_id = props.data?props.data.id:0
     const [showModal, setShowModal] = useState(false);
+    const change_id = props.id_change?props.id_change: ""
     return (
         <div className="page-title-add">
             <div className="title"><h2>{name}</h2></div>
             <div className="add">
                 <button onClick={handleOnClick}><p>+</p><p>Add {name}</p></button>
-                <Add_Popup open={showModal} onClose={() => setShowModal(false)} options={props.options} fields={props.fields} name={name}/>
+                <Add_Popup open={showModal} onClose={() => setShowModal(false)} options={props.options} fields={props.fields} filled_field={{[change_id]: data_id}} name={name}/>
             </div>
         </div>
     );

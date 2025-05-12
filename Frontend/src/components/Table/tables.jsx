@@ -12,11 +12,15 @@ import { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "./tables.css";
 import Add_Popup from "../Add_Popup/index.jsx";
+import { ExpensePayments_Context } from "../../context/ExpensePayments_Context.jsx";
 const Table1 = (props) => {
   const { members, update_members } = useContext(Members_Context);
   const { staffs, update_staffs } = useContext(Staffs_Context);
   const { coaches, update_coaches } = useContext(Coaches_Context);
   const { expenses, update_expenses } = useContext(Expenses_Context);
+  const { expensePayments, update_expensePayments } = useContext(
+    ExpensePayments_Context
+  );
   const { paymentAccounts, update_paymentAccounts } = useContext(
     PaymentAccounts_Context
   );
@@ -37,6 +41,8 @@ const Table1 = (props) => {
       data = expenses;
     } else if (title == "paymentAccounts") {
       data = paymentAccounts;
+    } else if (title == "expensePayments") {
+      data = expensePayments;
     }
     if (!data) {
       if (title == "member") {
@@ -49,6 +55,8 @@ const Table1 = (props) => {
         update_expenses();
       } else if (title == "paymentAccounts") {
         update_paymentAccounts();
+      } else if (title == "expensePayments") {
+        update_expensePayments();
       }
     } else {
       data.forEach((data) => {
@@ -57,6 +65,12 @@ const Table1 = (props) => {
       });
       if (visible) {
         data = data.slice(0, visible);
+      }
+      if (props.data_filter){
+        data= data.filter((value) => {
+          if(value[Object.keys(props.data_filter)[0]] == props.data_filter[Object.keys(props.data_filter)[0]])
+            return value
+          })
       }
       const [_, ...headers_without_id] = [...Object.keys(data[0])];
       // console.log(headers_without_id)
@@ -93,7 +107,7 @@ const Table1 = (props) => {
       //   })
       // );
     }
-  }, [members, staffs, coaches, expenses, paymentAccounts]);
+  }, [members, staffs, coaches, expenses, paymentAccounts, expensePayments]);
 
   const muiCache = createCache({
     key: "mui-datatables",
