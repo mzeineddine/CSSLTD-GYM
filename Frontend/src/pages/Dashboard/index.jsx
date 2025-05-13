@@ -118,14 +118,6 @@ const Dashboard = () => {
         <DashboardStatCard icon={icon} title="Patients" count="270" />
       </div>
       <div className="appointment-table">
-        {/* <Table
-          title="member"
-          info={true}
-          searchable={false}
-          paging={false}
-          exportable={false}
-          visible={5}
-        /> */}
         <Table1
           title="member"
           info={true}

@@ -12,7 +12,7 @@ body{
     transition: all 0.5s ease;
     background-color: rgb(250, 250, 250);
 }
-a{  
+a ,.a{  
     display: flex;
     justify-content: start;
     align-items: center;
@@ -28,7 +28,7 @@ a{
     padding: 0px;
     margin: 5px;
 }
-.shorten a{
+.shorten a, .shorten .a{
     justify-content: center;
     transition: all 0.5s ease;
 }
@@ -36,11 +36,11 @@ a{
 a:has(.logo-img){
     justify-content: center;
 }
-.sideBar a:not(:first-child):hover{
+.sideBar a:not(:first-child):hover, .sideBar .a:hover{
     background-color: blueviolet;
     color: white;
 }
-.sideBar a:not(:first-child):hover .icon-img{
+.sideBar a:not(:first-child):hover .icon-img, .sideBar .a:hover .icon-img{
     filter: invert(100%);
 }
 .icon{

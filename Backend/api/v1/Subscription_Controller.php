@@ -43,7 +43,7 @@
                 return false;
             }
             $data['created_by']=$decoded_token->id;
-            if(!Controllers_Utilities::check_params($data,["member_id","category_id","cost","paid","start_date","end_date","created_by"]))
+            if(!Controllers_Utilities::check_params($data,["member_id","category_id","cost","start_date","end_date","created_by"]))
                 return false;
             $modified_data = ["id"=>$data["created_by"]];
             if(self::check_created_by($modified_data)){
@@ -83,7 +83,7 @@
                 return false;
             }
             $data = json_decode(file_get_contents("php://input"),true);
-            if(!Controllers_Utilities::check_params($data,["member_id","category_id","cost","paid","start_date","end_date","id"]))
+            if(!Controllers_Utilities::check_params($data,["member_id","category_id","cost","start_date","end_date","id"]))
                 return false;
             $subscription=Subscription::read($data);
             if(!$subscription){

@@ -13,10 +13,12 @@ import { Link } from "react-router-dom";
 import "./tables.css";
 import Add_Popup from "../Add_Popup/index.jsx";
 import { ExpensePayments_Context } from "../../context/ExpensePayments_Context.jsx";
+import { Categories_Context } from "../../context/Categories_Context.jsx";
 const Table1 = (props) => {
   const { members, update_members } = useContext(Members_Context);
   const { staffs, update_staffs } = useContext(Staffs_Context);
   const { coaches, update_coaches } = useContext(Coaches_Context);
+  const { categories, update_categories } = useContext(Categories_Context);
   const { expenses, update_expenses } = useContext(Expenses_Context);
   const { expensePayments, update_expensePayments } = useContext(
     ExpensePayments_Context
@@ -43,6 +45,8 @@ const Table1 = (props) => {
       data = paymentAccounts;
     } else if (title == "expensePayments") {
       data = expensePayments;
+    } else if (title == "categories") {
+      data = categories;
     }
     if (!data) {
       if (title == "member") {
@@ -57,6 +61,8 @@ const Table1 = (props) => {
         update_paymentAccounts();
       } else if (title == "expensePayments") {
         update_expensePayments();
+      } else if (title == "categories") {
+        update_categories();
       }
     } else {
       data.forEach((data) => {
@@ -66,33 +72,27 @@ const Table1 = (props) => {
       if (visible) {
         data = data.slice(0, visible);
       }
-      if (props.data_filter){
-        data= data.filter((value) => {
-          if(value[Object.keys(props.data_filter)[0]] == props.data_filter[Object.keys(props.data_filter)[0]])
-            return value
-          })
+      if (props.data_filter) {
+        data = data.filter((value) => {
+          if (
+            value[Object.keys(props.data_filter)[0]] ==
+            props.data_filter[Object.keys(props.data_filter)[0]]
+          )
+            return value;
+        });
       }
       const [_, ...headers_without_id] = [...Object.keys(data[0])];
-      // console.log(headers_without_id)
       setHeaders(
         props.options ? [...headers_without_id, "actions"] : headers_without_id
       );
-      // const rows = data.map((item, index) => {
-      //   const row = Object.values(item);
-      //   props.options &&
-      //     row.push(
-      //       <PositionedMenu data={data[index]} options={props.options} />
-      //     );
-      //   return row;
-      // });
       const rows_without_id = data.map((item) => {
-        // const row = Object.values(item);
         const [_, ...row] = [...Object.values(item)];
         props.options &&
           row.push(
             <PositionedMenu
               data={item}
               options_names={props.options_names}
+              select_options={props.select_options}
               options_functions_field={props.options_functions_field}
               options={props.options}
             />
@@ -100,14 +100,8 @@ const Table1 = (props) => {
         return row;
       });
       setValues(rows_without_id);
-
-      // setIds(
-      //   data.map((value) => {
-      //     return value["id"];
-      //   })
-      // );
     }
-  }, [members, staffs, coaches, expenses, paymentAccounts, expensePayments]);
+  }, [members, staffs, coaches, expenses, paymentAccounts, expensePayments, categories]);
 
   const muiCache = createCache({
     key: "mui-datatables",
@@ -140,7 +134,7 @@ const Table1 = (props) => {
               {title}
             </p>
             <div>
-              <Link to="appointments">See All</Link>
+              <Link to={"../" + title}>See All</Link>
             </div>
           </div>
         )}

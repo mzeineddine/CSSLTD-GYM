@@ -9,7 +9,7 @@
             $sql = "INSERT INTO members (`full_name`, `contact`, `address`,`dob`,`created_by`) VALUES (?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
             $stmt->execute([$data['full_name'],$data['contact'],$data['address'],$data['dob'],$data["created_by"]]);
-            return boolval($stmt->rowCount());
+            return $conn->lastInsertId();
         }
         static function read($data){
             global $conn;

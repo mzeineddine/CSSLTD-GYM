@@ -64,6 +64,11 @@ export default function PositionedMenu(props) {
     setShowEdit(true);
   }
 
+  const edit_category = (function_name) => {
+    setFunction_name(function_name);
+    setShowEdit(true);
+  }
+
   return (
     <div>
       {showAdd && (
@@ -80,7 +85,7 @@ export default function PositionedMenu(props) {
         <Edit_Popup
           open={showEdit}
           onClose={() => setShowEdit(false)}
-          options={props.options}
+          options={props.select_options}
           fields={edit_popup_field()}
           name={edit_popup_name()}
           filled_field={props.data}

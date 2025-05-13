@@ -32,7 +32,7 @@
                 return false;
             }
             $data['created_by']=$decoded_token->id;
-            if(!Controllers_Utilities::check_params($data,["date","account_id","bill_amount","paid_amount","comment","created_by"]))
+            if(!Controllers_Utilities::check_params($data,["date","account_id","bill_amount","comment","created_by"]))
                 return false;
             $modified_data = ["id"=>$data["created_by"]];
             if(self::check_created_by($modified_data)){
@@ -70,7 +70,7 @@
                 return false;
             }
             $data = json_decode(file_get_contents("php://input"),true);
-            if(!Controllers_Utilities::check_params($data,["id","date","account_id","bill_amount","paid_amount","comment"]))
+            if(!Controllers_Utilities::check_params($data,["id","date","account_id","bill_amount","comment"]))
                 return false;
             if(!Expense::read($data)){
                 echo json_encode([

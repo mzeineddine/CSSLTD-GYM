@@ -26,6 +26,7 @@ import { Coaches_Context } from "../../context/Coaches_Context";
 import { Expenses_Context } from "../../context/Expenses_Context";
 import { PaymentAccounts_Context } from "../../context/PaymentAccounts_Context";
 import { ExpensePayments_Context } from "../../context/ExpensePayments_Context";
+import { Categories_Context } from "../../context/Categories_Context";
 
 // import CloseIcon from '@mui/icons-material';
 const Edit_Popup = (props) => {
@@ -47,10 +48,10 @@ const Edit_Popup = (props) => {
   const { update_members } = useContext(Members_Context);
   const { update_staffs } = useContext(Staffs_Context);
   const { update_coaches } = useContext(Coaches_Context);
+  const { update_categories } = useContext(Categories_Context);
   const { update_expenses } = useContext(Expenses_Context);
   const { update_paymentAccounts } = useContext(PaymentAccounts_Context);
   const { update_expensePayments } = useContext(ExpensePayments_Context);
-  
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -80,13 +81,16 @@ const Edit_Popup = (props) => {
       props.name.toLowerCase() == "expense_payment"
     ) {
       update_paymentAccounts();
-    } if ( props.name.toLowerCase() == "expense_payment"){
-      update_expensePayments()
+    } else if (props.name.toLowerCase() == "category") {
+      update_categories();
+    }
+    if (props.name.toLowerCase() == "expense_payment") {
+      update_expensePayments();
     }
     setFormData(default_values);
     props.onClose();
   };
-  const title = "Add " + props.name == "User" ? "Staff" : props.name;
+  const title = "Edit " + props.name == "User" ? "Staff" : props.name;
   const options = props.options;
   return (
     <Dialog open={props.open}>

@@ -5,10 +5,10 @@
         static function create($data){
             global $conn;
             // id,name,price,last_update,created_on,created_by,is_deleted	
-            $sql = "INSERT INTO categories (`name`, `price`, `created_by`) 
-            VALUES (?, ?, ?)";
+            $sql = "INSERT INTO categories (`name`, `type`,`price`, `created_by`) 
+            VALUES (?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
-            $stmt->execute([$data['name'],$data['price'],$data['created_by']]);
+            $stmt->execute([$data['name'], $data['type'],$data['price'],$data['created_by']]);
             return boolval($stmt->rowCount());
         }
         static function read($data){
@@ -28,10 +28,10 @@
     
         static function update($data){
             global $conn;
-            $sql = "UPDATE categories SET `name`=?, `price`=?,`last_update`=? WHERE id = ?";
+            $sql = "UPDATE categories SET `name`=?, `type`=?,`price`=?,`last_update`=? WHERE id = ?";
             $stmt = $conn->prepare($sql);
             $data["last_update"] = date('Y-m-d h:i:s', time());
-            $stmt->execute([$data['name'],$data['price'],$data['last_update'],$data["id"]]);
+            $stmt->execute([$data['name'],$data['type'],$data['price'],$data['last_update'],$data["id"]]);
             return boolval($stmt->rowCount());
         }
         static function delete($data){

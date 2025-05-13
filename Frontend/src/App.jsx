@@ -18,6 +18,9 @@ import { PaymentAccounts_Provider } from "./context/PaymentAccounts_Context";
 import { ExpensePayments_Provider } from "./context/ExpensePayments_Context";
 import Expense_Payment from "./components/Expense_Payment";
 import { Appointments_Provider } from "./context/Appointments_Context";
+import Settings from "./pages/Settings";
+import Category from "./pages/Category";
+import { Categories_Provider } from "./context/Categories_Context";
 
 function App() {
   return (
@@ -28,24 +31,33 @@ function App() {
             <PaymentAccounts_Provider>
               <ExpensePayments_Provider>
                 <Appointments_Provider>
-                  <Routes>
-                    <Route element={<NoSidebarLayout />}>
-                      <Route path="/" element={<Login />} />
-                    </Route>
-                    <Route element={<WithSidebarLayout />}>
-                      <Route path="/home" element={<Dashboard />} />
-                      <Route path="/member" element={<Member />} />
-                      <Route path="/staff" element={<Staff />} />
-                      <Route path="/coach" element={<Coach />} />
-                      <Route path="/calendar" element={<Appointment_Calendar />} />
-                      {/* <Route path="/balance" element={<Balance />} /> */}
-                      <Route path="/expense" element={<Expense />} />
-                      <Route path="/expense_payments" element={<Expense_Payment />} />
-                      {/* <Route path="/settings" element={<Settings />} /> */}
-                      {/* <Route path="/logout" element={<Logout />} /> */}
-                      {/* <Route path="/profile" element={<Profile />} /> */}
-                    </Route>
-                  </Routes>
+                  <Categories_Provider>
+                    <Routes>
+                      <Route element={<NoSidebarLayout />}>
+                        <Route path="/" element={<Login />} />
+                      </Route>
+                      <Route element={<WithSidebarLayout />}>
+                        <Route path="/home" element={<Dashboard />} />
+                        <Route path="/member" element={<Member />} />
+                        <Route path="/staff" element={<Staff />} />
+                        <Route path="/coach" element={<Coach />} />
+                        <Route
+                          path="/calendar"
+                          element={<Appointment_Calendar />}
+                        />
+                        <Route path="/category" element={<Category />} />
+                        {/* <Route path="/balance" element={<Balance />} /> */}
+                        <Route path="/expense" element={<Expense />} />
+                        <Route
+                          path="/expense_payments"
+                          element={<Expense_Payment />}
+                        />
+                        <Route path="/settings" element={<Settings />} />
+                        {/* <Route path="/logout" element={<Logout />} /> */}
+                        {/* <Route path="/profile" element={<Profile />} /> */}
+                      </Route>
+                    </Routes>
+                  </Categories_Provider>
                 </Appointments_Provider>
               </ExpensePayments_Provider>
             </PaymentAccounts_Provider>

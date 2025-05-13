@@ -2,13 +2,13 @@
     require_once __DIR__ . "/Subscription_Skeleton.php";
     require_once __DIR__ . "/../connections/connection.php";
     class Subscription extends Subscription_Skeleton{
-        // id,member_id,category_id,cost,paid,start_date,end_date,created_on,created_by,is_deleted	
+        // id,member_id,category_id,cost,start_date,end_date,created_on,created_by,is_deleted	
         static function create($data){
             global $conn;
-            $sql = "INSERT INTO subscriptions (`member_id`,`category_id`,`cost`,`paid`,`start_date`,`end_date`,`created_by`) 
+            $sql = "INSERT INTO subscriptions (`member_id`,`category_id`,`cost`,`start_date`,`end_date`,`created_by`) 
             VALUES (?, ?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
-            $stmt->execute([$data['member_id'],$data['category_id'],$data['cost'],$data['paid'],$data['start_date'],$data['end_date'],$data['created_by']]);
+            $stmt->execute([$data['member_id'],$data['category_id'],$data['cost'],$data['start_date'],$data['end_date'],$data['created_by']]);
             return boolval($stmt->rowCount());
         }
         static function read($data){
@@ -28,9 +28,9 @@
     
         static function update($data){
             global $conn;
-            $sql = "UPDATE subscriptions SET `member_id`=?,`category_id`=?,`cost`=?,`paid`=?,`start_date`=?,`end_date`=? WHERE id = ?";
+            $sql = "UPDATE subscriptions SET `member_id`=?,`category_id`=?,`cost`=?,,`start_date`=?,`end_date`=? WHERE id = ?";
             $stmt = $conn->prepare($sql);
-            $stmt->execute([$data['member_id'],$data['category_id'],$data['cost'],$data["paid"],$data['start_date'],$data['end_date'],$data["id"]]);
+            $stmt->execute([$data['member_id'],$data['category_id'],$data['cost'],$data['start_date'],$data['end_date'],$data["id"]]);
             return boolval($stmt->rowCount());
         }
         static function delete($data){

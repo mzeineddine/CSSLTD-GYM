@@ -4,11 +4,11 @@
     class Expense extends ExpensePayment_Skeleton{
         static function create($data){
             global $conn;
-            //id,date,account_id,bill_amount,paid_amount,comment,created_on,created_by,is_deleted
-            $sql = "INSERT INTO expenses (`date`, `account_id`,`bill_amount`,`paid_amount`,`comment`,`created_by`) 
-            VALUES (?, ?, ?, ?, ?, ?)";
+            //id,date,account_id,bill_amount,comment,created_on,created_by,is_deleted
+            $sql = "INSERT INTO expenses (`date`, `account_id`,`bill_amount`,`comment`,`created_by`) 
+            VALUES (?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
-            $stmt->execute([$data['date'],$data['account_id'],$data['bill_amount'],$data['paid_amount'],$data['comment'],$data['created_by']]);
+            $stmt->execute([$data['date'],$data['account_id'],$data['bill_amount'],$data['comment'],$data['created_by']]);
             return boolval($stmt->rowCount());
         }
         static function read($data){
@@ -28,9 +28,9 @@
     
         static function update($data){
             global $conn;
-            $sql = "UPDATE expenses SET `date`=?, `account_id`=?,`bill_amount`=?,`paid_amount`=?,`comment`=? WHERE id = ?";
+            $sql = "UPDATE expenses SET `date`=?, `account_id`=?,`bill_amount`=?,`comment`=? WHERE id = ?";
             $stmt = $conn->prepare($sql);
-            $stmt->execute([$data['date'],$data['account_id'],$data['bill_amount'],$data['paid_amount'],$data['comment'],$data["id"]]);
+            $stmt->execute([$data['date'],$data['account_id'],$data['bill_amount'],$data['comment'],$data["id"]]);
             return boolval($stmt->rowCount());
         }
         static function delete($data){
