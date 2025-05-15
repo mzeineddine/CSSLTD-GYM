@@ -3,34 +3,17 @@ import PiChart from "../../components/PiChart";
 // import Table from "../../components/Table";
 import "./member.css";
 import Page_Title_Add from "../../components/Page_Title_Add";
-import { Members_Context, Members_Provider } from "../../context/Members_Context.jsx";
+import {
+  Members_Context,
+  Members_Provider,
+} from "../../context/Members_Context.jsx";
 import Table1 from "../../components/Table/tables.jsx";
+import { useContext } from "react";
+import { Categories_Context } from "../../context/Categories_Context.jsx";
 
 const Member = () => {
-  // const navigate = useNavigate();  
-  // const effectFunction = () => {
-  //   // const getData = async () => {
-  //   //   console.log("in getData");
-  //   //   let response = await axios_function(
-  //   //     "GET",
-  //   //     "http://localhost/Projects/CSSLTD-GYM/Backend/member/read"
-  //   //   );
-  //   //   if (response.message == "Access denied.") {
-  //   //     console.log("Should Go login");
-  //   //     navigate("/");
-  //   //   }
-  //   //   if (Object.prototype.hasOwnProperty.call(response, "data")) {
-  //   //     update_members(response.data)
-  //   //   }
-  //   // };
-  //   // getData();
-  // };
-  // useEffect(effectFunction, []);
-
-  // const headers = ["FullName", "Contact", "Address", "Date of Birth", "Created On", "Created By"];
-  // const data = [
-  //     [1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5],[1,2,3,4,5]
-  // ];
+  const { categories, update_categories } = useContext(Categories_Context);
+  if (!categories) update_categories();
   const graph_data = [
     { month: "Jan", left: 4000, new: 2400 },
     { month: "Feb", left: 3000, new: 1398 },
@@ -80,27 +63,64 @@ const Member = () => {
           colors={chart_colors}
         />
       </div>
-        <Page_Title_Add
-          name="member"
-          fields={{
-            full_name: "text",
-            contact: "text",
-            address: "text",
-            dob: "date",
-          }}
-        />
+      <Page_Title_Add
+        name="member"
+        options={{
+          category_id: categories,
+        }}
+        fields={{
+          full_name: "text",
+          contact: "text",
+          address: "text",
+          dob: "date",
+          category_id: "select",
+          start_date: "date",
+          end_date: "date",
+        }}
+      />
       {/* <Table_Search_Export /> */}
       <div className="appointment-table">
-        {<Table1
-          // headers={headers}
-          // data={members}
+        <Table1
           title="member"
+          // select_options={{
+          //   category_id: categories,
+          // }}
+          options={[
+            { "Edit Member": "edit_member" },
+            { "Add Payment": "add_payment" },
+            { "View Payments": "view_payment" },
+          ]}
+          options_names={{
+            edit_member: "member",
+            add_payment: "subscription_payment",
+            view_payment: "subscription_payment",
+          }}
+          options_functions_field={{
+            edit_member: {
+              full_name: "text",
+              contact: "text",
+              address: "text",
+              dob: "date",
+              // category_id: "select",
+              // start_date: "date",
+              // end_date: "date",
+            },
+
+            add_payment: {
+              amount: "number",
+            },
+
+            view_payment: {
+              name: "text",
+              description: "text",
+            },
+          }}
           info={false}
           searchable={true}
           paging={true}
           exportable={true}
           visible={false}
-        />}
+        />
       </div>
     </div>
   );

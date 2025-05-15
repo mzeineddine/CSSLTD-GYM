@@ -5,10 +5,10 @@
         static function create($data){
             global $conn;
             // id	expense_id	amount	created_on	created_by	is_deleted	
-            $sql = "INSERT INTO subscription_payments (`subscription_id`,`amount`,`created_by`) 
+            $sql = "INSERT INTO subscription_payments (`member_id`,`amount`,`created_by`) 
             VALUES (?, ?, ?)";
             $stmt = $conn->prepare($sql);
-            $stmt->execute([$data['subscription_id'],$data['amount'],$data['created_by']]);
+            $stmt->execute([$data['member_id'],$data['amount'],$data['created_by']]);
             return boolval($stmt->rowCount());
         }
         static function read($data){

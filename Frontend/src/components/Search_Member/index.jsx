@@ -36,7 +36,6 @@ const Search_Member = () => {
   const handleSelect = (member) => {
     setSearchTerm(member.full_name);
     setShowDropdown(false);
-    console.log("Selected:", member);
   };
 
   return (

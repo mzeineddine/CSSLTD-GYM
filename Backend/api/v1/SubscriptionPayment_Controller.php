@@ -1,6 +1,6 @@
 <?php
     require_once __DIR__ . "/../../models/User.php";
-    require_once __DIR__ . "/../../models/Subscription.php";
+    require_once __DIR__ . "/../../models/Member.php";
     require_once __DIR__ . "/../../models/SubscriptionPayment.php";
     require_once __DIR__ . "/../../utilities/Controllers_Utilities.php";
     class SubscriptionPayment_Controller{
@@ -14,8 +14,8 @@
             }
             return true;
         } 
-        static function check_subscription($data){
-            if(!Subscription::read($data)){
+        static function check_member($data){
+            if(!Member::read($data)){
                 echo json_encode([
                     "result"=>false,
                     "message"=>"Invalid subscription"
@@ -32,12 +32,12 @@
                 return false;
             }
             $data['created_by']=$decoded_token->id;
-            if(!Controllers_Utilities::check_params($data,["subscription_id","amount","created_by"]))
+            if(!Controllers_Utilities::check_params($data,["member_id","amount","created_by"]))
                 return false;
             $modified_data = ["id"=>$data["created_by"]];
             if(self::check_created_by($modified_data)){
-                $modified_data = ["id"=>$data["subscription_id"]];
-                if(self::check_subscription($modified_data)){
+                $modified_data = ["id"=>$data["member_id"]];
+                if(self::check_member($modified_data)){
                     $created = SubscriptionPayment::create($data);
                     echo json_encode([
                         "result" => $created,
@@ -79,8 +79,8 @@
                 ]);
                 return false;
             }
-            // $modified_data = ["id"=>$data["subscription_id"]];
-            // if(self::check_subscription($modified_data)){
+            // $modified_data = ["id"=>$data["member_id"]];
+            // if(self::check_member($modified_data)){
                 $updated = SubscriptionPayment::update($data);
                 echo json_encode([
                     "result" => $updated,

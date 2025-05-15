@@ -8,7 +8,6 @@ import Table1 from "../../components/Table/tables";
 const Dashboard = () => {
   // const effectFunction = () => {
   //   const getData = async () => {
-  //     console.log("in getData");
   //     let response = await axios({
   //       method: "post",
   //       url: "http://localhost/Projects/CSSLTD-GYM/Backend/member/read",
@@ -17,9 +16,7 @@ const Dashboard = () => {
   //         Authorization: "Bearer" + localStorage.getItem("access-token"),
   //       },
   //     }).catch((err) => {
-  //       console.log(err);
   //     });
-  //     console.log(response.data);
   //   };
   //   getData();
   // };

@@ -44,11 +44,10 @@ const Add_Popup = (props) => {
     }
   }
   const [formData, setFormData] = useState(default_values);
-  console.log(formData);
   const { update_members } = useContext(Members_Context);
   const { update_staffs } = useContext(Staffs_Context);
   const { update_coaches } = useContext(Coaches_Context);
-  const { update_categories} = useContext(Categories_Context);
+  const { update_categories } = useContext(Categories_Context);
   const { update_expenses } = useContext(Expenses_Context);
   const { update_paymentAccounts } = useContext(PaymentAccounts_Context);
   const { update_expensePayments } = useContext(ExpensePayments_Context);
@@ -56,18 +55,32 @@ const Add_Popup = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let name = props.name;
+          console.log(formData)
     if (props.name == "staff") {
       name = "user";
     }
-    console.log(name.toLowerCase());
-    await axios_function(
-      "POST",
-      "http://localhost/Projects/CSSLTD-GYM/Backend/" +
-        name.toLowerCase() +
-        "/create",
-      formData
-    );
-    console.log("form submitted");
+    if (props.name.toLowerCase() == "member") {
+      let response = await axios_function(
+        "POST",
+        "http://localhost/Projects/CSSLTD-GYM/Backend/" +
+          name.toLowerCase() +
+          "/create",
+        formData
+      );
+      await axios_function(
+        "POST",
+        "http://localhost/Projects/CSSLTD-GYM/Backend/subscription/create",
+        { ...formData, member_id: response.result }
+      );
+    } else {
+      await axios_function(
+        "POST",
+        "http://localhost/Projects/CSSLTD-GYM/Backend/" +
+          name.toLowerCase() +
+          "/create",
+        formData
+      );
+    }
     if (props.name.toLowerCase() == "member") {
       update_members();
     } else if (props.name.toLowerCase() == "user") {
@@ -151,7 +164,7 @@ const Add_Popup = (props) => {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={["DateTimePicker"]}>
                         <DatePicker
-                          label="Start Date Time"
+                          label={k}
                           value={formData[k]}
                           onChange={(newValue) => {
                             setFormData({ ...formData, [k]: newValue });
@@ -188,13 +201,24 @@ const Add_Popup = (props) => {
                       value={formData[k]}
                       onChange={(e) => {
                         setFormData({ ...formData, [k]: e.target.value });
+                        if (props.name.toLowerCase() == "member") {
+                          const cost=options[k].filter((value) => {
+                              if (value.id == e.target.value) {
+                                return value;
+                              }
+                            })
+                          setFormData({
+                            ...formData,
+                            cost: cost[0]["price"],
+                            [k]: e.target.value
+                          });
+                        } 
                       }}
                       required
                       select
                     >
                       {options[k] &&
                         options[k].map((value) => {
-                          console.log(value)
                           return (
                             <MenuItem value={value.id}>{value.name}</MenuItem>
                           );

@@ -5,7 +5,6 @@ import Table1 from "../Table/tables";
 export default function Expense_Payment() {
   const location = useLocation();
   const data = location.state;
-  console.log(data)
   return (
     <div className="expense_payment m-[2%]">
       <Page_Title_Add

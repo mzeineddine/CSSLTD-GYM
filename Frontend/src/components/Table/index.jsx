@@ -101,10 +101,8 @@
 //   }, [members, staffs, coaches, expenses, paymentAccounts]);
 
 //   const exportData = () => {
-//     console.log("export");
 //     if (!table) return;
 //     const options = { download: true, filename: "frameworks_export" };
-//     console.log(exportFormat);
 //     switch (exportFormat) {
 //       case "csv":
 //         exportCSV(table, options);

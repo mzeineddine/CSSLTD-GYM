@@ -44,7 +44,6 @@ const Edit_Popup = (props) => {
     }
   }
   const [formData, setFormData] = useState(default_values);
-  console.log(formData);
   const { update_members } = useContext(Members_Context);
   const { update_staffs } = useContext(Staffs_Context);
   const { update_coaches } = useContext(Coaches_Context);
@@ -59,14 +58,31 @@ const Edit_Popup = (props) => {
     if (props.name == "staff") {
       name = "user";
     }
-    console.log(name.toLowerCase());
-    await axios_function(
-      "POST",
-      "http://localhost/Projects/CSSLTD-GYM/Backend/" +
-        name.toLowerCase() +
-        "/update",
-      formData
-    );
+
+    if (props.name.toLowerCase() == "member") {
+      let response = await axios_function(
+        "POST",
+        "http://localhost/Projects/CSSLTD-GYM/Backend/" +
+          name.toLowerCase() +
+          "/update",
+        formData
+      );
+      console.log("response.result", response.result);
+      await axios_function(
+        "POST",
+        "http://localhost/Projects/CSSLTD-GYM/Backend/subscription/update",
+        { ...formData, member_id: response.result }
+      );
+    } else {
+      console.log(name.toLowerCase());
+      await axios_function(
+        "POST",
+        "http://localhost/Projects/CSSLTD-GYM/Backend/" +
+          name.toLowerCase() +
+          "/update",
+        formData
+      );
+    }
     console.log("form submitted");
     if (props.name.toLowerCase() == "member") {
       update_members();
@@ -150,8 +166,8 @@ const Edit_Popup = (props) => {
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
                       <DemoContainer components={["DateTimePicker"]}>
                         <DatePicker
-                          label="Start Date Time"
-                          value={formData[k]}
+                          label={k}
+                          value={dayjs(formData[k])}
                           onChange={(newValue) => {
                             setFormData({ ...formData, [k]: newValue });
                           }}
@@ -187,12 +203,26 @@ const Edit_Popup = (props) => {
                       value={formData[k]}
                       onChange={(e) => {
                         setFormData({ ...formData, [k]: e.target.value });
+                        if (props.name.toLowerCase() == "member") {
+                          // console.log("MEMBER")
+                          const cost = options[k].filter((value) => {
+                            if (value.id == e.target.value) {
+                              return value;
+                            }
+                          });
+                          console.log("VALUE", cost[0]["price"]);
+                          setFormData({
+                            ...formData,
+                            cost: cost[0]["price"],
+                            [k]: e.target.value,
+                          });
+                        }
                       }}
                       required
                       select
                     >
-                      {options &&
-                        options.map((value) => {
+                      {options[k] &&
+                        options[k].map((value) => {
                           return (
                             <MenuItem value={value.id}>{value.name}</MenuItem>
                           );

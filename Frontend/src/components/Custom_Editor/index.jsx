@@ -100,7 +100,6 @@ const Custom_Editor = ({ scheduler, coaches, members }) => {
   };
   return (
       <div>
-        {console.log("ID: "+state.id)}
       <div className=" flex-col h-full gap-1 justify-center items-center p-2">
         <p>Load your custom form/fields</p>
         <DemoContainer

@@ -7,10 +7,10 @@ import { useState } from "react";
 import Add_Popup from "../Add_Popup";
 import Edit_Popup from "../Edit_Popup";
 import { useNavigate } from "react-router-dom";
+
 export default function PositionedMenu(props) {
   const [anchorEl, setAnchorEl] = useState(null);
-  // const [showEdit, setShowEdit] = useState(false);
-  // const [showEdit, setShowEdit] = useState(false);
+
   const navigate = useNavigate()
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -29,13 +29,9 @@ export default function PositionedMenu(props) {
     setShowAdd(true);
   };
   const add_popup_field = () => {
-    console.log(function_name);
-    console.log(props.options_functions_field[function_name]);
     return props.options_functions_field[function_name];
   };
   const add_popup_name = () => {
-    console.log(function_name);
-    console.log(props.options_names[function_name]);
     return props.options_names[function_name];
   };
 
@@ -44,18 +40,13 @@ export default function PositionedMenu(props) {
     setShowEdit(true);
   };
   const edit_popup_field = () => {
-    console.log(function_name);
-    console.log(props.options_functions_field[function_name]);
     return props.options_functions_field[function_name];
   };
   const edit_popup_name = () => {
-    console.log(function_name);
-    console.log(props.options_names[function_name]);
     return props.options_names[function_name];
   };
 
   const view_payment = () => {
-    // console.log(props.data)
     navigate("/expense_payments", { state: props.data });
   }
 
@@ -69,6 +60,10 @@ export default function PositionedMenu(props) {
     setShowEdit(true);
   }
 
+  const edit_member = (function_name) => {
+    setFunction_name(function_name);
+    setShowEdit(true);
+  }
   return (
     <div>
       {showAdd && (
@@ -78,7 +73,7 @@ export default function PositionedMenu(props) {
           options={props.options}
           fields={add_popup_field()}
           name={add_popup_name()}
-          filled_field={{ account_id: props.data.id }}
+          filled_field={{ account_id: props.data.id, member_id: props.data.id }}
         />
       )}
       {showEdit && (
@@ -116,9 +111,7 @@ export default function PositionedMenu(props) {
         }}
       >
         {props.options.map((value, index) => {
-          // console.log(Object.keys(props.options_functions_field[0]))
           const function_name = props.options[index][Object.keys(value)[0]];
-          console.log(function_name);
           return (
             <MenuItem
               key={index}

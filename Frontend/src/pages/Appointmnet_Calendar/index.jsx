@@ -36,7 +36,6 @@ const Appointment_Calendar = () => {
       coaches.forEach((coach) => {
         coach_data.push({ [coach.id]: [coach.full_name] });
       });
-      console.log(coach_data);
       members.forEach((member) => {
         member_data.push({ [member.id]: [member.full_name] });
       });

@@ -12,9 +12,7 @@ import "./sidebar.css"
 const Sidebar = () => {
     const navigate = useNavigate()
     const handleMouseEnter = () => {
-        // console.log("mouse enter")
         const sidebar = document.querySelector(".sideBar");
-        // console.log(sidebar)
         const texts = document.querySelectorAll("a .text");
         sidebar.classList.remove("shorten")
         texts.forEach(text => {
@@ -27,9 +25,7 @@ const Sidebar = () => {
         });
     }
     const handleMouseLeave = () => {
-        // console.log("mouse leave")
         const sidebar = document.querySelector(".sideBar");
-        // console.log(sidebar)
         const texts = document.querySelectorAll("a .text");
         sidebar.classList.add("shorten")
         texts.forEach(text => {
@@ -55,7 +51,6 @@ const Sidebar = () => {
                 <hr/>
                 <Link to="settings"> <span className="icon"><img className="icon-img" src={setting_icon} alt="settings" /></span>  <span className="text hidden">Settings</span></Link>
                 <div className="a" onClick={()=>{
-                    console.log("logout")
                     localStorage.removeItem("access-token")
                     navigate("/")
                 }}> <span className="icon"><img className="icon-img" src={logout_icon} alt="logout" /></span>  <span className="text hidden">Logout</span></div>

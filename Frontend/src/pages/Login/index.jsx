@@ -23,7 +23,6 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const onSubmit_handler = async (event) => {
     event.preventDefault();
-    console.log(form);
     let response = await axios({
       method: "post",
       url: "http://localhost/Projects/CSSLTD-GYM/Backend/user/login",
@@ -35,7 +34,6 @@ const LoginPage = () => {
       console.log(err);
     });
     if (response.data.result) {
-      console.log(response.data);
       localStorage.setItem("access-token", response.data.token);
       localStorage.setItem("user_name", response.data.data.username);
       navigate("/home");

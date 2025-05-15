@@ -6,7 +6,7 @@
         static function create($data){
             global $conn;
             $sql = "INSERT INTO subscriptions (`member_id`,`category_id`,`cost`,`start_date`,`end_date`,`created_by`) 
-            VALUES (?, ?, ?, ?, ?, ?, ?)";
+            VALUES (?, ?, ?, ?, ?, ?)";
             $stmt = $conn->prepare($sql);
             $stmt->execute([$data['member_id'],$data['category_id'],$data['cost'],$data['start_date'],$data['end_date'],$data['created_by']]);
             return boolval($stmt->rowCount());

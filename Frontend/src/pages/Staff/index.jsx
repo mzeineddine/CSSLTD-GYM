@@ -10,7 +10,6 @@ import Table1 from "../../components/Table/tables";
 const Staff = () => {
   const effectFunction = () => {
     const getData = async () => {
-      console.log("in getData");
       let response = await axios({
         method: "post",
         url: "http://localhost/Projects/CSSLTD-GYM/Backend/member/read",
@@ -21,7 +20,6 @@ const Staff = () => {
       }).catch((err) => {
         console.log(err);
       });
-      console.log(response.data);
     };
     getData();
   };
