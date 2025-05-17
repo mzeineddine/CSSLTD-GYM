@@ -41,4 +41,19 @@ class General_Controller
         ]);
         return false;
     }
+
+    static function get_profit()
+    {
+        $decoded_token = Controllers_Utilities::check_jwt();
+        if (!$decoded_token) {
+            return false;
+        }
+        $total_profit = General::get_profit();
+        echo json_encode([
+            "result" => boolval($total_profit),
+            "message" => $total_profit ? "Total profit found" : "Total profit not found",
+            "data" => $total_profit
+        ]);
+        return false;
+    }
 }

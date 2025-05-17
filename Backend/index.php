@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 // Define your base directory 
 $base_dir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
@@ -30,11 +30,17 @@ $apis = [
     "/member/update"  => ['controller' => 'Member_Controller', "method" => 'update'],
     "/member/delete"  => ['controller' => 'Member_Controller', "method" => 'delete'],
 
+    // "/member/count"  => ['controller' => 'Member_Controller', "method" => 'get_members_count'],
+
+
     // CRUD Coach apis paths
     "/coach/create"  => ['controller' => 'Coach_Controller', "method" => 'create'],
     "/coach/read"    => ['controller' => 'Coach_Controller', "method" => 'read'],
     "/coach/update"  => ['controller' => 'Coach_Controller', "method" => 'update'],
     "/coach/delete"  => ['controller' => 'Coach_Controller', "method" => 'delete'],
+
+    "/coach/count"  => ['controller' => 'Coach_Controller', "method" => 'get_coaches_count'],
+
 
     // CRUD PaymentAccount apis paths
     "/payment_account/create"  => ['controller' => 'PaymentAccount_Controller', "method" => 'create'],
@@ -59,7 +65,7 @@ $apis = [
     "/category/read"    => ['controller' => 'Category_Controller', "method" => 'read'],
     "/category/update"  => ['controller' => 'Category_Controller', "method" => 'update'],
     "/category/delete"  => ['controller' => 'Category_Controller', "method" => 'delete'],
-    
+
     // CRUD Subscription apis paths
     "/subscription/create"  => ['controller' => 'Subscription_Controller', "method" => 'create'],
     "/subscription/read"    => ['controller' => 'Subscription_Controller', "method" => 'read'],
@@ -111,13 +117,14 @@ $apis = [
     //General apis paths
     "/general/balance" => ['controller' => 'General_Controller', "method" => "get_balance"],
     "/general/balance_transactions" => ['controller' => 'General_Controller', "method" => "get_transactions"],
+    "/general/profit" => ['controller' => 'General_Controller', "method" => "get_profit"],
 ];
 
 if (isset($apis[$request])) {
     $controller_name = $apis[$request]['controller'];
     $method = $apis[$request]['method'];
     require_once "./api/v1/{$controller_name}.php";
-    
+
     $controller = new $controller_name();
     if (method_exists($controller, $method)) {
         $controller->$method();

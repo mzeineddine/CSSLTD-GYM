@@ -96,5 +96,22 @@
             ]);
             return $deleted;
         }
+
+        static function get_coaches_count(){
+            $decoded_token = Controllers_Utilities::check_jwt();
+            if(!$decoded_token){
+                return false;
+            }
+            $data = json_decode(file_get_contents("php://input"),true);
+            
+            $count = Coach::get_coaches_count();
+
+            echo json_encode([
+                "result" => boolval($count),
+                "message" => $count ? "Coach count found":"No coaches count found",
+                "data" => $count
+            ]);
+            return $count;
+        }
     }
 ?>

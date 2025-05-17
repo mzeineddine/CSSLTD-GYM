@@ -5,7 +5,37 @@ import { Link } from "react-router-dom";
 import Graph from "../../components/Graph";
 import PiChart from "../../components/PiChart";
 import Table1 from "../../components/Table/tables";
+import { axios_function } from "../../utilities/axios";
+import { useContext, useEffect, useState } from "react";
+import { Members_Context } from "../../context/Members_Context";
+import { Coaches_Context } from "../../context/Coaches_Context";
+
 const Dashboard = () => {
+  const { members } = useContext(Members_Context);
+  const { coaches } = useContext(Coaches_Context);
+  const [member_count, setMemberCount] = useState(0);
+  const [coaches_count, setCoachCount] = useState(0);
+  const [profit, setProfit] = useState(0);
+  const get_coach_count = async () => {
+    const response = await axios_function(
+      "GET",
+      "http://localhost/Projects/CSSLTD-GYM/Backend/coach/count"
+    );
+    setCoachCount(response.data.count);
+  };
+  const get_profit = async () => {
+    const response = await axios_function(
+      "GET",
+      "http://localhost/Projects/CSSLTD-GYM/Backend/general/profit"
+    );
+    console.log("Response.DATA", response);
+    setProfit(response.data);
+  };
+  useEffect(() => {
+    setMemberCount(members ? members.length : 0);
+    get_coach_count();
+    get_profit();
+  }, [members, coaches]);
   const graph_data = [
     { month: "Jan", left: 4000, new: 2400 },
     { month: "Feb", left: 3000, new: 1398 },
@@ -42,9 +72,9 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       <div className="dashboardStatCards">
-        <DashboardStatCard icon={icon} title="Patients" count="270" />
-        <DashboardStatCard icon={icon} title="Patients" count="270" />
-        <DashboardStatCard icon={icon} title="Patients" count="270" />
+        <DashboardStatCard icon={icon} title="Members" count={member_count} />
+        <DashboardStatCard icon={icon} title="Coaches" count={coaches_count} />
+        <DashboardStatCard icon={icon} title="Patients" count={profit} />
       </div>
       <div className="appointment-table overflow-auto">
         <div className="info flex justify-between rounded-t-2xl items-center bg-gray-50 px-1">

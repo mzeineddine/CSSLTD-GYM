@@ -72,4 +72,20 @@ class General
 
         return $response;
     }
+
+    static function get_profit()
+    {
+        global $conn;
+        $sql_1 = "SELECT SUM(amount) AS total_in FROM subscription_payments WHERE is_deleted = 0";
+        $stmt_1 = $conn->prepare($sql_1);
+        $stmt_1->execute();
+        $result_1 = $stmt_1->fetch(PDO::FETCH_ASSOC);
+
+        $sql_2 = "SELECT SUM(amount) AS total_out FROM expense_payments WHERE is_deleted = 0";
+        $stmt_2 = $conn->prepare($sql_2);
+        $stmt_2->execute();
+        $result_2 = $stmt_2->fetch(PDO::FETCH_ASSOC);
+        $response = (float)$result_1["total_in"] - (float)$result_2["total_out"];
+        return $response;
+    }
 }
