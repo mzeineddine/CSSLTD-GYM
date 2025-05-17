@@ -107,6 +107,10 @@ $apis = [
     "/appointment/read"    => ['controller' => 'Appointment_Controller', "method" => 'read'],
     "/appointment/update"  => ['controller' => 'Appointment_Controller', "method" => 'update'],
     "/appointment/delete"  => ['controller' => 'Appointment_Controller', "method" => 'delete'],
+
+    //General apis paths
+    "/general/balance" => ['controller' => 'General_Controller', "method" => "get_balance"],
+    "/general/balance_transactions" => ['controller' => 'General_Controller', "method" => "get_transactions"],
 ];
 
 if (isset($apis[$request])) {

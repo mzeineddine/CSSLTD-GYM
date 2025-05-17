@@ -1,4 +1,4 @@
-.table button {
+.balance-table button {
   width: auto;
   background: auto;
   border: medium none;
@@ -10,10 +10,10 @@
   text-decoration: auto;
   text-indent: auto;
 }
-.table button:hover {
+.balance-table button:hover {
   color: rgb(165, 91, 235);
 }
-.table input {
+.balance-table input {
   width: auto;
   background: auto;
   border: medium none;
@@ -25,14 +25,20 @@
   text-decoration: auto;
   text-indent: auto;
 }
-.table{
-    padding: 0px;
-    margin: 0px;
-}
-.table th{
-    padding: 0px;
-    margin: 0px;
+/* .table {
+  padding: 0px;
+  margin: 0px;
+} */
+.balance-table th {
+  padding: 0px;
+  margin: 0px;
 }
 .MuiTableCell-root {
   text-align: center !important;
+}
+
+button{
+  width: auto;
+  background-color: blueviolet;
+  color: blueviolet;
 }

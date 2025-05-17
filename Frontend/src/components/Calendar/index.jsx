@@ -14,7 +14,7 @@ const Calendar = (props) => {
   const members = props.members;
 
   const [formattedEvents, setFormattedEvents] = useState(
-    [props.appointments].flat().map((e) => {
+    [appointments].flat().map((e) => {
       return {
         event_id: e.id,
         title: e.title,
@@ -53,6 +53,11 @@ const Calendar = (props) => {
   return (
     <Scheduler
       view="month"
+      day={{
+        startHour: 0,
+        endHour: 24,
+        step: 60,
+      }}
       height={500}
       hideHeader={true}
       events={formattedEvents}
@@ -71,23 +76,19 @@ const Calendar = (props) => {
             event.event_id === newEnd.event_id ? newEnd : event
           )
         );
-        update_appointments(); // optionally reload from context/backend
+        update_appointments();
       }}
       onConfirm={update_appointments}
       onDelete={async (deletedId) => {
-        // Call your backend to delete the event
         await axios_function(
           "DELETE",
           "http://localhost/Projects/CSSLTD-GYM/Backend/appointment/delete",
           { id: deletedId }
         );
 
-        // Optionally remove it from the state manually
         setFormattedEvents((prev) =>
           prev.filter((event) => event.event_id !== deletedId)
         );
-
-        // Or fetch updated appointments
         update_appointments();
       }}
       customEditor={(scheduler) => (

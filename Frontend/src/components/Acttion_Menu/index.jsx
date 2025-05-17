@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 export default function PositionedMenu(props) {
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -47,23 +47,27 @@ export default function PositionedMenu(props) {
   };
 
   const view_payment = () => {
-    navigate("/expense_payments", { state: props.data });
-  }
+    if (props.options_names["view_payment"] == "subscription_payment") {
+      navigate("/subscription_payments", { state: props.data });
+    } else {
+      navigate("/expense_payments", { state: props.data });
+    }
+  };
 
   const edit_payment = (function_name) => {
     setFunction_name(function_name);
     setShowEdit(true);
-  }
+  };
 
   const edit_category = (function_name) => {
     setFunction_name(function_name);
     setShowEdit(true);
-  }
+  };
 
   const edit_member = (function_name) => {
     setFunction_name(function_name);
     setShowEdit(true);
-  }
+  };
   return (
     <div>
       {showAdd && (

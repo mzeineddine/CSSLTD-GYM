@@ -27,6 +27,7 @@ import { Expenses_Context } from "../../context/Expenses_Context";
 import { PaymentAccounts_Context } from "../../context/PaymentAccounts_Context";
 import { ExpensePayments_Context } from "../../context/ExpensePayments_Context";
 import { Categories_Context } from "../../context/Categories_Context";
+import { SubscriptionPayments_Context } from "../../context/SubscriptionPayments_Context";
 
 // import CloseIcon from '@mui/icons-material';
 const Edit_Popup = (props) => {
@@ -51,6 +52,9 @@ const Edit_Popup = (props) => {
   const { update_expenses } = useContext(Expenses_Context);
   const { update_paymentAccounts } = useContext(PaymentAccounts_Context);
   const { update_expensePayments } = useContext(ExpensePayments_Context);
+  const { update_subscriptionPayments } = useContext(
+    SubscriptionPayments_Context
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -92,15 +96,18 @@ const Edit_Popup = (props) => {
       update_coaches();
     } else if (props.name.toLowerCase() == "expense") {
       update_expenses();
-    } else if (
-      props.name.toLowerCase() == "payment_account" ||
-      props.name.toLowerCase() == "expense_payment"
-    ) {
+    } else if (props.name.toLowerCase() == "payment_account") {
       update_paymentAccounts();
     } else if (props.name.toLowerCase() == "category") {
       update_categories();
     }
+
+    if (props.name.toLowerCase() == "subscription_payment") {
+      update_members();
+      update_subscriptionPayments();
+    }
     if (props.name.toLowerCase() == "expense_payment") {
+      update_expenses();
       update_expensePayments();
     }
     setFormData(default_values);

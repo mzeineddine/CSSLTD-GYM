@@ -14,6 +14,7 @@ import "./tables.css";
 import Add_Popup from "../Add_Popup/index.jsx";
 import { ExpensePayments_Context } from "../../context/ExpensePayments_Context.jsx";
 import { Categories_Context } from "../../context/Categories_Context.jsx";
+import { SubscriptionPayments_Context } from "../../context/SubscriptionPayments_Context.jsx";
 const Table1 = (props) => {
   const { members, update_members } = useContext(Members_Context);
   const { staffs, update_staffs } = useContext(Staffs_Context);
@@ -23,15 +24,18 @@ const Table1 = (props) => {
   const { expensePayments, update_expensePayments } = useContext(
     ExpensePayments_Context
   );
+  const { subscriptionPayments, update_subscriptionPayments } = useContext(
+    SubscriptionPayments_Context
+  );
   const { paymentAccounts, update_paymentAccounts } = useContext(
     PaymentAccounts_Context
   );
 
-  let { title, info, searchable, paging, exportable, visible } = props;
+  let { title, searchable, paging, exportable, visible } = props;
   const [headers, setHeaders] = useState([]);
   const [values, setValues] = useState([]);
   // const [ids, setIds] = useState([]);
-  let data = [];
+  let data = null;
   useEffect(() => {
     if (title == "member") {
       data = members;
@@ -47,8 +51,10 @@ const Table1 = (props) => {
       data = expensePayments;
     } else if (title == "categories") {
       data = categories;
+    } else if (title == "subscriptionPayments") {
+      data = subscriptionPayments;
     }
-    if (!data) {
+    if (!data || data.length == 0) {
       if (title == "member") {
         update_members();
       } else if (title == "staff") {
@@ -63,6 +69,8 @@ const Table1 = (props) => {
         update_expensePayments();
       } else if (title == "categories") {
         update_categories();
+      } else if (title == "subscriptionPayments") {
+        update_subscriptionPayments();
       }
     } else {
       data.forEach((data) => {
@@ -81,9 +89,14 @@ const Table1 = (props) => {
             return value;
         });
       }
-      const [_, ...headers_without_id] = [...Object.keys(data[0])];
+      console.log("data: ", data);
+      const [_, ...headers_without_id] = [
+        ...Object.keys(data.length > 0 ? data[0] : ""),
+      ];
       setHeaders(
-        props.options ? [...headers_without_id, "actions"] : headers_without_id
+        props.options && data.length > 0
+          ? [...headers_without_id, "actions"]
+          : headers_without_id
       );
       const rows_without_id = data.map((item) => {
         const [_, ...row] = [...Object.values(item)];
@@ -101,7 +114,16 @@ const Table1 = (props) => {
       });
       setValues(rows_without_id);
     }
-  }, [members, staffs, coaches, expenses, paymentAccounts, expensePayments, categories]);
+  }, [
+    members,
+    staffs,
+    coaches,
+    expenses,
+    paymentAccounts,
+    expensePayments,
+    categories,
+    subscriptionPayments,
+  ]);
 
   const muiCache = createCache({
     key: "mui-datatables",
@@ -120,24 +142,15 @@ const Table1 = (props) => {
     rowsPerPage: 5,
     rowsPerPageOptions: [5, 10, 15, 20],
     selectableRows: "none",
+    responsive: "standard",
     // onTableChange: (action, state) => {
     //   // console.log(action);
     //   // console.dir(state);
     // },
   };
   return (
-    <div className="table w-full rounded-2xl ">
+    <div className="table w-full rounded-2xl overflow-auto">
       <CacheProvider value={muiCache}>
-        {info && (
-          <div className="info flex justify-between rounded-t-2xl items-center bg-gray-50 px-1">
-            <p className="h-full inline justify-content-center align-items-center">
-              {title}
-            </p>
-            <div>
-              <Link to={"../" + title}>See All</Link>
-            </div>
-          </div>
-        )}
         <ThemeProvider theme={createTheme()}>
           <MUIDataTable
             // title={title}

@@ -79,18 +79,3 @@ hr{
     background-color: #c3c3c3; 
     border: none;
 }
-@media screen and (max-width: 1080px) {
-    body{font-size: 16px;}
-}
-
-@media screen and (max-width: 720px) {
-    body{font-size: 12px;}
-}
-
-@media screen and (max-width: 480px) {
-    body{font-size: 8px;}
-}
-
-@media screen and (max-width: 320px) {
-    body{font-size: 4px;}
-}

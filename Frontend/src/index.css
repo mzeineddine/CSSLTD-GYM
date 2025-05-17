@@ -28,3 +28,18 @@
   margin: 0;
   box-sizing: border-box;
 }
+@media screen and (max-width: 1080px) {
+    body{font-size: 64px;}
+}
+
+@media screen and (max-width: 720px) {
+    body{font-size: 32px;}
+}
+
+@media screen and (max-width: 480px) {
+    body{font-size: 16px;}
+}
+
+@media screen and (max-width: 320px) {
+    body{font-size: 4px;}
+}

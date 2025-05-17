@@ -1,79 +1,11 @@
 import DashboardStatCard from "../../components/DashboardStatCard";
 import "./dashboard.css";
 import icon from "../../assets/icons/member_icon.svg";
-// import Table from "../../components/Table";
+import { Link } from "react-router-dom";
 import Graph from "../../components/Graph";
 import PiChart from "../../components/PiChart";
 import Table1 from "../../components/Table/tables";
 const Dashboard = () => {
-  // const effectFunction = () => {
-  //   const getData = async () => {
-  //     let response = await axios({
-  //       method: "post",
-  //       url: "http://localhost/Projects/CSSLTD-GYM/Backend/member/read",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //         Authorization: "Bearer" + localStorage.getItem("access-token"),
-  //       },
-  //     }).catch((err) => {
-  //     });
-  //   };
-  //   getData();
-  // };
-  // useEffect(effectFunction, []);
-
-//   const headers = ["FullName", "Contact", "Title", "Start Date", "End Date"];
-//   const data = [
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//     [1, 2, 3, 4, 5],
-//   ];
-
   const graph_data = [
     { month: "Jan", left: 4000, new: 2400 },
     { month: "Feb", left: 3000, new: 1398 },
@@ -114,7 +46,15 @@ const Dashboard = () => {
         <DashboardStatCard icon={icon} title="Patients" count="270" />
         <DashboardStatCard icon={icon} title="Patients" count="270" />
       </div>
-      <div className="appointment-table">
+      <div className="appointment-table overflow-auto">
+        <div className="info flex justify-between rounded-t-2xl items-center bg-gray-50 px-1">
+          <p className="h-full inline justify-content-center align-items-center">
+            {"Member"}
+          </p>
+          <div>
+            <Link to={"../member"}>See All</Link>
+          </div>
+        </div>
         <Table1
           title="member"
           info={true}
