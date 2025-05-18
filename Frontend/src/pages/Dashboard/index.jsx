@@ -74,7 +74,7 @@ const Dashboard = () => {
       <div className="dashboardStatCards">
         <DashboardStatCard icon={icon} title="Members" count={member_count} />
         <DashboardStatCard icon={icon} title="Coaches" count={coaches_count} />
-        <DashboardStatCard icon={icon} title="Patients" count={profit} />
+        <DashboardStatCard icon={icon} title="Profit" count={profit} />
       </div>
       <div className="appointment-table overflow-auto">
         <div className="info flex justify-between rounded-t-2xl items-center bg-gray-50 px-1">

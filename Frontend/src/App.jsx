@@ -24,6 +24,7 @@ import { Categories_Provider } from "./context/Categories_Context";
 import Subscription_Payment from "./components/Subscription_Payment";
 import { SubscriptionPayment_Provider } from "./context/SubscriptionPayments_Context";
 import Balance from "./pages/Balance";
+import Member_Profile from "./pages/Member_Profile";
 
 function App() {
   return (
@@ -52,6 +53,10 @@ function App() {
                           <Route path="/category" element={<Category />} />
                           <Route path="/balance" element={<Balance />} />
                           <Route path="/expense" element={<Expense />} />
+                          <Route
+                            path="/member_profile"
+                            element={<Member_Profile />}
+                          />
                           <Route
                             path="/expense_payments"
                             element={<Expense_Payment />}

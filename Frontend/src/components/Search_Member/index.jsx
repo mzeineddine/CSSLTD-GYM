@@ -9,6 +9,8 @@ import {
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import { Members_Context } from "../../context/Members_Context";
+import Member_Profile from "../../pages/Member_Profile";
+import { useNavigate } from "react-router-dom";
 
 const Search_Member = () => {
   const { members } = useContext(Members_Context);
@@ -38,6 +40,7 @@ const Search_Member = () => {
   //   setHighlightIndex(0); // Start at the first item
   // };
 
+  const navigate = useNavigate();
   const debouncedSearch = debounce((value) => {
     if (value.trim() === "") {
       setFilteredMembers([]);
@@ -63,6 +66,8 @@ const Search_Member = () => {
     setSearchTerm(member.full_name);
     setShowDropdown(false);
     setHighlightIndex(-1);
+    console.log(member["id"])
+    navigate("/member_profile", { state: member["id"] });
   };
 
   const handleKeyDown = (e) => {
