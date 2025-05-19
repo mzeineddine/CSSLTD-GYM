@@ -9,13 +9,14 @@ import { axios_function } from "../../utilities/axios";
 import { useContext, useEffect, useState } from "react";
 import { Members_Context } from "../../context/Members_Context";
 import { Coaches_Context } from "../../context/Coaches_Context";
-
 const Dashboard = () => {
   const { members } = useContext(Members_Context);
   const { coaches } = useContext(Coaches_Context);
   const [member_count, setMemberCount] = useState(0);
   const [coaches_count, setCoachCount] = useState(0);
   const [profit, setProfit] = useState(0);
+  const [chart_data, setChartData] = useState([{}]);
+  const [graph_data, setGraphData] = useState([{}]);
   const get_coach_count = async () => {
     const response = await axios_function(
       "GET",
@@ -28,47 +29,83 @@ const Dashboard = () => {
       "GET",
       "http://localhost/Projects/CSSLTD-GYM/Backend/general/profit"
     );
-    console.log("Response.DATA", response);
+    // console.log("Response.DATA", response);
     setProfit(response.data);
   };
+
+  const getChartData = () => {
+    let _0_11 = 0;
+    let _12_17 = 0;
+    let _18_29 = 0;
+    let _30_59 = 0;
+    let _60 = 0;
+    members && members.forEach((value) => {
+      const birthDate = new Date(value.dob);
+      const today = new Date();
+      let age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
+      const dayDiff = today.getDate() - birthDate.getDate();
+
+      if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+        age--;
+      }
+      if (age < 12) _0_11++;
+      else if (age < 18) _12_17++;
+      else if (age < 30) _18_29++;
+      else if (age < 60) _30_59++;
+      else _60++;
+    });
+    setChartData([
+      { name: "0-11", value: _0_11 },
+      { name: "12-17", value: _12_17 },
+      { name: "18-29", value: _18_29 },
+      { name: "30-59", value: _30_59 },
+      { name: "+60", value: _60 },
+    ]);
+  };
+
+  const getGraphData = async() => {
+
+    const response = await axios_function(
+      "GET",
+      "http://localhost/Projects/CSSLTD-GYM/Backend/general/receive_pay_month"
+    );
+    setGraphData(response.data);
+  }
   useEffect(() => {
     setMemberCount(members ? members.length : 0);
     get_coach_count();
     get_profit();
+    getChartData();
+    getGraphData();
   }, [members, coaches]);
-  const graph_data = [
-    { month: "Jan", left: 4000, new: 2400 },
-    { month: "Feb", left: 3000, new: 1398 },
-    { month: "Mar", left: 2000, new: 9800 },
-    { month: "Apr", left: 2780, new: 3908 },
-    { month: "May", left: 1890, new: 4800 },
-    { month: "Jun", left: 2390, new: 3800 },
-    { month: "Jul", left: 3490, new: 4300 },
-  ];
+  // const graph_data = [
+  //   { month: "Jan", left: 4000, new: 2400 },
+  //   { month: "Feb", left: 3000, new: 1398 },
+  //   { month: "Mar", left: 2000, new: 9800 },
+  //   { month: "Apr", left: 2780, new: 3908 },
+  //   { month: "May", left: 1890, new: 4800 },
+  //   { month: "Jun", left: 2390, new: 3800 },
+  //   { month: "Jul", left: 3490, new: 4300 },
+  // ];
   const graph_title = "Members";
-  const key_x = "months";
+  const key_x = "month_year";
   const lines_data = [
     {
-      key: "new",
-      legend: "new members",
+      key: "total_in",
+      legend: "total in",
       color: "green",
     },
     {
-      key: "left",
-      legend: "leaving members",
+      key: "total_out",
+      legend: "total out",
       color: "red",
     },
   ];
 
   const chart_title = "Members by Age Group";
-  const chart_data = [
-    { name: "0-12", value: 400 },
-    { name: "13-29", value: 300 },
-    { name: "30-59", value: 200 },
-    { name: "+60", value: 100 },
-  ];
   const chart_key = "value";
-  const chart_colors = ["red", "yellow", "green", "blue"];
+  const chart_colors = ["red", "yellow", "orange", "green", "blue"];
   return (
     <div className="dashboard">
       <div className="dashboardStatCards">
@@ -76,8 +113,8 @@ const Dashboard = () => {
         <DashboardStatCard icon={icon} title="Coaches" count={coaches_count} />
         <DashboardStatCard icon={icon} title="Profit" count={profit} />
       </div>
-      <div className="appointment-table overflow-auto">
-        <div className="info flex justify-between rounded-t-2xl items-center bg-gray-50 px-1">
+      <div className="appointment-table flex flex-col justify-between rounded-2xl items-center bg-neutral-50 p-[2%]">
+        <div className="info flex flex-row justify-between items-center w-full px-[1%]">
           <p className="h-full inline justify-content-center align-items-center">
             {"Member"}
           </p>
@@ -91,7 +128,7 @@ const Dashboard = () => {
           searchable={true}
           paging={true}
           exportable={true}
-          // visible={5}
+          visible={5}
         />
       </div>
       <div className="graphs">

@@ -38,6 +38,9 @@ const Table1 = (props) => {
   const [values, setValues] = useState([]);
   // const [ids, setIds] = useState([]);
   let data = null;
+  const handleDelete = (e) => {
+    console.log(e)
+  } 
   useEffect(() => {
     if (title == "member") {
       data = members;
@@ -148,15 +151,13 @@ const Table1 = (props) => {
     pagination: paging,
     rowsPerPage: 5,
     rowsPerPageOptions: [5, 10, 15, 20],
-    selectableRows: "none",
+    selectableRows: props.selectable? props.selectable: "none",
+    selectableRowsOnClick: true,
     responsive: "standard",
-    // onTableChange: (action, state) => {
-    //   // console.log(action);
-    //   // console.dir(state);
-    // },
+    onRowsDelete: handleDelete
   };
   return (
-    <div className="table w-full rounded-2xl overflow-auto">
+    <div className="table w-[100%] rounded-2xl overflow-hidden">
       <CacheProvider value={muiCache}>
         <ThemeProvider theme={createTheme()}>
           <MUIDataTable

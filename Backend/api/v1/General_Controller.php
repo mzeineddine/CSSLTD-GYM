@@ -56,4 +56,19 @@ class General_Controller
         ]);
         return false;
     }
+
+    static function get_receive_pay_month()
+    {
+        $decoded_token = Controllers_Utilities::check_jwt();
+        if (!$decoded_token) {
+            return false;
+        }
+        $receive_pay_month = General::get_receive_pay_month();
+        echo json_encode([
+            "result" => boolval($receive_pay_month),
+            "message" => $receive_pay_month ? "receive and pay in month found" : "receive and pay in month not found",
+            "data" => $receive_pay_month
+        ]);
+        return false;
+    }
 }

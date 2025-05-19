@@ -88,4 +88,41 @@ class General
         $response = (float)$result_1["total_in"] - (float)$result_2["total_out"];
         return $response;
     }
+
+
+
+
+
+    static function get_receive_pay_month()
+    {
+        global $conn;
+        $sql = "SELECT 
+                month_year,
+                SUM(total_in) AS total_in,
+                SUM(total_out) AS total_out
+                FROM (
+                    SELECT 
+                        DATE_FORMAT(created_on, '%Y-%m') AS month_year,
+                        SUM(amount) AS total_in,
+                        0 AS total_out
+                    FROM subscription_payments
+                    WHERE created_on >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+                    GROUP BY month_year
+                    UNION ALL
+                    SELECT 
+                        DATE_FORMAT(created_on, '%Y-%m') AS month_year,
+                        0 AS total_in,
+                        SUM(amount) AS total_out
+                    FROM expense_payments
+                    WHERE created_on >= DATE_SUB(CURDATE(), INTERVAL 12 MONTH)
+                    GROUP BY month_year
+                ) AS combined
+                GROUP BY month_year
+                ORDER BY month_year ASC;
+            ";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $result;
+    }
 }

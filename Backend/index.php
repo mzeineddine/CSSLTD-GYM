@@ -121,6 +121,7 @@ $apis = [
     "/general/balance" => ['controller' => 'General_Controller', "method" => "get_balance"],
     "/general/balance_transactions" => ['controller' => 'General_Controller', "method" => "get_transactions"],
     "/general/profit" => ['controller' => 'General_Controller', "method" => "get_profit"],
+    "/general/receive_pay_month" => ['controller' => 'General_Controller', "method" => "get_receive_pay_month"],
 ];
 
 if (isset($apis[$request])) {
