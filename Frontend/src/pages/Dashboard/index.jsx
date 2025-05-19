@@ -88,7 +88,7 @@ const Dashboard = () => {
   //   { month: "Jun", left: 2390, new: 3800 },
   //   { month: "Jul", left: 3490, new: 4300 },
   // ];
-  const graph_title = "Members";
+  const graph_title = "Received and Paid Money";
   const key_x = "month_year";
   const lines_data = [
     {

@@ -32,24 +32,13 @@ const Appointment_Calendar = () => {
     } else if (!member) {
       update_members();
       setMember(members);
-    } else {
-      coaches.forEach((coach) => {
-        coach_data.push({ [coach.id]: [coach.full_name] });
-      });
-      members.forEach((member) => {
-        member_data.push({ [member.id]: [member.full_name] });
-      });
     }
   }, [appointments, coaches, members]);
   return (
     <div className="appointment-calendar m-[2%]">
       <h1 className="font-bold w-full text-left text-3xl my-1">Calendar</h1>
       {coach_data && member_data && appointment && (
-        <Calendar
-          members={member_data}
-          coaches={coach_data}
-          appointments={appointment}
-        />
+        <Calendar appointments={appointment} />
       )}
     </div>
   );

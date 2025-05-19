@@ -11,6 +11,7 @@ import {
   TextField,
   MenuItem,
   Box,
+  Autocomplete,
 } from "@mui/material";
 import Textarea from "@mui/joy/Textarea";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -55,7 +56,7 @@ const Add_Popup = (props) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let name = props.name;
-          console.log(formData)
+    console.log(formData);
     if (props.name == "staff") {
       name = "user";
     }
@@ -195,35 +196,34 @@ const Add_Popup = (props) => {
                       required
                     ></TextField>
                   ) : isSelect ? (
-                    <TextField
-                      fullWidth
-                      label={k}
-                      value={formData[k]}
-                      onChange={(e) => {
-                        setFormData({ ...formData, [k]: e.target.value });
-                        if (props.name.toLowerCase() == "member") {
-                          const cost=options[k].filter((value) => {
-                              if (value.id == e.target.value) {
-                                return value;
-                              }
-                            })
-                          setFormData({
+                    <Autocomplete
+                      options={options[k] || []}
+                      getOptionLabel={(option) => option.name || ""}
+                      isOptionEqualToValue={(option, value) =>
+                        option.id === value.id
+                      }
+                      onChange={(event, selectedOption) => {
+                        if (selectedOption) {
+                          const updatedFormData = {
                             ...formData,
-                            cost: cost[0]["price"],
-                            [k]: e.target.value
-                          });
-                        } 
+                            [k]: selectedOption.id,
+                          };
+
+                          if (props.name.toLowerCase() === "member") {
+                            updatedFormData.cost = selectedOption.price;
+                          }
+
+                          setFormData(updatedFormData);
+                        }
                       }}
-                      required
-                      select
-                    >
-                      {options[k] &&
-                        options[k].map((value) => {
-                          return (
-                            <MenuItem value={value.id}>{value.name}</MenuItem>
-                          );
-                        })}
-                    </TextField>
+                      renderInput={(params) => (
+                        <TextField {...params} fullWidth label={k} required />
+                      )}
+                      value={
+                        options[k]?.find((opt) => opt.id === formData[k]) ||
+                        null
+                      }
+                    />
                   ) : (
                     <TextField
                       fullWidth
