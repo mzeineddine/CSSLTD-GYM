@@ -15,6 +15,7 @@ import Add_Popup from "../Add_Popup/index.jsx";
 import { ExpensePayments_Context } from "../../context/ExpensePayments_Context.jsx";
 import { Categories_Context } from "../../context/Categories_Context.jsx";
 import { SubscriptionPayments_Context } from "../../context/SubscriptionPayments_Context.jsx";
+import { Logs_Context } from "../../context/Logs_Context.jsx";
 const Table1 = (props) => {
   const { members, update_members } = useContext(Members_Context);
   const { staffs, update_staffs } = useContext(Staffs_Context);
@@ -30,6 +31,7 @@ const Table1 = (props) => {
   const { paymentAccounts, update_paymentAccounts } = useContext(
     PaymentAccounts_Context
   );
+  const { logs, update_logs } = useContext(Logs_Context);
 
   let { title, searchable, paging, exportable, visible } = props;
   const [headers, setHeaders] = useState([]);
@@ -53,6 +55,8 @@ const Table1 = (props) => {
       data = categories;
     } else if (title == "subscriptionPayments") {
       data = subscriptionPayments;
+    } else if (title == "log") {
+      data = logs;
     }
     if (!data || data.length == 0) {
       if (title == "member") {
@@ -71,6 +75,8 @@ const Table1 = (props) => {
         update_categories();
       } else if (title == "subscriptionPayments") {
         update_subscriptionPayments();
+      } else if (title == "log") {
+        update_logs();
       }
     } else {
       data.forEach((data) => {
@@ -123,6 +129,7 @@ const Table1 = (props) => {
     expensePayments,
     categories,
     subscriptionPayments,
+    logs
   ]);
 
   const muiCache = createCache({

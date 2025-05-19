@@ -21,8 +21,11 @@ $apis = [
     "/user/update"  => ['controller' => 'User_Controller', "method" => 'update'],
     "/user/delete"  => ['controller' => 'User_Controller', "method" => 'delete'],
     //User apis
-    "/user/signup"       => ['controller' => 'User_Controller', "method" => 'signup'],
-    "/user/login"        => ['controller' => 'User_Controller', "method" => 'login'],
+    "/user/signup"          => ['controller' => 'User_Controller', "method" => 'signup'],
+    "/user/login"           => ['controller' => 'User_Controller', "method" => 'login'],
+    "/user/reset_password"   => ['controller' => 'User_Controller', "method" => 'reset_password'],
+    "/user/reset"   => ['controller' => 'User_Controller', "method" => 'reset'],
+
 
     // CRUD Member apis paths
     "/member/create"  => ['controller' => 'Member_Controller', "method" => 'create'],

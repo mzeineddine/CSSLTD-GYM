@@ -48,6 +48,8 @@ const Sidebar = () => {
                 <Link to="calendar"><span className="icon"><img className="icon-img" src={calendar_icon} alt="calendar" /></span><span className="text hidden">Calendar</span></Link>
                 <Link to="balance"> <span className="icon"><img className="icon-img" src={balance_icon} alt="balance" /></span>  <span className="text hidden">Balance</span></Link>
                 <Link to="expense"> <span className="icon"><img className="icon-img" src={expense_icon} alt="expense" /></span>  <span className="text hidden">Expense</span></Link>
+                <Link to="log"> <span className="icon"><img className="icon-img" src={expense_icon} alt="log" /></span>  <span className="text hidden">Log</span></Link>
+
                 <hr/>
                 <Link to="settings"> <span className="icon"><img className="icon-img" src={setting_icon} alt="settings" /></span>  <span className="text hidden">Settings</span></Link>
                 <div className="a" onClick={()=>{

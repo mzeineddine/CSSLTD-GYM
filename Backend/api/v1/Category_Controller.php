@@ -2,6 +2,8 @@
 require_once __DIR__ . "/../../models/User.php";
 require_once __DIR__ . "/../../models/Category.php";
 require_once __DIR__ . "/../../utilities/Controllers_Utilities.php";
+require_once __DIR__ . "/../../models/Log.php";
+
 class Category_Controller
 {
     static function check_created_by($data)
@@ -33,6 +35,14 @@ class Category_Controller
                 "result" => $created,
                 "message" => $created ? "Category created successfully" : "Category not created",
             ]);
+            if ($created) {
+                Log::create([
+                    "action" => "Create",
+                    "created_by" => $decoded_token->id,
+                    "description" => $decoded_token->id .
+                        " create CATEGORY of name " . $data["name"]
+                ]);
+            }
             return $created;
         }
         return false;
@@ -63,7 +73,8 @@ class Category_Controller
         }
         if (!Controllers_Utilities::check_params($data, ["id", "name", "type", "price"]))
             return false;
-        if (!Category::read($data)) {
+        $category = Category::read($data);
+        if (!$category) {
             echo json_encode([
                 "result" => false,
                 "message" => "No Category found"
@@ -75,6 +86,14 @@ class Category_Controller
             "result" => $updated,
             "message" => $updated ? "Category updated successfully" : "Category not updated",
         ]);
+        if ($updated) {
+            Log::create([
+                "action" => "Update",
+                "created_by" => $decoded_token->id,
+                "description" => $decoded_token->id .
+                    " update CATEGORY of name " . $category["name"]
+            ]);
+        }
         return $updated;
     }
     static function delete()
@@ -99,6 +118,14 @@ class Category_Controller
             "result" => $deleted,
             "message" => $deleted ? "Category deleted successfully" : "Category not deleted",
         ]);
+        if ($deleted) {
+            Log::create([
+                "action" => "Deleted",
+                "created_by" => $decoded_token->id,
+                "description" => $decoded_token->id .
+                    " delete CATEGORY of name " . $category["name"]
+            ]);
+        }
         return $deleted;
     }
 }

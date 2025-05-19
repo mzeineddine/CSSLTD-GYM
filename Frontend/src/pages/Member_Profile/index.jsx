@@ -18,16 +18,6 @@ import ConfirmationNumberIcon from "@mui/icons-material/ConfirmationNumber";
 import BillingOverviewChart from "../../components/PiChart/piChart";
 
 const Member_Profile = () => {
-  //   const chartData = [
-  //     { name: "Paid", value: 928, color: "#00C49F" },
-  //     { name: "Due", value: 672, color: "#FFBB28" },
-  //   ];
-
-  const discountInfo = {
-    title: "Discounts Applied",
-    description: "The patient has received a 13% discount on their total due",
-  };
-
   const location = useLocation();
   const id = location.state;
   const [showEdit, setShowEdit] = useState(false);

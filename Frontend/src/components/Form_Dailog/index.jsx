@@ -1,0 +1,51 @@
+import Button from "@mui/material/Button";
+import TextField from "@mui/material/TextField";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import React, { useState } from "react";
+import { axios_function } from "../../utilities/axios";
+
+export default function FormDialog(props) {
+  const [email, setEmail] = useState("");
+  const handleSubmit = async () => {
+    console.log(email);
+    await axios_function(
+      "post",
+      "http://localhost/Projects/CSSLTD-GYM/Backend/user/reset_password",
+      { email: email }
+    );
+    props.handleClose();
+  };
+  return (
+    <React.Fragment>
+      <Dialog open={props.open} onClose={props.handleClose}>
+        <DialogTitle>{props.title}</DialogTitle>
+        <DialogContent>
+          <DialogContentText>{props.message}</DialogContentText>
+          <TextField
+            autoFocus
+            required
+            margin="dense"
+            id="name"
+            name="email"
+            label="Email Address"
+            type="email"
+            fullWidth
+            variant="standard"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={props.handleClose}>Cancel</Button>
+          <Button type="submit" onClick={handleSubmit}>
+            {props.submit_text}
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </React.Fragment>
+  );
+}

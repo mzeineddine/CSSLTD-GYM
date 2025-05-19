@@ -24,11 +24,11 @@ class Member extends Member_Skeleton
             $stmt = $conn->prepare("SELECT SUM(cost) AS total FROM subscriptions GROUP BY member_id HAVING member_id = ?;");
             $stmt->execute([$id]);
             $total_amount = $stmt->fetch(PDO::FETCH_ASSOC);
-            $member["total_amount"] = $total_amount["total"];
+            $member["total_amount"] = $total_amount["total"]?? 0;
             $stmt = $conn->prepare("SELECT SUM(amount) AS total FROM subscription_payments GROUP BY member_id HAVING member_id = ?;");
             $stmt->execute([$id]);
             $paid_amount = $stmt->fetch(PDO::FETCH_ASSOC);
-            $member["paid_amount"] = $paid_amount["total"];
+            $member["paid_amount"] = $paid_amount["total"]?? 0;
             // $payment_account["remaining_amount"] = $total_amount - $paid_amount;
             return $member;
         } else {

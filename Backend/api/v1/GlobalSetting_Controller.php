@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . "/../../models/User.php";
 require_once __DIR__ . "/../../models/GlobalSetting.php";
+require_once __DIR__ . "/../../models/Log.php";
 require_once __DIR__ . "/../../utilities/Controllers_Utilities.php";
 class GlobalSetting_Controller
 {
@@ -35,6 +36,15 @@ class GlobalSetting_Controller
                 "result" => $created,
                 "message" => $created ? "Global settings created successfully" : "Global settings not created",
             ]);
+            if ($created) {
+                Log::create([
+                    "action" => "Create",
+                    "created_by" => $decoded_token->id,
+                    "description" => $decoded_token->id .
+                        " create GLOBAL SETTINGS of name " . $data["name"]
+                ]);
+            }
+            return $created;
         }
         return false;
     }
@@ -65,7 +75,8 @@ class GlobalSetting_Controller
             return false;
         $out_path = self::save_image($data['file_name'], $data['logo']);
         $data["logo"] = $out_path;
-        if (!GlobalSetting::read($data)) {
+        $global_setting = GlobalSetting::read($data);
+        if (!$global_setting) {
             echo json_encode([
                 "result" => false,
                 "message" => "No global settings found"
@@ -80,6 +91,15 @@ class GlobalSetting_Controller
             "message" => $updated ? "Global setting updated successfully" : "Global setting not updated",
         ]);
         // }
+        if ($updated) {
+            Log::create([
+                "action" => "Update",
+                "created_by" => $decoded_token->id,
+                "description" => $decoded_token->id .
+                    " update GLOBAL SETTINGS from name " . $global_setting["name"] .
+                    " to name" . $data["name"]
+            ]);
+        }
         return $updated;
     }
     static function delete()
@@ -104,6 +124,14 @@ class GlobalSetting_Controller
             "result" => $deleted,
             "message" => $deleted ? "Global setting deleted successfully" : "Global setting not deleted",
         ]);
+        if ($deleted) {
+                Log::create([
+                    "action" => "Delete",
+                    "created_by" => $decoded_token->id,
+                    "description" => $decoded_token->id .
+                        " delete GLOBAL SETTINGS of name " . $data["name"]
+                ]);
+            }
         return $deleted;
     }
     static function save_image($file_name, $img)

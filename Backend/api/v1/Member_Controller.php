@@ -2,6 +2,7 @@
 require_once __DIR__ . "/../../models/User.php";
 require_once __DIR__ . "/../../models/Member.php";
 require_once __DIR__ . "/../../utilities/Controllers_Utilities.php";
+require_once __DIR__ . "/../../models/Log.php";
 class Member_Controller
 {
     static function check_created_by($data)
@@ -33,6 +34,15 @@ class Member_Controller
                 "result" => $created,
                 "message" => $created ? "Member created successfully" : "Member not created",
             ]);
+            if ($created) {
+                Log::create([
+                    "action" => "Create",
+                    "created_by" => $decoded_token->id,
+                    "description" => $decoded_token->id .
+                        " create Member of name " . $data["full_name"]
+                ]);
+            }
+            return $created;
         }
         return false;
     }
@@ -61,7 +71,8 @@ class Member_Controller
         $data = json_decode(file_get_contents("php://input"), true);
         if (!Controllers_Utilities::check_params($data, ["id", "full_name", "contact", "address", "dob"]))
             return false;
-        if (!Member::read($data)) {
+        $member = Member::read($data);
+        if (!$member) {
             echo json_encode([
                 "result" => false,
                 "message" => "No members found"
@@ -76,6 +87,14 @@ class Member_Controller
             "message" => $updated ? "Member updated successfully" : "Member not updated",
         ]);
         // }
+        if ($updated) {
+            Log::create([
+                "action" => "Update",
+                "created_by" => $decoded_token->id,
+                "description" => $decoded_token->id .
+                    " update Member of name " . $member["full_name"]
+            ]);
+        }
         return $updated;
     }
     static function delete()
@@ -100,6 +119,14 @@ class Member_Controller
             "result" => $deleted,
             "message" => $deleted ? "Member deleted successfully" : "Member not deleted",
         ]);
+        if ($deleted) {
+            Log::create([
+                "action" => "Delete",
+                "created_by" => $decoded_token->id,
+                "description" => $decoded_token->id .
+                    " delete Member of name " . $member["full_name"]
+            ]);
+        }
         return $deleted;
     }
 }

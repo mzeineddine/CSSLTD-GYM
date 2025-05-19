@@ -2,16 +2,17 @@ import React, { useState } from "react";
 import "./login.css";
 import Logo from "./../../assets/logo.png";
 import Land_image from "./../../assets/land_image.png";
-import axios from "axios";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import Edit_Popup from "../../components/Edit_Popup";
+import FormDialog from "../../components/Form_Dailog";
+import { axios_function } from "../../utilities/axios";
 const LoginPage = () => {
   const logo = Logo;
   const gym_description =
     "Lorem ipsum dolor, sit amet consectetur adipisicing elit. Fuga, rerum corporis voluptas unde, aspernatur maiores debitis tenetur ab veniam optio sit laborum, dolores maxime? Accusantium iure similique ipsam ipsa explicabo.";
   const gym_image = Land_image;
   const gym_name = "CSSLTD";
-  const [showEdit, setShowEdit] = useState(false)
+  const [showEdit, setShowEdit] = useState(false);
   const [form, setForm] = useState({
     email: localStorage.getItem("email") ? localStorage.getItem("email") : "",
     password: localStorage.getItem("password")
@@ -19,23 +20,26 @@ const LoginPage = () => {
       : "",
     is_remember: false,
   });
+  const [open, setOpen] = useState(false);
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const navigate = useNavigate();
+  const handleForgot = async (e) => {
+    e.preventDefault();
+    setOpen(true);
+  };
   const onSubmit_handler = async (event) => {
     event.preventDefault();
-    let response = await axios({
-      method: "post",
-      url: "http://localhost/Projects/CSSLTD-GYM/Backend/user/login",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: form,
-    }).catch((err) => {
-      console.log(err);
-    });
-    if (response.data.result) {
-      localStorage.setItem("access-token", response.data.token);
-      localStorage.setItem("user_name", response.data.data.username);
+    let response = await axios_function(
+      "POST",
+      "http://localhost/Projects/CSSLTD-GYM/Backend/user/login",
+      form
+    );
+    if (response.result) {
+      localStorage.setItem("access-token", response.token);
+      localStorage.setItem("user_name", response.data.username);
       navigate("/home");
     }
     if (form.is_remember) {
@@ -95,25 +99,35 @@ const LoginPage = () => {
               </div>
               <button
                 style={{ backgroundColor: "transparent", color: "blueviolet" }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setShowEdit(true)
-                }}
+                onClick={handleForgot}
               >
                 Forgot Password?
               </button>
-              {showEdit&&<Edit_Popup
-                open={showEdit}
-                name={"user"}
-                onClose={()=>{setShowEdit(false)}}
-                fields={{ email: "email", password: "password" }}
-                filled_field={{"email":form.email}}
-              />}
+              {showEdit && (
+                <Edit_Popup
+                  open={showEdit}
+                  name={"user"}
+                  onClose={() => {
+                    setShowEdit(false);
+                  }}
+                  fields={{ email: "email", password: "password" }}
+                  filled_field={{ email: form.email }}
+                />
+              )}
             </div>
             <button type="submit">Login</button>
           </form>
         </div>
       </div>
+      <FormDialog
+        title={"Reset Password"}
+        handleClose={handleClose}
+        submit_text={"Reset"}
+        open={open}
+        message={
+          "Enter Your Email and then submit the form to get the reset link by the passed email"
+        }
+      />
     </div>
   );
 };
