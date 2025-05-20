@@ -38,8 +38,7 @@ class PaymentAccount_Controller
                 Log::create([
                     "action" => "Create",
                     "created_by" => $decoded_token->id,
-                    "description" => $decoded_token->id .
-                        " create PAYMENT ACCOUNT of name " . $data["name"]
+                    "description" => "PAYMENT ACCOUNT of name " . $data["name"]
                 ]);
             }
             return $created;
@@ -89,8 +88,7 @@ class PaymentAccount_Controller
             Log::create([
                 "action" => "Update",
                 "created_by" => $decoded_token->id,
-                "description" => $decoded_token->id .
-                    " update PAYMENT ACCOUNT of name " . $payment_account["name"]
+                "description" => "PAYMENT ACCOUNT of name " . $payment_account["name"]
             ]);
         }
         return $updated;
@@ -121,8 +119,7 @@ class PaymentAccount_Controller
             Log::create([
                 "action" => "Delete",
                 "created_by" => $decoded_token->id,
-                "description" => $decoded_token->id .
-                    " delete PAYMENT ACCOUNT of name " . $payment_account["name"]
+                "description" => "PAYMENT ACCOUNT of name " . $payment_account["name"]
             ]);
         }
         return $deleted;

@@ -52,9 +52,7 @@ class Expense_Controller
                     Log::create([
                         "action" => "Create",
                         "created_by" => $decoded_token->id,
-                        "description" => $decoded_token->id .
-                            " create EXPENSE of amount " . $data["bill_amount"] .
-                            " and account_id " . $data["account_id"]
+                        "description" => "EXPENSE of amount " . $data["bill_amount"] . " and account_id " . $data["account_id"]
                     ]);
                 }
                 return $created;
@@ -107,8 +105,7 @@ class Expense_Controller
                 Log::create([
                     "action" => "Update",
                     "created_by" => $decoded_token->id,
-                    "description" => $decoded_token->id .
-                        " update EXPENSE from bill amount " . $expense["bill_amount"] .
+                    "description" => "EXPENSE from bill amount " . $expense["bill_amount"] .
                         " to bill amount" . $data["bill_amount"] .
                         " and account_id " . $expense["account_id"]
                 ]);
@@ -143,8 +140,7 @@ class Expense_Controller
             Log::create([
                 "action" => "Delete",
                 "created_by" => $decoded_token->id,
-                "description" => $decoded_token->id .
-                    " delete EXPENSE of amount " . $expense["amount"] .
+                "description" => "EXPENSE of amount " . $expense["amount"] .
                     " and account_id " . $expense["account_id"]
             ]);
         }

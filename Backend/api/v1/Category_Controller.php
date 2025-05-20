@@ -39,8 +39,7 @@ class Category_Controller
                 Log::create([
                     "action" => "Create",
                     "created_by" => $decoded_token->id,
-                    "description" => $decoded_token->id .
-                        " create CATEGORY of name " . $data["name"]
+                    "description" => "CATEGORY of name " . $data["name"]
                 ]);
             }
             return $created;
@@ -90,8 +89,7 @@ class Category_Controller
             Log::create([
                 "action" => "Update",
                 "created_by" => $decoded_token->id,
-                "description" => $decoded_token->id .
-                    " update CATEGORY of name " . $category["name"]
+                "description" => "CATEGORY of name " . $category["name"]
             ]);
         }
         return $updated;
@@ -122,8 +120,7 @@ class Category_Controller
             Log::create([
                 "action" => "Deleted",
                 "created_by" => $decoded_token->id,
-                "description" => $decoded_token->id .
-                    " delete CATEGORY of name " . $category["name"]
+                "description" => "CATEGORY of name " . $category["name"]
             ]);
         }
         return $deleted;

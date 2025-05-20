@@ -15,12 +15,12 @@
             global $conn;
             $id = $data['id'] ?? null;
             if ($id){
-                $stmt = $conn->prepare("SELECT * FROM categories WHERE id = ? AND is_deleted=0");
+                $stmt = $conn->prepare("SELECT categories.*, username as created_by FROM categories, users WHERE created_by=users.id AND categories.id = ? AND categories.is_deleted=0");
                 $stmt->execute([$id]);
                 $expense = $stmt->fetch(PDO::FETCH_ASSOC);
                 return $expense;
             } else {
-                $stmt = $conn->query("SELECT * FROM categories WHERE is_deleted=0");
+                $stmt = $conn->query("SELECT categories.*, username as created_by FROM categories, users WHERE created_by=users.id AND categories.is_deleted=0");
                 $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 return $expenses;
             }

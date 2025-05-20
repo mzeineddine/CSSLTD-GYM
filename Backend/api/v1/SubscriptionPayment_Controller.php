@@ -52,8 +52,7 @@ class SubscriptionPayment_Controller
                     Log::create([
                         "action" => "Create",
                         "created_by" => $decoded_token->id,
-                        "description" => $decoded_token->id .
-                            " create SUBSCRIPTION PAYMENT from amount " . $data["amount"]
+                        "description" => "SUBSCRIPTION PAYMENT from amount " . $data["amount"]
                     ]);
                 }
                 return $created;
@@ -106,8 +105,7 @@ class SubscriptionPayment_Controller
             Log::create([
                 "action" => "Update",
                 "created_by" => $decoded_token->id,
-                "description" => $decoded_token->id .
-                    " update SUBSCRIPTION PAYMENT from amount " . $subscription_payment["amount"] .
+                "description" => "SUBSCRIPTION PAYMENT from amount " . $subscription_payment["amount"] .
                     " to amount " . $data["amount"]
             ]);
         }
@@ -140,8 +138,7 @@ class SubscriptionPayment_Controller
             Log::create([
                 "action" => "Delete",
                 "created_by" => $decoded_token->id,
-                "description" => $decoded_token->id .
-                    " delete SUBSCRIPTION PAYMENT from amount " . $subscription_payment["amount"]
+                "description" => "SUBSCRIPTION PAYMENT from amount " . $subscription_payment["amount"]
             ]);
         }
         return $deleted;

@@ -15,12 +15,12 @@
             global $conn;
             $id = $data['id'] ?? null;
             if ($id){
-                $stmt = $conn->prepare("SELECT * FROM `logs` WHERE id = ? AND is_deleted=0");
+                $stmt = $conn->prepare("SELECT logs.*, username as created_by FROM `logs`, users WHERE created_by=users.id AND  logs.id = ? AND logs.is_deleted=0");
                 $stmt->execute([$id]);
                 $member = $stmt->fetch(PDO::FETCH_ASSOC);
                 return $member;
             } else {
-                $stmt = $conn->query("SELECT * FROM `logs` WHERE is_deleted=0");
+                $stmt = $conn->query("SELECT logs.*, username as created_by FROM logs, users WHERE created_by=users.id AND logs.is_deleted=0");
                 $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 return $members;
             }

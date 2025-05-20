@@ -38,8 +38,7 @@ class Coach_Controller
                 Log::create([
                     "action" => "Create",
                     "created_by" => $decoded_token->id,
-                    "description" => $decoded_token->id .
-                        " create Coach of name " . $data["full_name"]
+                    "description" => "Coach of name " . $data["full_name"]
                 ]);
             }
             return $created;
@@ -90,8 +89,7 @@ class Coach_Controller
             Log::create([
                 "action" => "Update",
                 "created_by" => $decoded_token->id,
-                "description" => $decoded_token->id .
-                    " update Coach of name " . $coach["full_name"]
+                "description" => "Coach of name " . $coach["full_name"]
             ]);
         }
         return $updated;
@@ -122,8 +120,7 @@ class Coach_Controller
             Log::create([
                 "action" => "Update",
                 "created_by" => $decoded_token->id,
-                "description" => $decoded_token->id .
-                    " update Coach of name " . $coach["full_name"]
+                "description" => "Coach of name " . $coach["full_name"]
             ]);
         }
         return $deleted;

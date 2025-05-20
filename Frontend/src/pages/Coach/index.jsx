@@ -6,7 +6,6 @@ import Page_Title_Add from "../../components/Page_Title_Add";
 import Table1 from "../../components/Table/tables";
 
 const Coach = () => {
-  
   return (
     <div className="coach">
       {/* <div className="graphs">
@@ -41,6 +40,7 @@ const Coach = () => {
             paging={true}
             exportable={true}
             visible={false}
+            selectable={"multiple"}
           />
         }
       </div>

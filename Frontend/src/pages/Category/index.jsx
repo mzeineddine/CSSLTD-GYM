@@ -23,7 +23,10 @@ const Category = () => {
           options_names={{
             edit_category: "category",
           }}
-          select_options={[{id:0,name:0},{id:1,name:1}]}
+          select_options={[
+            { id: 0, name: 0 },
+            { id: 1, name: 1 },
+          ]}
           options_functions_field={{
             edit_category: {
               name: "text",
@@ -36,6 +39,7 @@ const Category = () => {
           paging={true}
           exportable={true}
           visible={false}
+          selectable={"multiple"}
           actions={[
             { Edit_Account: "edit_account()" },
             { add_payment: "add_payment()" },

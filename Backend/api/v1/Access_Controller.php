@@ -41,10 +41,7 @@ class Appointment_Controller
                 Log::create([
                     "action" => "Create",
                     "created_by" => $data["created_by"],
-                    "description" => $data["created_by"] .
-                        " created ACCESS of Page " . $data["page"] .
-                        " and Action " . $data["action"]
-
+                    "description" => " ACCESS of Page " . $data["page"] . " and Action " . $data["action"]
                 ]);
                 return $created;
             }
@@ -95,9 +92,7 @@ class Appointment_Controller
             Log::create([
                 "action" => "Update",
                 "created_by" => $decoded_token->id,
-                "description" => $decoded_token->id .
-                    " created ACCESS of page " . $access["page"] .
-                    " from " . $access["action"] . " to " . $data["action"]
+                "description" => "ACCESS of page " . $access["page"] . " from " . $access["action"] . " to " . $data["action"]
             ]);
             return $updated;
         }
@@ -128,9 +123,7 @@ class Appointment_Controller
         Log::create([
             "action" => "Delete",
             "created_by" => $decoded_token->id,
-            "description" => $decoded_token->id .
-                " deleted Access of page " . $access["page"] . 
-                " and action " . $access["action"] 
+            "description" => "Access of page " . $access["page"] . " and action " . $access["action"]
         ]);
         return $deleted;
     }

@@ -38,8 +38,7 @@ class Member_Controller
                 Log::create([
                     "action" => "Create",
                     "created_by" => $decoded_token->id,
-                    "description" => $decoded_token->id .
-                        " create Member of name " . $data["full_name"]
+                    "description" => "Member of name " . $data["full_name"]
                 ]);
             }
             return $created;
@@ -91,8 +90,7 @@ class Member_Controller
             Log::create([
                 "action" => "Update",
                 "created_by" => $decoded_token->id,
-                "description" => $decoded_token->id .
-                    " update Member of name " . $member["full_name"]
+                "description" => "Member of name " . $member["full_name"]
             ]);
         }
         return $updated;
@@ -123,8 +121,7 @@ class Member_Controller
             Log::create([
                 "action" => "Delete",
                 "created_by" => $decoded_token->id,
-                "description" => $decoded_token->id .
-                    " delete Member of name " . $member["full_name"]
+                "description" => "Member of name " . $member["full_name"]
             ]);
         }
         return $deleted;

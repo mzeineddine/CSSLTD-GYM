@@ -1,5 +1,5 @@
 import { CacheProvider, ThemeProvider } from "@emotion/react";
-import { createTheme } from "@mui/material";
+import { Box, createTheme } from "@mui/material";
 import MUIDataTable from "mui-datatables";
 import createCache from "@emotion/cache";
 import { Members_Context } from "../../context/Members_Context.jsx";
@@ -16,6 +16,7 @@ import { ExpensePayments_Context } from "../../context/ExpensePayments_Context.j
 import { Categories_Context } from "../../context/Categories_Context.jsx";
 import { SubscriptionPayments_Context } from "../../context/SubscriptionPayments_Context.jsx";
 import { Logs_Context } from "../../context/Logs_Context.jsx";
+import { axios_function } from "../../utilities/axios.js";
 const Table1 = (props) => {
   const { members, update_members } = useContext(Members_Context);
   const { staffs, update_staffs } = useContext(Staffs_Context);
@@ -36,11 +37,22 @@ const Table1 = (props) => {
   let { title, searchable, paging, exportable, visible } = props;
   const [headers, setHeaders] = useState([]);
   const [values, setValues] = useState([]);
-  // const [ids, setIds] = useState([]);
+  const [ids, setIds] = useState([]);
   let data = null;
-  const handleDelete = (e) => {
-    console.log(e)
-  } 
+  const handleDelete = (rows_deleted) => {
+    const deleted_indexes = rows_deleted.data.map((d) => d.dataIndex);
+    const deleted_rows_ids = deleted_indexes.map((index) => ids[index]);
+    console.log("Deleted rows:", deleted_rows_ids);
+    deleted_rows_ids.forEach((id) => {
+      let url_title = title;
+      if (title == "staff") url_title = "user";
+      axios_function(
+        "Delete",
+        "http://localhost/Projects/CSSLTD-GYM/Backend/" + url_title + "/delete",
+        { id: id }
+      );
+    });
+  };
   useEffect(() => {
     if (title == "member") {
       data = members;
@@ -122,6 +134,12 @@ const Table1 = (props) => {
         return row;
       });
       setValues(rows_without_id);
+
+      const rows_id = data.map((item) => {
+        const [id, ...row] = [...Object.values(item)];
+        return id;
+      });
+      setIds(rows_id);
     }
   }, [
     members,
@@ -132,7 +150,7 @@ const Table1 = (props) => {
     expensePayments,
     categories,
     subscriptionPayments,
-    logs
+    logs,
   ]);
 
   const muiCache = createCache({
@@ -151,10 +169,10 @@ const Table1 = (props) => {
     pagination: paging,
     rowsPerPage: 5,
     rowsPerPageOptions: [5, 10, 15, 20],
-    selectableRows: props.selectable? props.selectable: "none",
+    selectableRows: props.selectable ? props.selectable : "none",
     selectableRowsOnClick: true,
     responsive: "standard",
-    onRowsDelete: handleDelete
+    onRowsDelete: handleDelete,
   };
   return (
     <div className="table w-[100%] rounded-2xl overflow-hidden">

@@ -18,12 +18,12 @@ class Coach extends Coach_Skeleton
         global $conn;
         $id = $data['id'] ?? null;
         if ($id) {
-            $stmt = $conn->prepare("SELECT * FROM coaches WHERE id = ? AND is_deleted=0");
+            $stmt = $conn->prepare("SELECT coaches.*, user_name as created_by FROM coaches, users WHERE coaches.id = ?  created_by=users.id AND coaches.is_deleted=0");
             $stmt->execute([$id]);
             $member = $stmt->fetch(PDO::FETCH_ASSOC);
             return $member;
         } else {
-            $stmt = $conn->query("SELECT * FROM coaches WHERE is_deleted=0");
+            $stmt = $conn->query("SELECT coaches.*, username as created_by FROM coaches, users WHERE created_by=users.id AND coaches.is_deleted=0");
             $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $members;
         }

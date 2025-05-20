@@ -18,7 +18,7 @@ class Member extends Member_Skeleton
         global $conn;
         $id = $data['id'] ?? null;
         if ($id) {
-            $stmt = $conn->prepare("SELECT * FROM members WHERE id = ? AND is_deleted=0");
+            $stmt = $conn->prepare("SELECT members.*, username as created_by FROM members, users WHERE created_by=users.id AND members.id = ? AND members.is_deleted=0");
             $stmt->execute([$id]);
             $member = $stmt->fetch(PDO::FETCH_ASSOC);
             $stmt = $conn->prepare("SELECT SUM(cost) AS total FROM subscriptions GROUP BY member_id HAVING member_id = ?;");
@@ -32,7 +32,7 @@ class Member extends Member_Skeleton
             // $payment_account["remaining_amount"] = $total_amount - $paid_amount;
             return $member;
         } else {
-            $stmt = $conn->query("SELECT * FROM members WHERE is_deleted=0");
+            $stmt = $conn->query("SELECT members.*, username as created_by  FROM members, users WHERE created_by=users.id AND members.is_deleted=0");
             $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
             for ($i = 0; $i < count($members); $i++) {

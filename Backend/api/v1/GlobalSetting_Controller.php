@@ -40,8 +40,7 @@ class GlobalSetting_Controller
                 Log::create([
                     "action" => "Create",
                     "created_by" => $decoded_token->id,
-                    "description" => $decoded_token->id .
-                        " create GLOBAL SETTINGS of name " . $data["name"]
+                    "description" => "GLOBAL SETTINGS of name " . $data["name"]
                 ]);
             }
             return $created;
@@ -95,8 +94,7 @@ class GlobalSetting_Controller
             Log::create([
                 "action" => "Update",
                 "created_by" => $decoded_token->id,
-                "description" => $decoded_token->id .
-                    " update GLOBAL SETTINGS from name " . $global_setting["name"] .
+                "description" => "GLOBAL SETTINGS from name " . $global_setting["name"] .
                     " to name" . $data["name"]
             ]);
         }
@@ -125,13 +123,12 @@ class GlobalSetting_Controller
             "message" => $deleted ? "Global setting deleted successfully" : "Global setting not deleted",
         ]);
         if ($deleted) {
-                Log::create([
-                    "action" => "Delete",
-                    "created_by" => $decoded_token->id,
-                    "description" => $decoded_token->id .
-                        " delete GLOBAL SETTINGS of name " . $data["name"]
-                ]);
-            }
+            Log::create([
+                "action" => "Delete",
+                "created_by" => $decoded_token->id,
+                "description" => "GLOBAL SETTINGS of name " . $data["name"]
+            ]);
+        }
         return $deleted;
     }
     static function save_image($file_name, $img)

@@ -66,8 +66,7 @@ class Appointment_Controller
                     Log::create([
                         "action" => "Create",
                         "created_by" => $data["created_by"],
-                        "description" => $data["created_by"] .
-                            " created APPOINTMENT of title " . $data["title"]
+                        "description" => "APPOINTMENT of title " . $data["title"]
                     ]);
                     return $created;
                 }
@@ -123,8 +122,7 @@ class Appointment_Controller
                 Log::create([
                     "action" => "Update",
                     "created_by" => $decoded_token->id,
-                    "description" => $decoded_token->id .
-                        " created APPOINTMENT of title " . $appointment["title"]
+                    "description" => "APPOINTMENT of title " . $appointment["title"]
                 ]);
                 return $updated;
             }
@@ -157,8 +155,7 @@ class Appointment_Controller
         Log::create([
             "action" => "Delete",
             "created_by" => $decoded_token->id,
-            "description" => $decoded_token->id .
-                " deleted APPOINTMENT of title " . $appointment["title"]
+            "description" => "APPOINTMENT of title " . $appointment["title"]
         ]);
         return $deleted;
     }

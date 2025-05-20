@@ -17,7 +17,7 @@ use function PHPSTORM_META\type;
             global $conn;
             $id = $data['id'] ?? null;
             if ($id){
-                $stmt = $conn->prepare("SELECT * FROM payment_accounts WHERE id = ? AND is_deleted=0");
+                $stmt = $conn->prepare("SELECT payment_accounts.*, username as created_by FROM payment_accounts,users WHERE created_by=users.id AND payment_accounts.id = ? AND payment_accounts.is_deleted=0");
                 $stmt->execute([$id]);
                 $payment_account = $stmt->fetch(PDO::FETCH_ASSOC);
                 $stmt = $conn->prepare("SELECT SUM(bill_amount) AS total FROM expenses GROUP BY account_id HAVING account_id = ?;");
@@ -31,7 +31,7 @@ use function PHPSTORM_META\type;
                 // $payment_account["remaining_amount"] = $total_amount - $paid_amount;
                 return $payment_account;
             } else {
-                $stmt = $conn->query("SELECT * FROM payment_accounts WHERE is_deleted=0");
+                $stmt = $conn->query("SELECT payment_accounts.*, username as created_by FROM payment_accounts, users WHERE created_by=users.id AND payment_accounts.is_deleted=0");
                 $payment_accounts = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 for ($i = 0; $i < count($payment_accounts); $i++) {
                     $stmt = $conn->prepare("SELECT SUM(bill_amount) AS total FROM expenses WHERE account_id = ?");

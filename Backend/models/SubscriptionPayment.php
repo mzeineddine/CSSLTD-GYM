@@ -15,12 +15,12 @@
             global $conn;
             $id = $data['id'] ?? null;
             if ($id){
-                $stmt = $conn->prepare("SELECT * FROM subscription_payments WHERE id = ? AND is_deleted=0");
+                $stmt = $conn->prepare("SELECT subscription_payments.*, username as created_by FROM subscription_payments, users WHERE created_by=users.id AND subscription_payments.id = ? AND subscription_payments.is_deleted=0");
                 $stmt->execute([$id]);
                 $expense = $stmt->fetch(PDO::FETCH_ASSOC);
                 return $expense;
             } else {
-                $stmt = $conn->query("SELECT * FROM subscription_payments WHERE is_deleted=0");
+                $stmt = $conn->query("SELECT subscription_payments.*, username as created_by FROM subscription_payments, users WHERE created_by=users.id AND subscription_payments.is_deleted=0");
                 $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 return $expenses;
             }

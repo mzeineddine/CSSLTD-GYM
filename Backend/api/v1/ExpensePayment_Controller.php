@@ -52,8 +52,7 @@ class ExpensePayment_Controller
                     Log::create([
                         "action" => "Create",
                         "created_by" => $decoded_token->id,
-                        "description" => $decoded_token->id .
-                            " create EXPENSE PAYMENT of amount " . $data["amount"] .
+                        "description" => "EXPENSE PAYMENT of amount " . $data["amount"] .
                             " and account_id " . $data["account_id"]
                     ]);
                 }
@@ -107,8 +106,7 @@ class ExpensePayment_Controller
                 Log::create([
                     "action" => "update",
                     "created_by" => $decoded_token->id,
-                    "description" => $decoded_token->id .
-                        " update EXPENSE from amount " . $payment["amount"] .
+                    "description" => "EXPENSE from amount " . $payment["amount"] .
                         " to amount " . $data["amount"] .
                         " and account_id " . $payment["account_id"]
                 ]);
@@ -143,8 +141,7 @@ class ExpensePayment_Controller
             Log::create([
                 "action" => "Delete",
                 "created_by" => $decoded_token->id,
-                "description" => $decoded_token->id .
-                    " delete EXPENSE PAYMENT of name " . $expense["full_name"]
+                "description" => "EXPENSE PAYMENT of name " . $expense["full_name"]
             ]);
         }
         return $deleted;

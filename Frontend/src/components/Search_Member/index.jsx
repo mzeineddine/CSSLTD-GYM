@@ -7,14 +7,11 @@ import { useNavigate } from "react-router-dom";
 export default function Search_Member() {
   const { members } = useContext(Members_Context);
   const navigate = useNavigate();
-  members &&
-    members.forEach((member) => {
-      member["label"] = member["full_name"];
-    });
   return (
     <Autocomplete
       disablePortal
       options={members}
+      getOptionLabel={(member)=>{return member.full_name}}
       onChange={(event, member)=>{ navigate("/member_profile", { state: member["id"] });}}
       renderInput={(params) => (
         <TextField

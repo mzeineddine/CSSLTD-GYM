@@ -50,6 +50,7 @@ const Staff = () => {
             paging={true}
             exportable={true}
             visible={false}
+            selectable={"multiple"}
           />
         }
       </div>

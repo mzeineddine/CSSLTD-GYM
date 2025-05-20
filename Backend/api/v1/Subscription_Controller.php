@@ -66,8 +66,7 @@ class Subscription_Controller
                         Log::create([
                             "action" => "Create",
                             "created_by" => $decoded_token->id,
-                            "description" => $decoded_token->id .
-                                " create SUBSCRIPTION of cost " . $data["cost"]
+                            "description" => "SUBSCRIPTION of cost " . $data["cost"]
                         ]);
                     }
                     return $created;
@@ -125,8 +124,7 @@ class Subscription_Controller
                     Log::create([
                         "action" => "Update",
                         "created_by" => $decoded_token->id,
-                        "description" => $decoded_token->id .
-                            " update SUBSCRIPTION from cost " . $subscription["cost"] .
+                        "description" => "SUBSCRIPTION from cost " . $subscription["cost"] .
                             " to cost" . $data["cost"]
                     ]);
                 }
@@ -162,8 +160,7 @@ class Subscription_Controller
             Log::create([
                 "action" => "Delete",
                 "created_by" => $decoded_token->id,
-                "description" => $decoded_token->id .
-                    " delete SUBSCRIPTION from cost " . $subscription["cost"] .
+                "description" => "SUBSCRIPTION from cost " . $subscription["cost"] .
                     " to cost" . $data["cost"]
             ]);
         }
