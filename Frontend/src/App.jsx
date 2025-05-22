@@ -30,6 +30,7 @@ import { Logs_Provider } from "./context/Logs_Context";
 
 import Log from "./pages/Log";
 import Access from "./pages/Access";
+import { Accesses_Provider } from "./context/Access_Context";
 
 function App() {
   return (
@@ -43,43 +44,48 @@ function App() {
                   <Categories_Provider>
                     <SubscriptionPayment_Provider>
                       <Logs_Provider>
-                        <Routes>
-                          <Route element={<NoSidebarLayout />}>
-                            <Route path="/" element={<Login />} />
-                            <Route path="/reset" element={<Reset_Password />} />
-                          </Route>
-                          <Route element={<WithSidebarLayout />}>
-                            <Route path="/home" element={<Dashboard />} />
-                            <Route path="/member" element={<Member />} />
-                            <Route path="/staff" element={<Staff />} />
-                            <Route path="/coach" element={<Coach />} />
-                            <Route
-                              path="/calendar"
-                              element={<Appointment_Calendar />}
-                            />
-                            <Route path="/category" element={<Category />} />
-                            <Route path="/balance" element={<Balance />} />
-                            <Route path="/expense" element={<Expense />} />
-                            <Route
-                              path="/member_profile"
-                              element={<Member_Profile />}
-                            />
-                            <Route
-                              path="/expense_payments"
-                              element={<Expense_Payment />}
-                            />
-                            <Route
-                              path="/subscription_payments"
-                              element={<Subscription_Payment />}
-                            />
-                            <Route path="/settings" element={<Settings />} />
-                            <Route path="/log" element={<Log />} />
-                            <Route path="/access" element={<Access />} />
+                        <Accesses_Provider>
+                          <Routes>  
+                            <Route element={<NoSidebarLayout />}>
+                              <Route path="/" element={<Login />} />
+                              <Route
+                                path="/reset"
+                                element={<Reset_Password />}
+                              />
+                            </Route>
+                            <Route element={<WithSidebarLayout />}>
+                              <Route path="/home" element={<Dashboard />} />
+                              <Route path="/member" element={<Member />} />
+                              <Route path="/staff" element={<Staff />} />
+                              <Route path="/coach" element={<Coach />} />
+                              <Route
+                                path="/calendar"
+                                element={<Appointment_Calendar />}
+                              />
+                              <Route path="/category" element={<Category />} />
+                              <Route path="/balance" element={<Balance />} />
+                              <Route path="/expense" element={<Expense />} />
+                              <Route
+                                path="/member_profile"
+                                element={<Member_Profile />}
+                              />
+                              <Route
+                                path="/expense_payments"
+                                element={<Expense_Payment />}
+                              />
+                              <Route
+                                path="/subscription_payments"
+                                element={<Subscription_Payment />}
+                              />
+                              <Route path="/settings" element={<Settings />} />
+                              <Route path="/log" element={<Log />} />
+                              <Route path="/access" element={<Access />} />
 
-                            {/* <Route path="/logout" element={<Logout />} /> */}
-                            {/* <Route path="/profile" element={<Profile />} /> */}
-                          </Route>
-                        </Routes>
+                              {/* <Route path="/logout" element={<Logout />} /> */}
+                              {/* <Route path="/profile" element={<Profile />} /> */}
+                            </Route>
+                          </Routes>
+                        </Accesses_Provider>
                       </Logs_Provider>
                     </SubscriptionPayment_Provider>
                   </Categories_Provider>

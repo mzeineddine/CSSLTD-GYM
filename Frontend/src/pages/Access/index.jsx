@@ -10,12 +10,12 @@ import {
 } from "@mui/material";
 import MUIDataTable from "mui-datatables";
 import { axios_function } from "../../utilities/axios";
-
+import { Accesses_Context } from "../../context/Access_Context";
 const Access = () => {
   const { staffs, update_staffs } = useContext(Staffs_Context);
   const [staff_id, setStaffId] = useState(null);
   const [permissions, setPermissions] = useState([]);
-
+  const {update_accesses} = useContext(Accesses_Context)
   const get_data = async () => {
     if (staff_id) {
       const response = await axios_function(
@@ -108,41 +108,32 @@ const Access = () => {
           <TextField {...params} label="Staff" fullWidth />
         )}
       />
-
       <div className="table w-[100%] rounded-2xl overflow-hidden">
-        <ThemeProvider theme={createTheme()}>
-          <MUIDataTable
-            title="Page Permissions"
-            columns={["Page", ...actions]}
-            data={tableData}
-            options={options}
-          />
-        </ThemeProvider>
+        {staff_id && (
+          <ThemeProvider theme={createTheme()}>
+            <MUIDataTable
+              title="Page Permissions"
+              columns={["Page", ...actions]}
+              data={tableData}
+              options={options}
+            />
+          </ThemeProvider>
+        )}
       </div>
-
-      <Button
-        onClick={async () => {
-          // console.log({ user_id: staff_id ,accesses: permissions})
-          let response = await axios_function(
-            "POST",
-            "http://localhost/Projects/CSSLTD-GYM/Backend/access/create_permission",
-            { accesses: permissions, user_id: staff_id }
-            // { accesses: [{aa:"AA", bb:"BB"},{aa:"AA", bb:"BB"}], user_id: staff_id }
-          );
-          console.log(response);
-
-          // permissions.forEach( async (value) => {
-          //   let response = await axios_function(
-          //     "POST",
-          //     "http://localhost/Projects/CSSLTD-GYM/Backend/access/create_permission",
-          //     { ...value, user_id: staff_id }
-          //   );
-          //   console.log(response)
-          // });
-        }}
-      >
-        SAVE
-      </Button>
+      {staff_id && (
+        <Button
+          onClick={async () => {
+            let response = await axios_function(
+              "POST",
+              "http://localhost/Projects/CSSLTD-GYM/Backend/access/create_permission",
+              { accesses: permissions, user_id: staff_id }
+            );
+            update_accesses()
+          }}
+        >
+          SAVE
+        </Button>
+      )}
     </div>
   );
 };

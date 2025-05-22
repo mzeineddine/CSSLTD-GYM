@@ -2,12 +2,38 @@ import axios from "axios";
 import Graph from "../../components/Graph";
 import PiChart from "../../components/PiChart";
 // import Table from "../../components/Table";
-import { useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./staff.css";
 import Page_Title_Add from "../../components/Page_Title_Add";
 import Table1 from "../../components/Table/tables";
+import { Accesses_Context } from "../../context/Access_Context";
 
 const Staff = () => {
+  const { accesses, update_accesses } = useContext(Accesses_Context);
+  const [access, setAccess] = useState(null);
+  if (!accesses) update_accesses();
+  useEffect(() => {
+    if (!accesses) return;
+
+    const newAccess = {
+      create: false,
+      view: false,
+      edit: false,
+      delete: false,
+    };
+
+    accesses.forEach((acc) => {
+      if (acc.page === "staff") {
+        if (acc.action == "1") newAccess.create = true;
+        if (acc.action == "2") newAccess.view = true;
+        if (acc.action == "3") newAccess.edit = true;
+        if (acc.action == "4") newAccess.delete = true;
+      }
+    });
+
+    setAccess(newAccess);
+  }, [accesses]);
+
   const effectFunction = () => {
     const getData = async () => {
       await axios({
@@ -26,21 +52,23 @@ const Staff = () => {
   useEffect(effectFunction, []);
   return (
     <div className="staff">
-      <Page_Title_Add
-        name="user"
-        fields={{
-          email: "email",
-          password: "password",
-          username: "text",
-          access_level: "number",
-          title: "text",
-          contact: "text",
-          address: "text",
-          status: "number",
-        }}
-      />
+      {access?.create && (
+        <Page_Title_Add
+          name="user"
+          fields={{
+            email: "email",
+            password: "password",
+            username: "text",
+            access_level: "number",
+            title: "text",
+            contact: "text",
+            address: "text",
+            status: "number",
+          }}
+        />
+      )}
       <div className="appointment-table">
-        {
+        {access?.view && (
           <Table1
             // headers={headers}
             // data={members}
@@ -50,9 +78,9 @@ const Staff = () => {
             paging={true}
             exportable={true}
             visible={false}
-            selectable={"multiple"}
+            selectable={access?.delete ? "multiple" : "none"}
           />
-        }
+        )}
       </div>
     </div>
   );

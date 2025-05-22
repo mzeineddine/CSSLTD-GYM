@@ -1,63 +1,159 @@
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import member_icon from "../../assets/icons/member_icon.svg"
-import staff_icon from "../../assets/icons/staff_icon.svg"
-import coach_icon from "../../assets/icons/staff_icon.svg"
-import calendar_icon from "../../assets/icons/calendar_icon.svg"
-import balance_icon from "../../assets/icons/balance_icon.svg"
-import expense_icon from "../../assets/icons/expense_icon.svg"
-import logo_icon from "../../assets/icons/logo_icon.svg"
-import setting_icon from "../../assets/icons/setting_icon.svg"
-import logout_icon from "../../assets/icons/logout_icon.svg"
-import "./sidebar.css" 
+import { 
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Divider,
+  IconButton,
+  useMediaQuery,
+  ThemeProvider,
+  createTheme
+} from "@mui/material";
+import {
+  Home,
+  Person,
+  Groups,
+  FitnessCenter,
+  Category,
+  CalendarMonth,
+  AccountBalance,
+  AttachMoney,
+  Lock,
+  ListAlt,
+  Settings,
+  Logout,
+  Menu
+} from "@mui/icons-material";
+
 const Sidebar = () => {
-    const navigate = useNavigate()
-    const handleMouseEnter = () => {
-        const sidebar = document.querySelector(".sideBar");
-        const texts = document.querySelectorAll("a .text");
-        sidebar.classList.remove("shorten")
-        texts.forEach(text => {
-            text.classList.remove("hidden")
-        });
-        const div_texts = document.querySelectorAll(".a .text");
-        sidebar.classList.remove("shorten")
-        div_texts.forEach(text => {
-            text.classList.remove("hidden")
-        });
+  const navigate = useNavigate();
+  const isMobile = useMediaQuery("(max-width: 600px)");
+  const [open, setOpen] = useState(!isMobile);
+  
+  // Handle responsive behavior
+  useEffect(() => {
+    if (!isMobile) {
+      setOpen(true);
+    } else {
+      setOpen(false);
     }
-    const handleMouseLeave = () => {
-        const sidebar = document.querySelector(".sideBar");
-        const texts = document.querySelectorAll("a .text");
-        sidebar.classList.add("shorten")
-        texts.forEach(text => {
-            text.classList.add("hidden")
-        });
-        const div_texts = document.querySelectorAll(".a .text");
-        sidebar.classList.add("shorten")
-        div_texts.forEach(text => {
-            text.classList.add("hidden")
-        });
+  }, [isMobile]);
+
+  const menuItems = [
+    { path: "/home", text: "Home", icon: <Home /> },
+    { path: "member", text: "Member", icon: <Person /> },
+    { path: "staff", text: "Staff", icon: <Groups /> },
+    { path: "coach", text: "Coach", icon: <FitnessCenter /> },
+    { path: "category", text: "Category", icon: <Category /> },
+    { path: "calendar", text: "Calendar", icon: <CalendarMonth /> },
+    { path: "balance", text: "Balance", icon: <AccountBalance /> },
+    { path: "expense", text: "Expense", icon: <AttachMoney /> },
+    { path: "access", text: "Access", icon: <Lock /> },
+    { path: "log", text: "Log", icon: <ListAlt /> },
+  ];
+
+  const bottomMenuItems = [
+    { path: "settings", text: "Settings", icon: <Settings /> },    
+  ];
+
+  const theme = createTheme({
+    components: {
+      MuiDrawer: {
+        styleOverrides: {
+          paper: {
+            backgroundColor: "rgb(250, 250, 250)",
+            width: 240,
+            transition: "width 0.3s ease",
+            height: "100%",
+            "&.MuiDrawer-paperAnchorDockedLeft": {
+              borderRight: "none"
+            }
+          }
+        }
+      }
     }
-    return(
-        <>
-            <div className="sideBar shorten" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-                <Link to="/home" className="logo">  <span className="logo-img"><img className="logo-img" src={logo_icon} alt="logo" /></span><span className="text hidden"></span></Link>
-                <Link to="member">   <span className="icon"><img className="icon-img" src={member_icon} alt="member" /></span>      <span className="text hidden">Member</span></Link>
-                <Link to="staff">   <span className="icon"><img className="icon-img" src={staff_icon} alt="staff" /></span>      <span className="text hidden">Staff</span></Link>
-                <Link to="coach">   <span className="icon"><img className="icon-img" src={coach_icon} alt="coach" /></span>      <span className="text hidden">Coach</span></Link>
-                <Link to="category">   <span className="icon"><img className="icon-img" src={coach_icon} alt="category" /></span>      <span className="text hidden">Category</span></Link>
-                <Link to="calendar"><span className="icon"><img className="icon-img" src={calendar_icon} alt="calendar" /></span><span className="text hidden">Calendar</span></Link>
-                <Link to="balance"> <span className="icon"><img className="icon-img" src={balance_icon} alt="balance" /></span>  <span className="text hidden">Balance</span></Link>
-                <Link to="expense"> <span className="icon"><img className="icon-img" src={expense_icon} alt="expense" /></span>  <span className="text hidden">Expense</span></Link>
-                <Link to="access"> <span className="icon"><img className="icon-img" src={expense_icon} alt="access" /></span>  <span className="text hidden">Access</span></Link>
-                <Link to="log"> <span className="icon"><img className="icon-img" src={expense_icon} alt="log" /></span>  <span className="text hidden">Log</span></Link>
-                <hr/>
-                <Link to="settings"> <span className="icon"><img className="icon-img" src={setting_icon} alt="settings" /></span>  <span className="text hidden">Settings</span></Link>
-                <div className="a" onClick={()=>{
-                    localStorage.removeItem("access-token")
-                    navigate("/")
-                }}> <span className="icon"><img className="icon-img" src={logout_icon} alt="logout" /></span>  <span className="text hidden">Logout</span></div>
-            </div>
-        </>
-    );
-}
+  });
+
+  return (
+    <ThemeProvider theme={theme}>
+      {isMobile && (
+        <IconButton
+          onClick={() => setOpen(!open)}
+          sx={{ position: 'absolute', top: 10, left: 10, zIndex: 1300 }}
+        >
+          <Menu />
+        </IconButton>
+      )}
+
+      <Drawer
+        variant={isMobile ? "temporary" : "permanent"}
+        open={open}
+        onClose={() => setOpen(false)}
+        onMouseEnter={!isMobile ? () => setOpen(true) : undefined}
+        onMouseLeave={!isMobile ? () => setOpen(false) : undefined}
+        sx={{
+          width: open ? 240 : 56,
+          flexShrink: 0,
+          "& .MuiDrawer-paper": {
+            width: open ? 240 : 56,
+            boxSizing: "border-box",
+            transition: "width 0.3s ease"
+          }
+        }}
+      >
+        <List>
+          <ListItem disablePadding >
+            <ListItemButton component={Link} to="/home">
+              <ListItemIcon sx={{ minWidth: 46 }}>
+                <Home sx={{ fontSize: 32 }} />
+              </ListItemIcon>
+              <ListItemText primary="GYM System" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+
+          {menuItems.map((item) => (
+            <ListItem key={item.path} disablePadding>
+              <ListItemButton component={Link} to={item.path}>
+                <ListItemIcon sx={{ minWidth: 46 }}>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+
+          <Divider />
+
+          {bottomMenuItems.map((item) => (
+            <ListItem key={item.path} disablePadding>
+              <ListItemButton component={Link} to={item.path}>
+                <ListItemIcon sx={{ minWidth: 46 }}>{item.icon}</ListItemIcon>
+                <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+
+          <ListItem disablePadding>
+            <ListItemButton 
+              onClick={() => {
+                localStorage.removeItem("access-token");
+                navigate("/");
+              }}
+            >
+              <ListItemIcon sx={{ minWidth: 46 }}><Logout /></ListItemIcon>
+              <ListItemText primary="Logout" sx={{ opacity: open ? 1 : 0 }} />
+            </ListItemButton>
+          </ListItem>
+        </List>
+      </Drawer>
+    </ThemeProvider>
+  );
+};
+
 export default Sidebar;
+{/* <div className="a" onClick={()=>{
+    localStorage.removeItem("access-token")
+    navigate("/")
+}}> <span className="icon"><img className="icon-img" src={logout_icon} alt="logout" /></span>  <span className="text hidden">Logout</span></div> */}

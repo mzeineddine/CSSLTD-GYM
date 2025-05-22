@@ -1,19 +1,51 @@
 import { Scheduler } from "@aldabil/react-scheduler";
 import { useContext, useEffect, useState } from "react";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
 import Custom_Editor from "../Custom_Editor";
 import "./calendar.css";
-import Custom_Header from "../Custom_Header";
 import { Appointments_Context } from "../../context/Appointments_Context";
 import { axios_function } from "../../utilities/axios";
+import { Accesses_Context } from "../../context/Access_Context";
+
 const Calendar = () => {
+  const { accesses, update_accesses } = useContext(Accesses_Context);
+  const [access, setAccess] = useState(null);
+
+  // Load accesses on mount
+  useEffect(() => {
+    if (!accesses) update_accesses();
+  }, []);
+
+  // Update access state when accesses change
+  useEffect(() => {
+    if (!accesses) return;
+
+    const newAccess = {
+      create: false,
+      view: false,
+      edit: false,
+      delete: false,
+    };
+    accesses.forEach((acc) => {
+      if (acc.page === "calendar") {
+        if (acc.action == "1") newAccess.create = true;
+        if (acc.action == "2") newAccess.view = true;
+        if (acc.action == "3") newAccess.edit = true;
+        if (acc.action == "4") newAccess.delete = true;
+      }
+    });
+    setAccess(newAccess);
+  }, [accesses]);
+
   const { appointments, update_appointments } =
     useContext(Appointments_Context);
 
-  const [formattedEvents, setFormattedEvents] = useState(
-    [appointments].flat().map((e) => {
-      return {
+  const [formattedEvents, setFormattedEvents] = useState([]);
+
+  useEffect(() => {
+    if (!access?.view) return;
+
+    setFormattedEvents(
+      [appointments].flat().map((e) => ({
         event_id: e.id,
         title: e.title,
         coach_id: e.coach_id,
@@ -21,41 +53,30 @@ const Calendar = () => {
         color: e.color,
         start: new Date(e.start_date),
         end: new Date(e.end_date),
-      };
-    })
-  );
-  useEffect(() => {
-    setFormattedEvents(
-      [appointments].flat().map((e) => {
-        return {
-          event_id: e.id,
-          title: e.title,
-          coach_id: e.coach_id,
-          member_id: e.member_id,
-          color: e.color,
-          start: new Date(e.start_date),
-          end: new Date(e.end_date),
-        };
-      })
+      }))
     );
-  }, [appointments]);
+  }, [appointments, access]);
+
   const update_db = async (event) => {
     await axios_function(
       "POST",
       "http://localhost/Projects/CSSLTD-GYM/Backend/appointment/update",
       event
     );
-    console.log("MUST UPDATE");
     update_appointments();
   };
+
+  // Don't render Scheduler until access is loaded
+  if (!access) return <div>Loading...</div>;
+
   return (
     <Scheduler
+      editable={access.edit}
+      draggable={access.edit}
+      deletable={access.delete}
+      // onCellClick={access?.create? {} : (e)=>{e.preventDefault()}}
       view="month"
-      day={{
-        startHour: 0,
-        endHour: 24,
-        step: 60,
-      }}
+      day={{ startHour: 0, endHour: 24, step: 60 }}
       height={500}
       hideHeader={true}
       events={formattedEvents}
@@ -76,7 +97,7 @@ const Calendar = () => {
         );
         update_appointments();
       }}
-      onConfirm={update_appointments}
+      onConfirm={access.edit && update_appointments}
       onDelete={async (deletedId) => {
         await axios_function(
           "DELETE",
@@ -92,4 +113,5 @@ const Calendar = () => {
     />
   );
 };
+
 export default Calendar;

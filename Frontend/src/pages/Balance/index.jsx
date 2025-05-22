@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { axios_function } from "../../utilities/axios";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -7,8 +7,34 @@ import dayjs from "dayjs";
 import { Button } from "@mui/material";
 import MUIDataTable from "mui-datatables";
 import "./balance.css";
+import { Accesses_Context } from "../../context/Access_Context";
 
 const Balance = () => {
+  const { accesses, update_accesses } = useContext(Accesses_Context);
+  const [access, setAccess] = useState(null);
+  if (!accesses) update_accesses();
+  useEffect(() => {
+    if (!accesses) return;
+
+    const newAccess = {
+      create: false,
+      view: false,
+      edit: false,
+      delete: false,
+    };
+
+    accesses.forEach((acc) => {
+      if (acc.page === "balance") {
+        if (acc.action == "1") newAccess.create = true;
+        if (acc.action == "2") newAccess.view = true;
+        if (acc.action == "3") newAccess.edit = true;
+        if (acc.action == "4") newAccess.delete = true;
+      }
+    });
+
+    setAccess(newAccess);
+  }, [accesses]);
+
   const [formData, setFormData] = useState({
     from: "",
     to: "",
@@ -119,32 +145,36 @@ const Balance = () => {
         </LocalizationProvider>
       </div>
       <div className="balance-table mt-4 w-full">
-        <MUIDataTable
-          title={"Balance"}
-          data={tableData}
-          columns={tableHeaders}
-          options={{
-            selectableRows: "none",
-            responsive: "standard",
-            pagination: false,
-            search:false,
-            print: false,
-            download: false,
-            filter:false,
-            viewColumns:false,
-          }}
-        />
+        {access?.view && (
+          <MUIDataTable
+            title={"Balance"}
+            data={tableData}
+            columns={tableHeaders}
+            options={{
+              selectableRows: "none",
+              responsive: "standard",
+              pagination: false,
+              search: false,
+              print: false,
+              download: false,
+              filter: false,
+              viewColumns: false,
+            }}
+          />
+        )}
       </div>
       <div className="balance-table mt-4 w-full">
-        <MUIDataTable
-          title={"Transactions"}
-          data={transactionsData}
-          columns={transactionsHeaders}
-          options={{
-            selectableRows: "none",
-            responsive: "standard",
-          }}
-        />
+        {access?.view && (
+          <MUIDataTable
+            title={"Transactions"}
+            data={transactionsData}
+            columns={transactionsHeaders}
+            options={{
+              selectableRows: "none",
+              responsive: "standard",
+            }}
+          />
+        )}
       </div>
     </div>
   );

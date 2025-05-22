@@ -14,8 +14,6 @@ const Appointment_Calendar = () => {
   const { coaches, update_coaches } = useContext(Coaches_Context);
   const { members, update_members } = useContext(Members_Context);
 
-  //   const [events, setEvents] = useState(null);
-
   const [appointment, setAppointment] = useState(appointments);
   const [coach, setCoach] = useState(coaches);
   const [member, setMember] = useState(members);

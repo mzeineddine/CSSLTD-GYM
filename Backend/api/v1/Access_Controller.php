@@ -164,4 +164,21 @@ class Access_Controller
         }
         return false;
     }
+
+    static function read_user()
+    {
+        $decoded_token = Controllers_Utilities::check_jwt();
+        if (!$decoded_token) {
+            return false;
+        }
+        $data = json_decode(file_get_contents("php://input"), true);
+        $data["user_id"] = $decoded_token->id;
+        $class = Access::read($data);
+        echo json_encode([
+            "result" => boolval($class),
+            "message" => $class ? "Access found" : "No accesses found",
+            "data" => $class
+        ]);
+        return boolval($class);
+    }
 }

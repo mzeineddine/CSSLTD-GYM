@@ -8,67 +8,102 @@ import {
   Members_Provider,
 } from "../../context/Members_Context.jsx";
 import Table1 from "../../components/Table/tables.jsx";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Categories_Context } from "../../context/Categories_Context.jsx";
+import { Accesses_Context } from "../../context/Access_Context.jsx";
 
 const Member = () => {
   const { categories, update_categories } = useContext(Categories_Context);
+
   if (!categories) update_categories();
+
+  const { accesses, update_accesses } = useContext(Accesses_Context);
+  const [access, setAccess] = useState(null);
+  if (!accesses) update_accesses();
+  useEffect(() => {
+    if (!accesses) return;
+
+    const newAccess = {
+      create: false,
+      view: false,
+      edit: false,
+      delete: false,
+    };
+
+    accesses.forEach((acc) => {
+      if (acc.page === "member") {
+        if (acc.action == "1") newAccess.create = true;
+        if (acc.action == "2") newAccess.view = true;
+        if (acc.action == "3") newAccess.edit = true;
+        if (acc.action == "4") newAccess.delete = true;
+      }
+    });
+
+    setAccess(newAccess);
+  }, [accesses]);
+
   return (
     <div className="member">
-      <Page_Title_Add
-        name="member"
-        options={{
-          category_id: categories,
-        }}
-        fields={{
-          full_name: "text",
-          contact: "text",
-          address: "text",
-          dob: "date",
-          category_id: "select",
-          start_date: "date",
-          end_date: "date",
-        }}
-      />
+      {console.log(access)}
+      {access?.create && (
+        <Page_Title_Add
+          name="member"
+          options={{
+            category_id: categories,
+          }}
+          fields={{
+            full_name: "text",
+            contact: "text",
+            address: "text",
+            dob: "date",
+            category_id: "select",
+            start_date: "date",
+            end_date: "date",
+          }}
+        />
+      )}
       {/* <Table_Search_Export /> */}
       <div className="appointment-table m-[2%]">
-        <Table1
-          title="member"
-          options={[
-            { "Edit Member": "edit_member" },
-            { "Add Payment": "add_payment" },
-            { "View Payments": "view_payment" },
-          ]}
-          options_names={{
-            edit_member: "member",
-            add_payment: "subscription_payment",
-            view_payment: "subscription_payment",
-          }}
-          options_functions_field={{
-            edit_member: {
-              full_name: "text",
-              contact: "text",
-              address: "text",
-              dob: "date",
-            },
+        {access?.view && (
+          <Table1
+            title="member"
+            options={
+              access?.edit && [
+                { "Edit Member": "edit_member" },
+                { "Add Payment": "add_payment" },
+                { "View Payments": "view_payment" },
+              ]
+            }
+            options_names={{
+              edit_member: "member",
+              add_payment: "subscription_payment",
+              view_payment: "subscription_payment",
+            }}
+            options_functions_field={{
+              edit_member: {
+                full_name: "text",
+                contact: "text",
+                address: "text",
+                dob: "date",
+              },
 
-            add_payment: {
-              amount: "number",
-            },
+              add_payment: {
+                amount: "number",
+              },
 
-            view_payment: {
-              name: "text",
-              description: "text",
-            },
-          }}
-          info={false}
-          searchable={true}
-          paging={true}
-          exportable={true}
-          visible={false}
-          selectable={"multiple"}
-        />
+              view_payment: {
+                name: "text",
+                description: "text",
+              },
+            }}
+            info={false}
+            searchable={true}
+            paging={true}
+            exportable={true}
+            visible={false}
+            selectable={access.delete ? "multiple" : "none"}
+          />
+        )}
       </div>
     </div>
   );

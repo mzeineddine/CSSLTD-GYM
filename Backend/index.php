@@ -126,6 +126,8 @@ $apis = [
 
     "/access/create" => ['controller' => 'Access_Controller', "method" => "create"],
     "/access/read" => ['controller' => 'Access_Controller', "method" => "read"],
+    
+    "/access/read_user" => ['controller' => 'Access_Controller', "method" => "read_user"],
     "/access/create_permission" => ['controller' => 'Access_Controller', "method" => "create_permission"],
 
 ];

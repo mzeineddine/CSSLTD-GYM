@@ -131,7 +131,7 @@
     color: blueviolet;
     text-decoration: none;
 }
-button {
+/* button {
     width: 100%;
     background: blueviolet;
     color: white;
@@ -143,4 +143,4 @@ button {
 }
 button:hover {
     background: rgb(150, 55, 240);
-}
+} */
