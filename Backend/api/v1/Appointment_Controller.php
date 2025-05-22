@@ -29,7 +29,7 @@ class Appointment_Controller
         }
         return true;
     }
-    static function check_member($data)
+    static function check_user($data)
     {
         if (!Member::read($data)) {
             echo json_encode([
@@ -57,7 +57,7 @@ class Appointment_Controller
             $modified_data = ["id" => $data["coach_id"]];
             if (self::check_coach($modified_data)) {
                 $modified_data = ["id" => $data["member_id"]];
-                if (self::check_member($modified_data)) {
+                if (self::check_user($modified_data)) {
                     $created = Appointment::create($data);
                     echo json_encode([
                         "result" => $created,
@@ -113,7 +113,7 @@ class Appointment_Controller
         $modified_data["id"] = $data["coach_id"];
         if (self::check_coach($modified_data)) {
             $modified_data["id"] = $data["member_id"];
-            if (self::check_member($modified_data)) {
+            if (self::check_user($modified_data)) {
                 $updated = Appointment::update($data);
                 echo json_encode([
                     "result" => $updated,

@@ -29,6 +29,7 @@ import Reset_Password from "./pages/Reset_Password";
 import { Logs_Provider } from "./context/Logs_Context";
 
 import Log from "./pages/Log";
+import Access from "./pages/Access";
 
 function App() {
   return (
@@ -73,6 +74,7 @@ function App() {
                             />
                             <Route path="/settings" element={<Settings />} />
                             <Route path="/log" element={<Log />} />
+                            <Route path="/access" element={<Access />} />
 
                             {/* <Route path="/logout" element={<Logout />} /> */}
                             {/* <Route path="/profile" element={<Profile />} /> */}

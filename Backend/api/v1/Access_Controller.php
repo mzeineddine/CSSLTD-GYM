@@ -3,9 +3,9 @@ require_once __DIR__ . "/../../models/User.php";
 require_once __DIR__ . "/../../models/Access.php";
 require_once __DIR__ . "/../../models/Log.php";
 require_once __DIR__ . "/../../utilities/Controllers_Utilities.php";
-class Appointment_Controller
+class Access_Controller
 {
-    static function check_member($data)
+    static function check_user($data)
     {
         if (!User::read($data)) {
             echo json_encode([
@@ -30,9 +30,9 @@ class Appointment_Controller
         if (!Controllers_Utilities::check_params($data, ['user_id', 'page', 'action', 'created_by']))
             return false;
         $modified_data = ["id" => $data["created_by"]];
-        if (self::check_member($modified_data)) {
+        if (self::check_user($modified_data)) {
             $modified_data = ["id" => $data["user_id"]];
-            if (self::check_member($modified_data)) {
+            if (self::check_user($modified_data)) {
                 $created = Access::create($data);
                 echo json_encode([
                     "result" => $created,
@@ -83,7 +83,7 @@ class Appointment_Controller
         }
 
         $modified_data["id"] = $data["user_id"];
-        if (self::check_member($modified_data)) {
+        if (self::check_user($modified_data)) {
             $updated = Access::update($data);
             echo json_encode([
                 "result" => $updated,
@@ -126,5 +126,42 @@ class Appointment_Controller
             "description" => "Access of page " . $access["page"] . " and action " . $access["action"]
         ]);
         return $deleted;
+    }
+
+    static function create_permission()
+    {
+        $data = json_decode(file_get_contents("php://input"), true);
+
+        $decoded_token = Controllers_Utilities::check_jwt();
+        if (!$decoded_token) {
+            return false;
+        }
+        $data['created_by'] = $decoded_token->id;
+        if (!Controllers_Utilities::check_params($data, ['user_id', 'accesses', 'created_by']))
+            return false;
+        foreach ($data["accesses"] as $access) {
+            # code...
+            if (!Controllers_Utilities::check_params($access, ['page', 'action']))
+                return false;
+        }
+        $modified_data = ["id" => $data["created_by"]];
+        if (self::check_user($modified_data)) {
+            $modified_data = ["id" => $data["user_id"]];
+            if (self::check_user($modified_data)) {
+                $created = Access::create_permission($data);
+                echo json_encode([
+                    "result" => $created,
+                    "message" => $created ? "Access created successfully" : "Access not created",
+                ]);
+                Log::create([
+                    "action" => "Create",
+                    "created_by" => $data["created_by"],
+                    "description" => " ACCESS " . json_encode($data["accesses"])
+                ]);
+                return $created;
+            }
+            return false;
+        }
+        return false;
     }
 }

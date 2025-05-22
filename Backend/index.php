@@ -122,6 +122,12 @@ $apis = [
     "/general/balance_transactions" => ['controller' => 'General_Controller', "method" => "get_transactions"],
     "/general/profit" => ['controller' => 'General_Controller', "method" => "get_profit"],
     "/general/receive_pay_month" => ['controller' => 'General_Controller', "method" => "get_receive_pay_month"],
+
+
+    "/access/create" => ['controller' => 'Access_Controller', "method" => "create"],
+    "/access/read" => ['controller' => 'Access_Controller', "method" => "read"],
+    "/access/create_permission" => ['controller' => 'Access_Controller', "method" => "create_permission"],
+
 ];
 
 if (isset($apis[$request])) {
