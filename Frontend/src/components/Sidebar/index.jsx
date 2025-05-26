@@ -1,6 +1,6 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { 
+import {
   Drawer,
   List,
   ListItem,
@@ -11,7 +11,9 @@ import {
   IconButton,
   useMediaQuery,
   ThemeProvider,
-  createTheme
+  createTheme,
+  Avatar,
+  Box,
 } from "@mui/material";
 import {
   Home,
@@ -26,25 +28,36 @@ import {
   ListAlt,
   Settings,
   Logout,
-  Menu
+  Menu,
+  Image,
 } from "@mui/icons-material";
+import { GeneralSettings_Context } from "../../context/GeneralSettings_Context";
 
 const Sidebar = () => {
+  const { generalSettings, update_generalSettings } = useContext(
+    GeneralSettings_Context
+  );
   const navigate = useNavigate();
   const isMobile = useMediaQuery("(max-width: 600px)");
   const [open, setOpen] = useState(!isMobile);
-  
-  // Handle responsive behavior
+  const [logoUrl, setLogoUrl] = useState("#");
+
   useEffect(() => {
     if (!isMobile) {
-      setOpen(true);
+      setOpen(false);
     } else {
       setOpen(false);
     }
   }, [isMobile]);
 
+  useEffect(() => {
+    if (!generalSettings) update_generalSettings();
+  }, []);
+  useEffect(() => {
+    setLogoUrl("http://localhost/Projects/CSSLTD-GYM/" + generalSettings?.logo);
+  }, [generalSettings]);
+
   const menuItems = [
-    { path: "/home", text: "Home", icon: <Home /> },
     { path: "member", text: "Member", icon: <Person /> },
     { path: "staff", text: "Staff", icon: <Groups /> },
     { path: "coach", text: "Coach", icon: <FitnessCenter /> },
@@ -57,7 +70,7 @@ const Sidebar = () => {
   ];
 
   const bottomMenuItems = [
-    { path: "settings", text: "Settings", icon: <Settings /> },    
+    { path: "settings", text: "Settings", icon: <Settings /> },
   ];
 
   const theme = createTheme({
@@ -70,12 +83,12 @@ const Sidebar = () => {
             transition: "width 0.3s ease",
             height: "100%",
             "&.MuiDrawer-paperAnchorDockedLeft": {
-              borderRight: "none"
-            }
-          }
-        }
-      }
-    }
+              borderRight: "none",
+            },
+          },
+        },
+      },
+    },
   });
 
   return (
@@ -83,7 +96,7 @@ const Sidebar = () => {
       {isMobile && (
         <IconButton
           onClick={() => setOpen(!open)}
-          sx={{ position: 'absolute', top: 10, left: 10, zIndex: 1300 }}
+          sx={{ position: "relative", top: 10, left: 5, zIndex: 10 }}
         >
           <Menu />
         </IconButton>
@@ -96,30 +109,76 @@ const Sidebar = () => {
         onMouseEnter={!isMobile ? () => setOpen(true) : undefined}
         onMouseLeave={!isMobile ? () => setOpen(false) : undefined}
         sx={{
-          width: open ? 240 : 56,
+          width: open ? 240 : 50,
+          transition: "width 0.5s ease",
           flexShrink: 0,
           "& .MuiDrawer-paper": {
-            width: open ? 240 : 56,
+            width: open ? 240 : 50,
             boxSizing: "border-box",
-            transition: "width 0.3s ease"
-          }
+            transition: "width 0.5s ease",
+          },
         }}
       >
         <List>
-          <ListItem disablePadding >
-            <ListItemButton component={Link} to="/home">
-              <ListItemIcon sx={{ minWidth: 46 }}>
-                <Home sx={{ fontSize: 32 }} />
+          <ListItem disablePadding>
+            <ListItemButton
+              component={Link}
+              to="/home"
+              sx={{
+                width: "100%",
+                margin: "0px 12px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <ListItemIcon
+                sx={{
+                  minWidth: 32,
+                }}
+              >
+                {/* <Home sx={{ fontSize: 32 }} /> */}
+                {/* <Home /> */}
+                {generalSettings && (
+                  <Avatar
+                    component={"image"}
+                    src={logoUrl}
+                    alt="Logo Preview"
+                    sx={{ width: 32, height: 32 }}
+                  />
+                )}
               </ListItemIcon>
-              <ListItemText primary="GYM System" sx={{ opacity: open ? 1 : 0 }} />
+              {/* <ListItemText
+                primary="GYM System"
+                sx={{ display: open ? "auto" : "none", margin: "0px 5px" }}
+              /> */}
             </ListItemButton>
           </ListItem>
 
           {menuItems.map((item) => (
             <ListItem key={item.path} disablePadding>
-              <ListItemButton component={Link} to={item.path}>
-                <ListItemIcon sx={{ minWidth: 46 }}>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemButton
+                component={Link}
+                to={item.path}
+                sx={{
+                  color: "blueviolet",
+                  ":hover": {
+                    backgroundColor: "blueviolet",
+                    color: "white",
+                  },
+                }}
+              >
+                <ListItemIcon sx={{ color: "inherit", minWidth: 32 }}>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.text}
+                  sx={{
+                    color: "inherit",
+                    display: open ? "auto" : "none",
+                    margin: "0px 5px",
+                  }}
+                />
               </ListItemButton>
             </ListItem>
           ))}
@@ -128,22 +187,67 @@ const Sidebar = () => {
 
           {bottomMenuItems.map((item) => (
             <ListItem key={item.path} disablePadding>
-              <ListItemButton component={Link} to={item.path}>
-                <ListItemIcon sx={{ minWidth: 46 }}>{item.icon}</ListItemIcon>
-                <ListItemText primary={item.text} sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemButton
+                component={Link}
+                to={item.path}
+                sx={{
+                  color: "blueviolet",
+                  ":hover": {
+                    backgroundColor: "blueviolet",
+                    color: "white",
+                  },
+                }}
+              >
+                <ListItemIcon
+                  sx={{
+                    color: "inherit",
+                    minWidth: 32,
+                  }}
+                >
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText
+                  primary={item.text}
+                  sx={{
+                    color: "inherit",
+                    display: open ? "auto" : "none",
+                    margin: "0px 5px",
+                  }}
+                />
               </ListItemButton>
             </ListItem>
           ))}
 
           <ListItem disablePadding>
-            <ListItemButton 
+            <ListItemButton
               onClick={() => {
                 localStorage.removeItem("access-token");
                 navigate("/");
               }}
+              sx={{
+                color: "blueviolet",
+                ":hover": {
+                  backgroundColor: "blueviolet",
+                  color: "white",
+                },
+              }}
             >
-              <ListItemIcon sx={{ minWidth: 46 }}><Logout /></ListItemIcon>
-              <ListItemText primary="Logout" sx={{ opacity: open ? 1 : 0 }} />
+              <ListItemIcon
+                sx={{
+                  color: "inherit",
+                  minWidth: 32,
+                }}
+              >
+                <Logout />
+              </ListItemIcon>
+              <ListItemText
+                primary="Logout"
+                sx={{
+                  color: "inherit",
+                  display: open ? "auto" : "none",
+                  margin: "0px 5px",
+                }}
+              />
             </ListItemButton>
           </ListItem>
         </List>
@@ -153,7 +257,3 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
-{/* <div className="a" onClick={()=>{
-    localStorage.removeItem("access-token")
-    navigate("/")
-}}> <span className="icon"><img className="icon-img" src={logout_icon} alt="logout" /></span>  <span className="text hidden">Logout</span></div> */}
