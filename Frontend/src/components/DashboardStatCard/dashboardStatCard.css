@@ -3,9 +3,10 @@
     flex-direction: row;
     justify-content: start;
     align-items: center;
-    min-width: 28%;
+    /* min-width: 28%; */
     border-radius: 15px;
     background: rgb(250, 250, 250);
+    flex: 3
 }
 .dashboardStatCard .card-icon{
     margin: 1.5em;

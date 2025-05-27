@@ -3,6 +3,11 @@
     flex-direction: row;
     justify-content: start;
     align-items: start;
+    width: 100%;   
+    padding: 0px;
+    margin: 0px;
+    gap: 0;
+    box-sizing: border-box;
     /* width: 100vw;
     height: 100vh; */
 }
@@ -11,7 +16,7 @@
     flex-direction: column;
     justify-content: start;
     align-items: start;
-    width: 100%;
+    width: 98vw;
     /* width: 100vw;
     height: 100vh; */
 }
@@ -21,4 +26,16 @@
     min-height: 90vh;
     background-color: rgb(225, 225, 225);
     border-radius: 10px;
+}
+
+@media screen and (max-width: 924px) {
+    .app-layout{
+        width: 95vw;
+    }
+    .nav{
+        width: 94%;
+    }
+    .main-content{
+        width: 100%;
+    }
 }

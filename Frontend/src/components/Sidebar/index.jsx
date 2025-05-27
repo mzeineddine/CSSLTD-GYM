@@ -96,13 +96,13 @@ const Sidebar = () => {
       {isMobile && (
         <IconButton
           onClick={() => setOpen(!open)}
-          sx={{ position: "relative", top: 10, left: 5, zIndex: 10 }}
+          sx={{ position: "relative", top: 10, left: 5, zIndex: 1500 }}
         >
           <Menu />
         </IconButton>
       )}
-
       <Drawer
+        // variant={isMobile ? "temporary" : "permanent"}
         variant={isMobile ? "temporary" : "permanent"}
         open={open}
         onClose={() => setOpen(false)}

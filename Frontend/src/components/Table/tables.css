@@ -1,4 +1,4 @@
-.table button {
+.table-container button {
   width: auto;
   background: auto;
   border: medium none;
@@ -10,10 +10,10 @@
   text-decoration: auto;
   text-indent: auto;
 }
-.table button:hover {
+.table-container button:hover {
   color: rgb(165, 91, 235);
 }
-.table input {
+.table-container input {
   width: auto;
   background: auto;
   border: medium none;
@@ -25,13 +25,13 @@
   text-decoration: auto;
   text-indent: auto;
 }
-.table{
-    padding: 0px;
-    margin: 0px;
+.table-container {
+  padding: 0px;
+  margin: 0px;
 }
-.table th{
-    padding: 0px;
-    margin: 0px;
+.table-container th {
+  padding: 0px;
+  margin: 0px;
 }
 .MuiTableCell-root {
   text-align: center !important;

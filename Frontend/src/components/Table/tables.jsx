@@ -175,15 +175,27 @@ const Table1 = (props) => {
     onRowsDelete: handleDelete,
   };
   return (
-    <div className="table w-[100%] rounded-2xl overflow-hidden">
+    <div
+      className="table-container w-[100%] overflow-x-auto"
+      // style={{ width: "100%", overflowX: "auto" }}
+    >
       <CacheProvider value={muiCache}>
-        <ThemeProvider theme={createTheme()}>
-          <MUIDataTable
-            // title={title}
-            data={values}
-            columns={[...headers]}
-            options={options}
-          />
+        <ThemeProvider
+          theme={createTheme({
+            components: {
+              MuiTableCell: {
+                styleOverrides: {
+                  root: {
+                    fontSize: "0.8em",
+                  },
+                },
+              },
+            },
+          })}
+        >
+          <Box sx={{ minWidth: 800 }}>
+            <MUIDataTable data={values} columns={headers} options={options} />
+          </Box>
         </ThemeProvider>
       </CacheProvider>
     </div>
