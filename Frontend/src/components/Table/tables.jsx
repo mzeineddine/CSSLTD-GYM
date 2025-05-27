@@ -45,7 +45,12 @@ const Table1 = (props) => {
     console.log("Deleted rows:", deleted_rows_ids);
     deleted_rows_ids.forEach((id) => {
       let url_title = title;
+      if (title == "subscriptionPayments") url_title = "subscription_payment";
+      else if (title == "expensePayments") url_title = "expense_payment";
+      else if (title == "paymentAccounts") url_title = "payment_account";
+
       if (title == "staff") url_title = "user";
+      console.log("ID: " + id, "URL: " + url_title);
       axios_function(
         "Delete",
         "http://localhost/Projects/CSSLTD-GYM/Backend/" + url_title + "/delete",

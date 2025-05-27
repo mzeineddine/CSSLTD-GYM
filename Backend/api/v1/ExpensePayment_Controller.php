@@ -87,7 +87,8 @@ class ExpensePayment_Controller
         $data = json_decode(file_get_contents("php://input"), true);
         if (!Controllers_Utilities::check_params($data, ["id", "amount", "account_id"]))
             return false;
-        $payment = PaymentAccount::read($data);
+        // echo json_encode($data);
+        $payment = ExpensePayment::read($data);
         if (!$payment) {
             echo json_encode([
                 "result" => false,
@@ -141,7 +142,7 @@ class ExpensePayment_Controller
             Log::create([
                 "action" => "Delete",
                 "created_by" => $decoded_token->id,
-                "description" => "EXPENSE PAYMENT of name " . $expense["full_name"]
+                "description" => "EXPENSE PAYMENT of amount " . $expense["amount"]
             ]);
         }
         return $deleted;

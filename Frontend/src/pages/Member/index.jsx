@@ -28,6 +28,10 @@ const Member = () => {
       view: false,
       edit: false,
       delete: false,
+      create_member_payment: false,
+      view_member_payment: false,
+      edit_member_payment: false,
+      delete_member_payment: false,
     };
 
     accesses.forEach((acc) => {
@@ -36,6 +40,12 @@ const Member = () => {
         if (acc.action == "2") newAccess.view = true;
         if (acc.action == "3") newAccess.edit = true;
         if (acc.action == "4") newAccess.delete = true;
+      }
+      if (acc.page === "member_payment") {
+        if (acc.action == "1") newAccess.create_member_payment = true;
+        if (acc.action == "2") newAccess.view_member_payment = true;
+        if (acc.action == "3") newAccess.edit_member_payment = true;
+        if (acc.action == "4") newAccess.delete_member_payment = true;
       }
     });
 
@@ -68,10 +78,16 @@ const Member = () => {
           <Table1
             title="member"
             options={
-              access?.edit && [
-                { "Edit Member": "edit_member" },
-                { "Add Payment": "add_payment" },
-                { "View Payments": "view_payment" },
+              (access?.edit ||
+                access?.create_member_payment ||
+                access?.view_member_payment) && [
+                access?.edit && { "Edit Member": "edit_member" },
+                access?.create_member_payment && {
+                  "Add Payment": "add_payment",
+                },
+                access?.view_member_payment && {
+                  "View Payments": "view_payment",
+                },
               ]
             }
             options_names={{

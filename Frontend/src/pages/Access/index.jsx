@@ -42,12 +42,15 @@ const Access = () => {
 
   const pages = [
     "member",
+    "member_payment",
     "staff",
     "coach",
     "category",
     "calendar",
     "balance",
     "expense",
+    "account",
+    "account_payment",
     "log",
     "access",
     "settings",

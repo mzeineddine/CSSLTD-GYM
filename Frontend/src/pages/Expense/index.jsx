@@ -15,10 +15,20 @@ const Expense = () => {
     if (!accesses) return;
 
     const newAccess = {
-      create: false,
-      view: false,
-      edit: false,
-      delete: false,
+      create_expense: false,
+      view_expense: false,
+      edit_expense: false,
+      delete_expense: false,
+
+      create_account: false,
+      view_account: false,
+      edit_account: false,
+      delete_account: false,
+
+      create_account_payment: false,
+      view_account_payment: false,
+      edit_account_payment: false,
+      delete_account_payment: false,
     };
 
     accesses.forEach((acc) => {
@@ -28,8 +38,25 @@ const Expense = () => {
         if (acc.action == "3") newAccess.edit = true;
         if (acc.action == "4") newAccess.delete = true;
       }
+      if (acc.page === "expense") {
+        if (acc.action == "1") newAccess.create_expense = true;
+        if (acc.action == "2") newAccess.view_expense = true;
+        if (acc.action == "3") newAccess.edit_expense = true;
+        if (acc.action == "4") newAccess.delete_expense = true;
+      }
+      if (acc.page === "account") {
+        if (acc.action == "1") newAccess.create_account = true;
+        if (acc.action == "2") newAccess.view_account = true;
+        if (acc.action == "3") newAccess.edit_account = true;
+        if (acc.action == "4") newAccess.delete_account = true;
+      }
+      if (acc.page == "account_payment") {
+        if (acc.action == "1") newAccess.create_account_payment = true;
+        if (acc.action == "2") newAccess.view_account_payment = true;
+        if (acc.action == "3") newAccess.edit_account_payment = true;
+        if (acc.action == "4") newAccess.delete_account_payment = true;
+      }
     });
-
     setAccess(newAccess);
   }, [accesses]);
 
@@ -37,7 +64,7 @@ const Expense = () => {
   return (
     <div className="expense">
       <div className="accounts-table m-[2%]">
-        {access?.create && (
+        {access?.create_account && (
           <Page_Title_Add
             name="payment_account"
             fields={{
@@ -46,16 +73,22 @@ const Expense = () => {
             }}
           />
         )}
-        {access?.view && (
+        {access?.view_account && (
           <Table1
             title="paymentAccounts"
             // options_names={["Edit Account", "Add Payment", "View Payments"]}
             // options_functions = {["","",""]}
             options={
-              access?.edit && [
-                { "Edit Account": "edit_account" },
-                { "Add Payment": "add_payment" },
-                { "View Payments": "view_payment" },
+              (access?.edit_account ||
+                access?.create_account_payment ||
+                access?.view_account_payment) && [
+                access?.edit_account && { "Edit Account": "edit_account" },
+                access?.create_account_payment && {
+                  "Add Payment": "add_payment",
+                },
+                access?.view_account_payment && {
+                  "View Payments": "view_payment",
+                },
               ]
             }
             options_names={{

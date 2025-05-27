@@ -17,39 +17,78 @@ class Member extends Member_Skeleton
     {
         global $conn;
         $id = $data['id'] ?? null;
+
         if ($id) {
-            $stmt = $conn->prepare("SELECT members.*, username as created_by FROM members, users WHERE created_by=users.id AND members.id = ? AND members.is_deleted=0");
+            // Fetch single member
+            $stmt = $conn->prepare("
+            SELECT members.*, users.username AS created_by
+            FROM members
+            JOIN users ON members.created_by = users.id
+            WHERE members.id = ? AND members.is_deleted = 0
+        ");
             $stmt->execute([$id]);
             $member = $stmt->fetch(PDO::FETCH_ASSOC);
-            $stmt = $conn->prepare("SELECT SUM(cost) AS total FROM subscriptions GROUP BY member_id HAVING member_id = ?;");
+
+            if (!$member) return null;
+
+            // Total subscription cost
+            $stmt = $conn->prepare("
+            SELECT SUM(cost) AS total
+            FROM subscriptions
+            WHERE member_id = ? AND is_deleted = 0
+        ");
             $stmt->execute([$id]);
-            $total_amount = $stmt->fetch(PDO::FETCH_ASSOC);
-            $member["total_amount"] = $total_amount["total"]?? 0;
-            $stmt = $conn->prepare("SELECT SUM(amount) AS total FROM subscription_payments GROUP BY member_id HAVING member_id = ?;");
+            $total = $stmt->fetchColumn() ?? 0;
+
+            // Total paid amount
+            $stmt = $conn->prepare("
+            SELECT SUM(amount) AS total
+            FROM subscription_payments
+            WHERE member_id = ? AND is_deleted = 0
+        ");
             $stmt->execute([$id]);
-            $paid_amount = $stmt->fetch(PDO::FETCH_ASSOC);
-            $member["paid_amount"] = $paid_amount["total"]?? 0;
-            // $payment_account["remaining_amount"] = $total_amount - $paid_amount;
+            $paid = $stmt->fetchColumn() ?? 0;
+
+            $member["total_amount"] = (float)$total;
+            $member["paid_amount"] = (float)$paid;
+            $member["remaining_amount"] = $member["total_amount"] - $member["paid_amount"];
+
             return $member;
         } else {
-            $stmt = $conn->query("SELECT members.*, username as created_by  FROM members, users WHERE created_by=users.id AND members.is_deleted=0");
+            // Fetch all members
+            $stmt = $conn->query("
+            SELECT members.*, users.username AS created_by
+            FROM members
+            JOIN users ON members.created_by = users.id
+            WHERE members.is_deleted = 0
+        ");
             $members = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            for ($i = 0; $i < count($members); $i++) {
-                $stmt = $conn->prepare("SELECT SUM(cost) AS total FROM subscriptions GROUP BY member_id HAVING member_id = ?;");
-                $stmt->execute([$members[$i]["id"]]);
-                $total_amount = $stmt->fetch(PDO::FETCH_ASSOC);
-                $members[$i]["total_amount"] = $total_amount ? (float)$total_amount["total"] : 0;
-                $stmt = $conn->prepare("SELECT SUM(amount) AS total FROM subscription_payments GROUP BY member_id HAVING member_id = ?;");
-                $stmt->execute([$members[$i]["id"]]);
-                $paid_amount = $stmt->fetch(PDO::FETCH_ASSOC);
-                $members[$i]["paid_amount"] = $paid_amount ? (float)$paid_amount["total"] : 0;
-                $members[$i]["remaining_amount"] = $members[$i]["total_amount"] - $members[$i]["paid_amount"];
+            foreach ($members as &$member) {
+                $id = $member["id"];
+                $stmt = $conn->prepare("
+                SELECT SUM(cost) AS total
+                FROM subscriptions
+                WHERE member_id = ? AND is_deleted = 0
+            ");
+                $stmt->execute([$id]);
+                $total = $stmt->fetchColumn() ?? 0;
+                $stmt = $conn->prepare("
+                SELECT SUM(amount) AS total
+                FROM subscription_payments
+                WHERE member_id = ? AND is_deleted = 0
+            ");
+                $stmt->execute([$id]);
+                $paid = $stmt->fetchColumn() ?? 0;
+                $member["total_amount"] = (float)$total;
+                $member["paid_amount"] = (float)$paid;
+                $member["remaining_amount"] = $member["total_amount"] - $member["paid_amount"];
             }
 
             return $members;
         }
     }
+
 
     static function update($data)
     {
