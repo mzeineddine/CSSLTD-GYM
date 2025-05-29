@@ -64,11 +64,6 @@
 .login-form input[type="email"],
 .login-form input[type="password"] {
   color: black;
-  width: 100%;
-  padding: 0.8em;
-  margin: 0.75em 0px;
-  border: 1px solid #ccc;
-  border-radius: 0.5em;
   background-color: transparent;
 }
 .options {

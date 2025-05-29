@@ -32,19 +32,26 @@ import { Categories_Context } from "../../context/Categories_Context";
 // import CloseIcon from '@mui/icons-material';
 const Add_Popup = (props) => {
   const default_values = {};
+  const default_errors = {};
   for (let [key, value] of Object.entries(props.fields)) {
-    if (value == "date") {
+    if (value === "date") {
       default_values[key] = dayjs();
-      continue;
+    } else {
+      default_values[key] = "";
     }
-    default_values[key] = "";
+    default_errors[key] = "";
   }
+
   if (props.filled_field) {
     for (let [key, value] of Object.entries(props.filled_field)) {
       default_values[key] = value;
     }
   }
+
   const [formData, setFormData] = useState(default_values);
+  const [formErrors, setFormErrors] = useState(default_errors);
+
+  // Contexts
   const { update_members } = useContext(Members_Context);
   const { update_staffs } = useContext(Staffs_Context);
   const { update_coaches } = useContext(Coaches_Context);
@@ -53,60 +60,103 @@ const Add_Popup = (props) => {
   const { update_paymentAccounts } = useContext(PaymentAccounts_Context);
   const { update_expensePayments } = useContext(ExpensePayments_Context);
 
+  const validateField = (key, value, type) => {
+    if (type === "email") {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+        ? ""
+        : "Invalid email format.";
+    }
+    if (type === "password") {
+      return value.length < 6 ? "Password must be at least 6 characters." : "";
+    }
+    if (type === "number") {
+      return value === "" || isNaN(value) ? "Must be a number." : "";
+    }
+    if (type === "text-area" || type === "text") {
+      return value.trim() === "" ? "This field is required." : "";
+    }
+    if (type === "select") {
+      return value ? "" : "Selection required.";
+    }
+    return "";
+  };
+
+  const validateAllFields = () => {
+    let hasError = false;
+    const newErrors = {};
+
+    Object.entries(props.fields).forEach(([key, type]) => {
+      const error = validateField(key, formData[key], type);
+      if (error) hasError = true;
+      newErrors[key] = error;
+    });
+
+    setFormErrors(newErrors);
+    return !hasError;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let name = props.name;
-    console.log(formData);
-    if (props.name == "staff") {
-      name = "user";
-    }
-    if (props.name.toLowerCase() == "member") {
-      let response = await axios_function(
-        "POST",
-        "http://localhost/Projects/CSSLTD-GYM/Backend/" +
-          name.toLowerCase() +
-          "/create",
-        formData
-      );
-      await axios_function(
-        "POST",
-        "http://localhost/Projects/CSSLTD-GYM/Backend/subscription/create",
-        { ...formData, member_id: response.result }
-      );
-    } else {
-      await axios_function(
-        "POST",
-        "http://localhost/Projects/CSSLTD-GYM/Backend/" +
-          name.toLowerCase() +
-          "/create",
-        formData
-      );
-    }
-    if (props.name.toLowerCase() == "member") {
-      update_members();
-    } else if (props.name.toLowerCase() == "user") {
-      update_staffs();
-    } else if (props.name.toLowerCase() == "coach") {
-      update_coaches();
-    } else if (props.name.toLowerCase() == "expense") {
-      update_expenses();
-    } else if (
-      props.name.toLowerCase() == "payment_account" ||
-      props.name.toLowerCase() == "expense_payment"
-    ) {
-      update_paymentAccounts();
-    } else if (props.name.toLowerCase() == "category") {
-      update_categories();
-    }
-    if (props.name.toLowerCase() == "expense_payment") {
-      update_expensePayments();
-    }
+    if (!validateAllFields()) return;
 
-    setFormData(default_values);
-    props.onClose();
+    let name = props.name === "staff" ? "user" : props.name;
+    const isMember = props.name.toLowerCase() === "member";
+
+    try {
+      if (isMember) {
+        const response = await axios_function(
+          "POST",
+          `http://localhost/Projects/CSSLTD-GYM/Backend/${name.toLowerCase()}/create`,
+          formData
+        );
+        await axios_function(
+          "POST",
+          `http://localhost/Projects/CSSLTD-GYM/Backend/subscription/create`,
+          { ...formData, member_id: response.result }
+        );
+      } else {
+        await axios_function(
+          "POST",
+          `http://localhost/Projects/CSSLTD-GYM/Backend/${name.toLowerCase()}/create`,
+          formData
+        );
+      }
+
+      switch (props.name.toLowerCase()) {
+        case "member":
+          update_members();
+          break;
+        case "user":
+          update_staffs();
+          break;
+        case "coach":
+          update_coaches();
+          break;
+        case "expense":
+          update_expenses();
+          break;
+        case "payment_account":
+        case "expense_payment":
+          update_paymentAccounts();
+          break;
+        case "category":
+          update_categories();
+          break;
+      }
+      if (props.name.toLowerCase() === "expense_payment")
+        update_expensePayments();
+
+      setFormData(default_values);
+      setFormErrors(default_errors);
+      props.onClose();
+    } catch (error) {
+      console.error("Submit failed", error);
+    }
   };
-  const title = "Add " + props.name == "User" ? "Staff" : props.name;
+
+  const title = props.name === "User" ? "Add Staff" : "Add " + props.name;
   const options = props.options;
+
   return (
     <Dialog open={props.open}>
       <DialogTitle>
@@ -117,125 +167,95 @@ const Add_Popup = (props) => {
       <DialogContent dividers>
         <div className="flex flex-row flex-wrap justify-between items-end w-full gap-0.5">
           {Object.entries(props.fields).map(([k, v]) => {
-            let isSelect = false;
-            let isTextArea = false;
-            let isNumber = false;
-            let isDate = false;
-            let isEmail = false;
-            let isPassword = false;
-            if (v == "email") {
-              isEmail = true;
-            } else if (v == "password") {
-              isPassword = true;
-            } else if (v == "select") {
-              isSelect = true;
-            } else if (v == "text-area") {
-              isTextArea = true;
-            } else if (v == "date") {
-              isDate = true;
-            } else if (v == "number") {
-              isNumber = true;
-            }
+            const commonProps = {
+              fullWidth: true,
+              label: k,
+              value: formData[k],
+              error: !!formErrors[k],
+              helperText: formErrors[k],
+              required: true,
+              onChange: (e) => {
+                const val = e.target.value;
+                setFormData({ ...formData, [k]: val });
+                setFormErrors({ ...formErrors, [k]: validateField(k, val, v) });
+              },
+            };
             return (
               <div key={k} className="w-[49%] flex-1/3">
-                <Box component="form" autoComplete="off">
-                  {isEmail ? (
-                    <TextField
-                      fullWidth
-                      label={k}
-                      type="email"
-                      value={formData[k]}
-                      onChange={(e) => {
-                        setFormData({ ...formData, [k]: e.target.value });
-                      }}
-                      required
-                    ></TextField>
-                  ) : isPassword ? (
-                    <TextField
-                      fullWidth
-                      label={k}
-                      type="password"
-                      value={formData[k]}
-                      onChange={(e) => {
-                        setFormData({ ...formData, [k]: e.target.value });
-                      }}
-                      required
-                    />
-                  ) : isDate ? (
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={["DateTimePicker"]}>
-                        <DatePicker
-                          label={k}
-                          value={formData[k]}
-                          onChange={(newValue) => {
-                            setFormData({ ...formData, [k]: newValue });
-                          }}
-                        />
-                      </DemoContainer>
-                    </LocalizationProvider>
-                  ) : isTextArea ? (
-                    <Textarea
-                      minRows={2}
-                      label={k}
-                      value={formData[k]}
-                      onChange={(e) => {
-                        setFormData({ ...formData, [k]: e.target.value });
-                      }}
-                      required
-                      placeholder="Comment"
-                    />
-                  ) : isNumber ? (
-                    <TextField
-                      fullWidth
-                      label={k}
-                      type="number"
-                      value={formData[k]}
-                      onChange={(e) => {
-                        setFormData({ ...formData, [k]: e.target.value });
-                      }}
-                      required
-                    ></TextField>
-                  ) : isSelect ? (
-                    <Autocomplete
-                      options={options[k] || []}
-                      getOptionLabel={(option) => option.name || ""}
-                      isOptionEqualToValue={(option, value) =>
-                        option.id === value.id
+                {v === "email" ? (
+                  <TextField key={k} type="email" {...commonProps} />
+                ) : v === "password" ? (
+                  <TextField key={k} type="password" {...commonProps} />
+                ) : v === "number" ? (
+                  <TextField key={k} type="number" {...commonProps} />
+                ) : v === "date" ? (
+                  <LocalizationProvider key={k} dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={["DatePicker"]}>
+                      <DatePicker
+                        label={k}
+                        value={formData[k]}
+                        onChange={(newValue) => {
+                          setFormData({ ...formData, [k]: newValue });
+                          setFormErrors({ ...formErrors, [k]: "" });
+                        }}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                ) : v === "text-area" ? (
+                  <Textarea
+                    key={k}
+                    minRows={2}
+                    placeholder={k}
+                    value={formData[k]}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setFormData({ ...formData, [k]: val });
+                      setFormErrors({
+                        ...formErrors,
+                        [k]: validateField(k, val, v),
+                      });
+                    }}
+                    required
+                  />
+                ) : v === "select" ? (
+                  <Autocomplete
+                    key={k}
+                    options={options[k] || []}
+                    getOptionLabel={(opt) => opt.name || ""}
+                    isOptionEqualToValue={(opt, val) => opt.id === val.id}
+                    value={
+                      options[k]?.find((o) => o.id === formData[k]) || null
+                    }
+                    onChange={(e, selectedOption) => {
+                      const updated = {
+                        ...formData,
+                        [k]: selectedOption?.id || "",
+                      };
+                      if (
+                        props.name.toLowerCase() === "member" &&
+                        selectedOption?.price
+                      ) {
+                        updated.cost = selectedOption.price;
                       }
-                      onChange={(event, selectedOption) => {
-                        if (selectedOption) {
-                          const updatedFormData = {
-                            ...formData,
-                            [k]: selectedOption.id,
-                          };
-
-                          if (props.name.toLowerCase() === "member") {
-                            updatedFormData.cost = selectedOption.price;
-                          }
-
-                          setFormData(updatedFormData);
-                        }
-                      }}
-                      renderInput={(params) => (
-                        <TextField {...params} fullWidth label={k} required />
-                      )}
-                      value={
-                        options[k]?.find((opt) => opt.id === formData[k]) ||
-                        null
-                      }
-                    />
-                  ) : (
-                    <TextField
-                      fullWidth
-                      label={k}
-                      value={formData[k]}
-                      onChange={(e) => {
-                        setFormData({ ...formData, [k]: e.target.value });
-                      }}
-                      required
-                    ></TextField>
-                  )}
-                </Box>
+                      setFormData(updated);
+                      setFormErrors({
+                        ...formErrors,
+                        [k]: selectedOption ? "" : "Required field.",
+                      });
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label={k}
+                        error={!!formErrors[k]}
+                        helperText={formErrors[k]}
+                        required
+                      />
+                    )}
+                  />
+                ) : (
+                  <TextField key={k} type="text" {...commonProps} />
+                )}
               </div>
             );
           })}
@@ -246,6 +266,7 @@ const Add_Popup = (props) => {
           onClick={() => {
             props.onClose();
             setFormData(default_values);
+            setFormErrors(default_errors);
           }}
         >
           Cancel
@@ -253,75 +274,6 @@ const Add_Popup = (props) => {
         <Button onClick={handleSubmit}>Confirm</Button>
       </DialogActions>
     </Dialog>
-    // <div className='add-popup'>
-    //     <div className="form-container">
-    //     <h2 className='title'>{title}</h2>
-    //         <form onSubmit={handleSubmit}>
-    //             <div className='inputs'>
-    //                 {
-    //                     Object.entries(props.fields).map(([k,v]) => {
-    //                         let isSelect=false
-    //                         let isTextArea = false
-    //                         if(v=="select"){
-    //                             isSelect=true
-    //                         } else if(v=="text-area"){
-    //                             isTextArea=true
-    //                         }
-    //                         return(
-    //                             <div key={k} className="input-label">
-    //                                 <label htmlFor={k}>{k.toLowerCase()
-    //                                     .split('_')
-    //                                     .map((word) => {
-    //                                         return word[0].toUpperCase() + word.slice(1);
-    //                                     })
-    //                                     .join(' ')}
-    //                                 </label>
-    //                                 {
-    //                                     isSelect?
-    //                                         <select className='w-full h-full' name={k} value={formData[k]}
-    //                                             onChange={(e)=>{
-    //                                                 setFormData({...formData,[k]: e.target.value})
-    //                                                 }
-    //                                             }
-    //                                         >
-    //                                             {options.map((value) => {
-    //                                                 return <option value={value}>{value}</option>
-    //                                             })}
-    //                                         </select>
-    //                                     : isTextArea?
-    //                                         <textarea name={k} value={formData[k]}
-    //                                         onChange={(e)=>{
-    //                                             setFormData({...formData,[k]: e.target.value})
-    //                                             }
-    //                                         }
-    //                                         >
-
-    //                                         </textarea>
-    //                                     :
-    //                                         <input type={v} name={k}
-    //                                             onChange ={(e)=>{
-    //                                                 setFormData({...formData,[k]: e.target.value})
-    //                                                 }
-    //                                             }
-    //                                             value={
-    //                                                 formData[k]
-    //                                             }
-    //                                         />
-    //                                 }
-    //                             </div>
-    //                         )
-    //                     })
-    //                 }
-    //             </div>
-    //             <div className="buttons-container">
-    //                 <div className='buttons'>
-    //                     <button type="button" className='cancel-button' onClick={()=>{setFormData(default_values);props.onClose()}}>Cancel</button>
-    //                     <button type="button" className='submit-button'>Add {props}</button>
-    //                 </div>
-    //             </div>
-    //         </form>
-    //     </div>
-    // </div>
   );
 };
 export default Add_Popup;

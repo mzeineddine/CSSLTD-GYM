@@ -10,15 +10,43 @@ import { axios_function } from "../../utilities/axios";
 
 export default function FormDialog(props) {
   const [email, setEmail] = useState("");
-  const handleSubmit = async () => {
-    console.log(email);
-    await axios_function(
-      "post",
-      "http://localhost/Projects/CSSLTD-GYM/Backend/user/reset_password",
-      { email: email }
-    );
-    props.handleClose();
+  const [emailError, setEmailError] = useState("");
+
+  const validateEmail = (email) => {
+    const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return pattern.test(email);
   };
+
+  const handleSubmit = async () => {
+    if (!validateEmail(email)) {
+      setEmailError("Please enter a valid email address.");
+      return;
+    }
+
+    try {
+      await axios_function(
+        "post",
+        "http://localhost/Projects/CSSLTD-GYM/Backend/user/reset_password",
+        { email: email }
+      );
+      props.handleClose();
+      setEmail(""); // Clear after success
+    } catch (error) {
+      console.error("Failed to send reset request:", error);
+    }
+  };
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+
+    if (!validateEmail(value)) {
+      setEmailError("Please enter a valid email address.");
+    } else {
+      setEmailError("");
+    }
+  };
+
   return (
     <React.Fragment>
       <Dialog open={props.open} onClose={props.handleClose}>
@@ -29,19 +57,21 @@ export default function FormDialog(props) {
             autoFocus
             required
             margin="dense"
-            id="name"
+            id="email"
             name="email"
             label="Email Address"
             type="email"
             fullWidth
             variant="standard"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleEmailChange}
+            error={!!emailError}
+            helperText={emailError}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={props.handleClose}>Cancel</Button>
-          <Button type="submit" onClick={handleSubmit}>
+          <Button type="submit" onClick={handleSubmit} disabled={!!emailError || email === ""}>
             {props.submit_text}
           </Button>
         </DialogActions>

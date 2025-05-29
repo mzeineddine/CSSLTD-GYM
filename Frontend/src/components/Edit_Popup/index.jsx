@@ -1,6 +1,4 @@
-import { useContext, useState } from "react";
-import "./add_popup.css";
-import React from "react";
+import { useContext, useState, useEffect } from "react";
 import {
   Dialog,
   DialogTitle,
@@ -9,17 +7,14 @@ import {
   DialogActions,
   Button,
   TextField,
-  MenuItem,
-  Box,
   Autocomplete,
 } from "@mui/material";
 import Textarea from "@mui/joy/Textarea";
-import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import dayjs from "dayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
 import { axios_function } from "../../utilities/axios";
 import { Members_Context } from "../../context/Members_Context";
 import { Staffs_Context } from "../../context/Staffs_Context";
@@ -27,255 +22,255 @@ import { Coaches_Context } from "../../context/Coaches_Context";
 import { Expenses_Context } from "../../context/Expenses_Context";
 import { PaymentAccounts_Context } from "../../context/PaymentAccounts_Context";
 import { ExpensePayments_Context } from "../../context/ExpensePayments_Context";
-import { Categories_Context } from "../../context/Categories_Context";
 import { SubscriptionPayments_Context } from "../../context/SubscriptionPayments_Context";
+import { Categories_Context } from "../../context/Categories_Context";
 
-// import CloseIcon from '@mui/icons-material';
-const Edit_Popup = (props) => {
-  const default_values = {};
-  for (let [key, value] of Object.entries(props.fields)) {
-    if (value == "date") {
-      default_values[key] = dayjs();
-      continue;
-    }
-    default_values[key] = "";
+const Edit_Popup = ({
+  name,
+  open,
+  onClose,
+  fields,
+  options = {},
+  filled_field = {},
+}) => {
+  const defaultValues = {};
+  const defaultErrors = {};
+
+  for (const [key, type] of Object.entries(fields)) {
+    defaultValues[key] = type === "date" ? dayjs() : "";
+    defaultErrors[key] = "";
   }
-  if (props.filled_field) {
-    for (let [key, value] of Object.entries(props.filled_field)) {
-      default_values[key] = value;
-    }
+
+  for (const [key, val] of Object.entries(filled_field)) {
+    defaultValues[key] = fields[key] === "date" ? dayjs(val) : val;
   }
-  const [formData, setFormData] = useState(default_values);
-  const { update_members } = useContext(Members_Context);
-  const { update_staffs } = useContext(Staffs_Context);
-  const { update_coaches } = useContext(Coaches_Context);
-  const { update_categories } = useContext(Categories_Context);
-  const { update_expenses } = useContext(Expenses_Context);
-  const { update_paymentAccounts } = useContext(PaymentAccounts_Context);
-  const { update_expensePayments } = useContext(ExpensePayments_Context);
-  const { update_subscriptionPayments } = useContext(
-    SubscriptionPayments_Context
-  );
+
+  const [formData, setFormData] = useState(defaultValues);
+  const [formErrors, setFormErrors] = useState(defaultErrors);
+
+  useEffect(() => {
+    setFormData(defaultValues);
+    setFormErrors(defaultErrors);
+  }, [filled_field]);
+
+  const {
+    update_members,
+    update_staffs,
+    update_coaches,
+    update_categories,
+    update_expenses,
+    update_paymentAccounts,
+    update_expensePayments,
+    update_subscriptionPayments,
+  } = {
+    ...useContext(Members_Context),
+    ...useContext(Staffs_Context),
+    ...useContext(Coaches_Context),
+    ...useContext(Categories_Context),
+    ...useContext(Expenses_Context),
+    ...useContext(PaymentAccounts_Context),
+    ...useContext(ExpensePayments_Context),
+    ...useContext(SubscriptionPayments_Context),
+  };
+
+  const validateField = (key, value, type) => {
+    if (type === "email") {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+        ? ""
+        : "Invalid email format";
+    }
+    if (type === "password") {
+      return value.length >= 6 ? "" : "Password must be at least 6 characters";
+    }
+    if (type === "number") {
+      return !isNaN(value) && value !== "" ? "" : "Must be a valid number";
+    }
+    if (type === "select" || type === "text-area" || type === "text") {
+      return value ? "" : "This field is required";
+    }
+    return "";
+  };
+
+  const validateForm = () => {
+    const newErrors = {};
+    let valid = true;
+
+    for (const [key, type] of Object.entries(fields)) {
+      const err = validateField(key, formData[key], type);
+      newErrors[key] = err;
+      if (err) valid = false;
+    }
+
+    setFormErrors(newErrors);
+    return valid;
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let name = props.name;
-    if (props.name == "staff") {
-      name = "user";
+    if (!validateForm()) return;
+
+    const endpoint = name === "staff" ? "user" : name.toLowerCase();
+
+    const payload = { ...formData };
+    if (fields["date"]) {
+      payload["date"] = formData["date"]?.toISOString?.();
     }
 
-    if (props.name.toLowerCase() == "member") {
-      let response = await axios_function(
+    if (name.toLowerCase() === "member") {
+      const response = await axios_function(
         "POST",
-        "http://localhost/Projects/CSSLTD-GYM/Backend/" +
-          name.toLowerCase() +
-          "/update",
-        formData
+        `http://localhost/Projects/CSSLTD-GYM/Backend/${endpoint}/update`,
+        payload
       );
-      console.log("response.result", response.result);
       await axios_function(
         "POST",
         "http://localhost/Projects/CSSLTD-GYM/Backend/subscription/update",
-        { ...formData, member_id: response.result }
+        {
+          ...formData,
+          member_id: response.result,
+        }
       );
     } else {
-      console.log(name.toLowerCase());
       await axios_function(
         "POST",
-        "http://localhost/Projects/CSSLTD-GYM/Backend/" +
-          name.toLowerCase() +
-          "/update",
-        formData
+        `http://localhost/Projects/CSSLTD-GYM/Backend/${endpoint}/update`,
+        payload
       );
     }
-    console.log("form submitted");
-    if (props.name.toLowerCase() == "member") {
-      update_members();
-    } else if (props.name.toLowerCase() == "user") {
-      update_staffs();
-    } else if (props.name.toLowerCase() == "coach") {
-      update_coaches();
-    } else if (props.name.toLowerCase() == "expense") {
-      update_expenses();
-    } else if (props.name.toLowerCase() == "payment_account") {
-      update_paymentAccounts();
-    } else if (props.name.toLowerCase() == "category") {
-      update_categories();
+
+    switch (name.toLowerCase()) {
+      case "member":
+        update_members();
+        break;
+      case "user":
+        update_staffs();
+        break;
+      case "coach":
+        update_coaches();
+        break;
+      case "expense":
+        update_expenses();
+        break;
+      case "payment_account":
+        update_paymentAccounts();
+        break;
+      case "category":
+        update_categories();
+        break;
+      case "subscription_payment":
+        update_members();
+        update_subscriptionPayments();
+        break;
+      case "expense_payment":
+        update_expenses();
+        update_expensePayments();
+        break;
     }
 
-    if (props.name.toLowerCase() == "subscription_payment") {
-      update_members();
-      update_subscriptionPayments();
-    }
-    if (props.name.toLowerCase() == "expense_payment") {
-      update_expenses();
-      update_expensePayments();
-    }
-    setFormData(default_values);
-    props.onClose();
+    onClose();
+    setFormData(defaultValues);
+    setFormErrors(defaultErrors);
   };
-  const title = "Edit " + props.name == "User" ? "Staff" : props.name;
-  const options = props.options;
+
   return (
-    <Dialog open={props.open}>
+    <Dialog open={open}>
       <DialogTitle>
-        <Typography variant="h6" component="div">
-          {title}
-        </Typography>
+        <Typography variant="h6">{`Edit ${
+          name === "User" ? "Staff" : name
+        }`}</Typography>
       </DialogTitle>
       <DialogContent dividers>
         <div className="flex flex-row flex-wrap justify-between items-end w-full gap-0.5">
-          {Object.entries(props.fields).map(([k, v]) => {
-            let isSelect = false;
-            let isTextArea = false;
-            let isNumber = false;
-            let isDate = false;
-            let isEmail = false;
-            let isPassword = false;
-            if (v == "email") {
-              isEmail = true;
-            } else if (v == "password") {
-              isPassword = true;
-            } else if (v == "select") {
-              isSelect = true;
-            } else if (v == "text-area") {
-              isTextArea = true;
-            } else if (v == "date") {
-              isDate = true;
-            } else if (v == "number") {
-              isNumber = true;
-            }
+          {Object.entries(fields).map(([k, v]) => {
+            const commonProps = {
+              fullWidth: true,
+              label: k,
+              value: formData[k],
+              error: !!formErrors[k],
+              helperText: formErrors[k],
+              required: true,
+              onChange: (e) => {
+                const val = e.target.value;
+                setFormData({ ...formData, [k]: val });
+                setFormErrors({ ...formErrors, [k]: validateField(k, val, v) });
+              },
+            };
             return (
               <div key={k} className="w-[49%] flex-1/3">
-                <Box component="form" autoComplete="off">
-                  {isEmail ? (
-                    <TextField
-                      fullWidth
-                      label={k}
-                      type="email"
-                      value={formData[k]}
-                      onChange={(e) => {
-                        setFormData({ ...formData, [k]: e.target.value });
-                      }}
-                      required
-                    ></TextField>
-                  ) : isPassword ? (
-                    <TextField
-                      fullWidth
-                      label={k}
-                      type="password"
-                      value={formData[k]}
-                      onChange={(e) => {
-                        setFormData({ ...formData, [k]: e.target.value });
-                      }}
-                      required
-                    />
-                  ) : isDate ? (
-                    <LocalizationProvider dateAdapter={AdapterDayjs}>
-                      <DemoContainer components={["DateTimePicker"]}>
-                        <DatePicker
-                          label={k}
-                          value={dayjs(formData[k])}
-                          onChange={(newValue) => {
-                            setFormData({ ...formData, [k]: newValue });
-                          }}
-                        />
-                      </DemoContainer>
-                    </LocalizationProvider>
-                  ) : isTextArea ? (
-                    <Textarea
-                      minRows={2}
-                      label={k}
-                      value={formData[k]}
-                      onChange={(e) => {
-                        setFormData({ ...formData, [k]: e.target.value });
-                      }}
-                      required
-                      placeholder="Comment"
-                    />
-                  ) : isNumber ? (
-                    <TextField
-                      fullWidth
-                      label={k}
-                      type="number"
-                      value={formData[k]}
-                      onChange={(e) => {
-                        setFormData({ ...formData, [k]: e.target.value });
-                      }}
-                      required
-                    ></TextField>
-                  ) : isSelect ? (
-                    <Autocomplete
-                      options={options[k] || []}
-                      getOptionLabel={(option) => option.name || ""}
-                      isOptionEqualToValue={(option, value) =>
-                        option.id === value.id
+                {v === "email" ? (
+                  <TextField key={k} type="email" {...commonProps} />
+                ) : v === "password" ? (
+                  <TextField key={k} type="password" {...commonProps} />
+                ) : v === "number" ? (
+                  <TextField key={k} type="number" {...commonProps} />
+                ) : v === "date" ? (
+                  <LocalizationProvider key={k} dateAdapter={AdapterDayjs}>
+                    <DemoContainer components={["DatePicker"]}>
+                      <DatePicker
+                        label={k}
+                        value={formData[k]}
+                        onChange={(newValue) => {
+                          setFormData({ ...formData, [k]: newValue });
+                          setFormErrors({ ...formErrors, [k]: "" });
+                        }}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+                ) : v === "text-area" ? (
+                  <Textarea
+                    key={k}
+                    minRows={2}
+                    placeholder={k}
+                    value={formData[k]}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setFormData({ ...formData, [k]: val });
+                      setFormErrors({
+                        ...formErrors,
+                        [k]: validateField(k, val, v),
+                      });
+                    }}
+                    required
+                  />
+                ) : v === "select" ? (
+                  <Autocomplete
+                    key={k}
+                    options={options[k] || []}
+                    getOptionLabel={(opt) => opt.name || ""}
+                    isOptionEqualToValue={(opt, val) => opt.id === val.id}
+                    value={
+                      options[k]?.find((o) => o.id === formData[k]) || null
+                    }
+                    onChange={(e, selectedOption) => {
+                      const updated = {
+                        ...formData,
+                        [k]: selectedOption?.id || "",
+                      };
+                      if (
+                        name.toLowerCase() === "member" &&
+                        selectedOption?.price
+                      ) {
+                        updated.cost = selectedOption.price;
                       }
-                      onChange={(event, selectedOption) => {
-                        if (selectedOption) {
-                          const updatedFormData = {
-                            ...formData,
-                            [k]: selectedOption.id,
-                          };
-
-                          if (props.name.toLowerCase() === "member") {
-                            updatedFormData.cost = selectedOption.price;
-                          }
-
-                          setFormData(updatedFormData);
-                        }
-                      }}
-                      renderInput={(params) => (
-                        <TextField {...params} fullWidth label={k} required />
-                      )}
-                      value={
-                        options[k]?.find((opt) => opt.id === formData[k]) ||
-                        null
-                      }
-                    />
-                  ) : (
-                    // <TextField
-                    //   fullWidth
-                    //   label={k}
-                    //   value={formData[k]}
-                    //   onChange={(e) => {
-                    //     setFormData({ ...formData, [k]: e.target.value });
-                    //     if (props.name.toLowerCase() == "member") {
-                    //       // console.log("MEMBER")
-                    //       const cost = options[k].filter((value) => {
-                    //         if (value.id == e.target.value) {
-                    //           return value;
-                    //         }
-                    //       });
-                    //       console.log("VALUE", cost[0]["price"]);
-                    //       setFormData({
-                    //         ...formData,
-                    //         cost: cost[0]["price"],
-                    //         [k]: e.target.value,
-                    //       });
-                    //     }
-                    //   }}
-                    //   required
-                    //   select
-                    // >
-                    //   {options[k] &&
-                    //     options[k].map((value) => {
-                    //       return (
-                    //         <MenuItem value={value.id}>{value.name}</MenuItem>
-                    //       );
-                    //     })}
-                    // </TextField>
-                    <TextField
-                      fullWidth
-                      label={k}
-                      value={formData[k]}
-                      onChange={(e) => {
-                        setFormData({ ...formData, [k]: e.target.value });
-                      }}
-                      required
-                    ></TextField>
-                  )}
-                </Box>
+                      setFormData(updated);
+                      setFormErrors({
+                        ...formErrors,
+                        [k]: selectedOption ? "" : "Required field.",
+                      });
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        label={k}
+                        error={!!formErrors[k]}
+                        helperText={formErrors[k]}
+                        required
+                      />
+                    )}
+                  />
+                ) : (
+                  <TextField key={k} type="text" {...commonProps} />
+                )}
               </div>
             );
           })}
@@ -284,8 +279,9 @@ const Edit_Popup = (props) => {
       <DialogActions>
         <Button
           onClick={() => {
-            props.onClose();
-            setFormData(default_values);
+            onClose();
+            setFormData(defaultValues);
+            setFormErrors(defaultErrors);
           }}
         >
           Cancel
