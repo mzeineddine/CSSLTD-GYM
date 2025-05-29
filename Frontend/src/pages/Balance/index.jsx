@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { axios_function } from "../../utilities/axios";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -12,8 +12,19 @@ import { Accesses_Context } from "../../context/Access_Context";
 const Balance = () => {
   const { accesses, update_accesses } = useContext(Accesses_Context);
   const [access, setAccess] = useState(null);
-  if (!accesses) update_accesses();
+
+  const [formData, setFormData] = useState({
+    from: null,
+    to: null,
+  });
+
+  const [tableData, setTableData] = useState([]);
+  const [tableHeaders, setTableHeaders] = useState([]);
+  const [transactionsData, setTransactionsData] = useState([]);
+  const [transactionsHeaders, setTransactionsHeaders] = useState([]);
+
   useEffect(() => {
+    if (!accesses) update_accesses();
     if (!accesses) return;
 
     const newAccess = {
@@ -25,82 +36,62 @@ const Balance = () => {
 
     accesses.forEach((acc) => {
       if (acc.page === "balance") {
-        if (acc.action == "1") newAccess.create = true;
-        if (acc.action == "2") newAccess.view = true;
-        if (acc.action == "3") newAccess.edit = true;
-        if (acc.action == "4") newAccess.delete = true;
+        if (acc.action === "1") newAccess.create = true;
+        if (acc.action === "2") newAccess.view = true;
+        if (acc.action === "3") newAccess.edit = true;
+        if (acc.action === "4") newAccess.delete = true;
       }
     });
 
     setAccess(newAccess);
   }, [accesses]);
 
-  const [formData, setFormData] = useState({
-    from: "",
-    to: "",
-  });
-
-  const [tableData, setTableData] = useState([]);
-  const [tableHeaders, setTableHeaders] = useState([]);
-  const [transactionsData, setTransactionsData] = useState([]);
-  const [transactionsHeaders, setTransactionsHeaders] = useState([]);
   const handleShowClick = async () => {
-    console.log(formData);
+    const requestPayload = {
+      from: formData.from ? dayjs(formData.from).format("YYYY-MM-DD") : "",
+      to: formData.to ? dayjs(formData.to).format("YYYY-MM-DD") : "",
+    };
+
     try {
-      const response = await axios_function(
+      const res1 = await axios_function(
         "POST",
         "http://localhost/Projects/CSSLTD-GYM/Backend/general/balance",
-        formData
+        requestPayload
       );
-
-      // Parse the stringified JSON object
-      const rawData = response.data;
-      const parsedData =
-        typeof rawData === "string" ? JSON.parse(rawData) : rawData;
+      const balanceData =
+        typeof res1.data === "string" ? JSON.parse(res1.data) : res1.data;
 
       if (
-        parsedData &&
-        typeof parsedData === "object" &&
-        !Array.isArray(parsedData)
+        balanceData &&
+        typeof balanceData === "object" &&
+        !Array.isArray(balanceData)
       ) {
-        const dataArray = [parsedData]; // wrap in array for MUIDataTable
-        const headers = Object.keys(parsedData);
-
-        setTableHeaders(headers);
-        setTableData(dataArray);
+        setTableHeaders(Object.keys(balanceData));
+        setTableData([balanceData]);
       } else {
         setTableHeaders([]);
         setTableData([]);
       }
-    } catch (error) {
-      console.error("Error fetching balance data:", error);
+    } catch (err) {
+      console.error("Error fetching balance:", err);
       setTableHeaders([]);
       setTableData([]);
     }
 
     try {
-      const response = await axios_function(
+      const res2 = await axios_function(
         "POST",
         "http://localhost/Projects/CSSLTD-GYM/Backend/general/balance_transactions",
-        formData
+        requestPayload
       );
-
-      // Parse the stringified JSON object
-      const parsedData = response.data;
-
-      const dataArray = parsedData; // wrap in array for MUIDataTable
-      const headers = Object.keys(parsedData[0]);
-      console.log(Object.values(dataArray));
-      setTransactionsHeaders(headers);
-      setTransactionsData(dataArray);
-    } catch (error) {
-      console.error("Error fetching balance data:", error);
+      const txData = res2.data;
+      setTransactionsHeaders(Object.keys(txData[0] || {}));
+      setTransactionsData(txData || []);
+    } catch (err) {
+      console.error("Error fetching transactions:", err);
       setTransactionsHeaders([]);
       setTransactionsData([]);
     }
-
-    // console.log(transactionsData)
-    // console.log(transactionsHeaders)
   };
 
   return (
@@ -111,24 +102,16 @@ const Balance = () => {
           dateAdapter={AdapterDayjs}
         >
           <DatePicker
-            label="from"
-            value={dayjs(formData.from)}
-            onChange={(newValue) =>
-              setFormData({
-                ...formData,
-                from: newValue ? dayjs(newValue).format("YYYY-MM-DD") : "",
-              })
-            }
+            label="From"
+            value={formData.from}
+            onChange={(value) => setFormData({ ...formData, from: value })}
+            slotProps={{ textField: { error: false } }}
           />
           <DatePicker
             label="To"
-            value={dayjs(formData.to)}
-            onChange={(newValue) =>
-              setFormData({
-                ...formData,
-                to: newValue ? dayjs(newValue).format("YYYY-MM-DD") : "",
-              })
-            }
+            value={formData.to}
+            onChange={(value) => setFormData({ ...formData, to: value })}
+            slotProps={{ textField: { error: false } }}
           />
           <Button
             style={{

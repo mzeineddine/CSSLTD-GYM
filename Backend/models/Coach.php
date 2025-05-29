@@ -18,7 +18,7 @@ class Coach extends Coach_Skeleton
         global $conn;
         $id = $data['id'] ?? null;
         if ($id) {
-            $stmt = $conn->prepare("SELECT coaches.*, user_name as created_by FROM coaches, users WHERE coaches.id = ?  created_by=users.id AND coaches.is_deleted=0");
+            $stmt = $conn->prepare("SELECT coaches.*, username as created_by FROM coaches, users WHERE coaches.id = ? AND created_by=users.id AND coaches.is_deleted=0");
             $stmt->execute([$id]);
             $member = $stmt->fetch(PDO::FETCH_ASSOC);
             return $member;
