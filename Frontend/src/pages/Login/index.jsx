@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./login.css";
 import Logo from "./../../assets/logo.png";
 import Land_image from "./../../assets/land_image.png";
@@ -6,6 +6,7 @@ import { Link, Navigate, useNavigate } from "react-router-dom";
 import Edit_Popup from "../../components/Edit_Popup";
 import FormDialog from "../../components/Form_Dailog";
 import { axios_function } from "../../utilities/axios";
+import { useMediaQuery } from "@mui/material";
 const LoginPage = () => {
   const logo = Logo;
   const gym_description =
@@ -21,6 +22,16 @@ const LoginPage = () => {
     is_remember: false,
   });
   const [open, setOpen] = useState(false);
+
+  const isMobile = useMediaQuery("(max-width: 800px)");
+  const [showLeft, setShowLeft] = useState(!isMobile);
+  useEffect(() => {
+    if (!isMobile) {
+      setShowLeft(true);
+    } else {
+      setShowLeft(false);
+    }
+  }, [isMobile]);
   const handleClose = () => {
     setOpen(false);
   };
@@ -50,13 +61,13 @@ const LoginPage = () => {
   };
   return (
     <div className="login-container">
-      <div className="left-side">
+      {showLeft && <div className="left-side">
         <div className="logo-section">
           <img src={logo} alt="Gym Logo" className="logo" />
           <h2 className="tagline">{gym_description}</h2>
           <img src={gym_image} alt="Gym Image" className="illustration" />
         </div>
-      </div>
+      </div>}
 
       <div className="right-side">
         <div className="login-form">

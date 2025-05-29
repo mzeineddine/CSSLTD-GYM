@@ -19,11 +19,13 @@ import BillingOverviewChart from "../../components/PiChart/piChart";
 
 const Member_Profile = () => {
   const location = useLocation();
-  const id = location.state;
+  const [id, setId] = useState(location.state);
   const [showEdit, setShowEdit] = useState(false);
   const { members, update_members } = useContext(Members_Context);
   const [member, setMember] = useState(null);
-
+  useEffect(() => {
+    setId(location.state);
+  }, [location]);
   useEffect(() => {
     if (!members) {
       update_members();
@@ -31,7 +33,7 @@ const Member_Profile = () => {
     }
     const found = members.find((m) => m.id == id);
     if (found) setMember(found);
-  }, [members]);
+  }, [members, id]);
 
   const data = useMemo(() => {
     if (!member) return [];

@@ -97,6 +97,11 @@ class GlobalSetting_Controller
                 ]);
                 return false;
             }
+            echo json_encode($global_setting);
+            $img_base =  __DIR__ . "/../../../";
+            $filePath = $global_setting["logo"];
+            $filePath = $img_base . $filePath;
+            unlink($filePath);
             $updated = GlobalSetting::update($data);
             echo json_encode([
                 "result" => $updated,
