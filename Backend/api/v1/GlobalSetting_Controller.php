@@ -72,23 +72,39 @@ class GlobalSetting_Controller
         $data = json_decode(file_get_contents("php://input"), true);
         if (!Controllers_Utilities::check_params($data, ["id", "logo", "file_name", "name", "phone_nb"]))
             return false;
-        $out_path = self::save_image($data['file_name'], $data['logo']);
-        $data["logo"] = $out_path;
-        $global_setting = GlobalSetting::read($data);
-        if (!$global_setting) {
+        if ($data["logo"] == "unchanged") {
+            $global_setting = GlobalSetting::read($data);
+            if (!$global_setting) {
+                echo json_encode([
+                    "result" => false,
+                    "message" => "No global settings found"
+                ]);
+                return false;
+            }
+            $updated = GlobalSetting::update_without_logo($data);
             echo json_encode([
-                "result" => false,
-                "message" => "No global settings found"
+                "result" => $updated,
+                "message" => $updated ? "Global setting updated successfully" : "Global setting not updated",
             ]);
-            return false;
+        } else {
+            $out_path = self::save_image($data['file_name'], $data['logo']);
+            $data["logo"] = $out_path;
+            $global_setting = GlobalSetting::read($data);
+            if (!$global_setting) {
+                echo json_encode([
+                    "result" => false,
+                    "message" => "No global settings found"
+                ]);
+                return false;
+            }
+            $updated = GlobalSetting::update($data);
+            echo json_encode([
+                "result" => $updated,
+                "message" => $updated ? "Global setting updated successfully" : "Global setting not updated",
+            ]);
         }
         // $modified_data = ["id"=>$data["created_by"]];
         // if(self::check_created_by($modified_data)){
-        $updated = GlobalSetting::update($data);
-        echo json_encode([
-            "result" => $updated,
-            "message" => $updated ? "Global setting updated successfully" : "Global setting not updated",
-        ]);
         // }
         if ($updated) {
             Log::create([

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -10,8 +10,37 @@ import {
 import PhoneIcon from "@mui/icons-material/Phone";
 import UploadIcon from "@mui/icons-material/Upload";
 import { axios_function } from "../../utilities/axios";
+import { GeneralSettings_Context } from "../../context/GeneralSettings_Context";
+import { Accesses_Context } from "../../context/Access_Context";
 
 const Settings = () => {
+  const { generalSettings, update_generalSettings } = useContext(
+    GeneralSettings_Context
+  );
+  const { accesses, update_accesses } = useContext(Accesses_Context);
+  const [access, setAccess] = useState(null);
+  if (!accesses) update_accesses();
+  useEffect(() => {
+    if (!accesses) return;
+
+    const newAccess = {
+      create: false,
+      view: false,
+      edit: false,
+      delete: false,
+    };
+
+    accesses.forEach((acc) => {
+      if (acc.page === "settings") {
+        if (acc.action == "1") newAccess.create = true;
+        if (acc.action == "2") newAccess.view = true;
+        if (acc.action == "3") newAccess.edit = true;
+        if (acc.action == "4") newAccess.delete = true;
+      }
+    });
+
+    setAccess(newAccess);
+  }, [accesses]);
   const [formData, setFormData] = useState({
     logo: "",
     file_name: "",
@@ -21,22 +50,20 @@ const Settings = () => {
   });
 
   const getData = async () => {
-    const response = await axios_function(
-      "GET",
-      "http://localhost/Projects/CSSLTD-GYM/Backend/global_setting/read",
-      { id: 1 }
-    );
-    // setFormData({...formData, response})
-    setFormData({
-      ...formData,
-      ...response.data[0],
-      logoPreview: response.data[0].logo,
-    });
+    if (!generalSettings) update_generalSettings();
+    else {
+      setFormData({
+        ...formData,
+        ...generalSettings,
+        logoPreview:
+          "http://localhost/Projects/CSSLTD-GYM/" + generalSettings?.logo,
+      });
+    }
   };
   useEffect(() => {
     getData();
     // setFormData({...formData, data});
-  }, []);
+  }, [generalSettings]);
   const handleLogoChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -53,19 +80,30 @@ const Settings = () => {
     } else {
       setFormData({
         ...formData,
-        logo: null,
         logoPreview: null,
       });
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    axios_function(
-      "POST",
-      "http://localhost/Projects/CSSLTD-GYM/Backend/global_setting/update",
-      formData
-    );
+    if (formData.logo == generalSettings.logo) {
+      console.log("unchanged logo");
+      await axios_function(
+        "POST",
+        "http://localhost/Projects/CSSLTD-GYM/Backend/global_setting/update",
+        { ...formData, logo: "unchanged" }
+      );
+    } else {
+      e.preventDefault();
+      await axios_function(
+        "POST",
+        "http://localhost/Projects/CSSLTD-GYM/Backend/global_setting/update",
+        formData
+      );
+      // console.log(formData)
+      update_generalSettings();
+    }
   };
 
   return (
@@ -90,11 +128,11 @@ const Settings = () => {
       </Typography>
       <Box display="flex" alignItems="center" gap={2}>
         <Avatar
-          src={"http://localhost/Projects/CSSLTD-GYM/"+formData.logoPreview || ""}
+          src={formData.logoPreview}
           alt="Logo Preview"
           sx={{ width: 64, height: 64 }}
         />
-        <Button
+        {access?.edit && <Button
           variant="contained"
           component="label"
           startIcon={<UploadIcon />}
@@ -109,7 +147,7 @@ const Settings = () => {
             hidden
             onChange={handleLogoChange}
           />
-        </Button>
+        </Button>}
       </Box>
       <TextField
         label="Company Name"
@@ -118,6 +156,7 @@ const Settings = () => {
         variant="outlined"
         fullWidth
         required
+        disabled={!access?.edit}
         sx={{
           m: 0,
           p: 0,
@@ -139,6 +178,7 @@ const Settings = () => {
         variant="outlined"
         fullWidth
         required
+        disabled={!access?.edit}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -161,7 +201,7 @@ const Settings = () => {
         }}
       />
 
-      <Button
+      {access?.edit && <Button
         type="submit"
         variant="contained"
         color="primary"
@@ -170,7 +210,7 @@ const Settings = () => {
         }}
       >
         Submit
-      </Button>
+      </Button>}
     </Box>
   );
 };

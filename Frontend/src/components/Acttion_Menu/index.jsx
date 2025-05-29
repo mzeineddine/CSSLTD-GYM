@@ -68,6 +68,11 @@ export default function PositionedMenu(props) {
     setFunction_name(function_name);
     setShowEdit(true);
   };
+
+  const edit_expense = (function_name) => {
+    setFunction_name(function_name);
+    setShowEdit(true);
+  };
   return (
     <div>
       {showAdd && (
@@ -117,12 +122,14 @@ export default function PositionedMenu(props) {
         {props.options.map((value, index) => {
           const function_name = props.options[index][Object.keys(value)[0]];
           return (
-            <MenuItem
-              key={index}
-              onClick={() => eval(function_name)(function_name)}
-            >
-              {Object.keys(value)[0]}
-            </MenuItem>
+            value && (
+              <MenuItem
+                key={index}
+                onClick={() => eval(function_name)(function_name)}
+              >
+                {Object.keys(value)[0]}
+              </MenuItem>
+            )
           );
         })}
       </Menu>

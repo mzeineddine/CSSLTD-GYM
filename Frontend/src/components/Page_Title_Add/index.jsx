@@ -4,10 +4,7 @@ import Add_Popup from "../Add_Popup";
 import { Members_Context } from "../../context/Members_Context";
 const Page_Title_Add = (props) => {
   // const navigate = new useNavigate();
-  const name =
-    props.name.toLowerCase() != "user"
-      ? props.name.charAt(0).toUpperCase() + props.name.slice(1).toLowerCase()
-      : "Staff";
+  const name = props.name
   const handleOnClick = () => {
     setShowModal(true);
   };
@@ -30,7 +27,12 @@ const Page_Title_Add = (props) => {
           options={props.options}
           fields={props.fields}
           filled_field={{ [change_id]: data_id }}
-          name={name}
+          name={
+            props.name.toLowerCase() != "staff"
+              ? props.name.charAt(0).toUpperCase() +
+                props.name.slice(1).toLowerCase()
+              : "user"
+          }
         />
       </div>
     </div>

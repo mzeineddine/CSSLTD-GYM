@@ -54,7 +54,7 @@ const Staff = () => {
     <div className="staff">
       {access?.create && (
         <Page_Title_Add
-          name="user"
+          name="Staff"
           fields={{
             email: "email",
             password: "password",

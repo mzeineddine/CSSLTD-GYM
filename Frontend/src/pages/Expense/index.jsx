@@ -33,12 +33,6 @@ const Expense = () => {
 
     accesses.forEach((acc) => {
       if (acc.page === "expense") {
-        if (acc.action == "1") newAccess.create = true;
-        if (acc.action == "2") newAccess.view = true;
-        if (acc.action == "3") newAccess.edit = true;
-        if (acc.action == "4") newAccess.delete = true;
-      }
-      if (acc.page === "expense") {
         if (acc.action == "1") newAccess.create_expense = true;
         if (acc.action == "2") newAccess.view_expense = true;
         if (acc.action == "3") newAccess.edit_expense = true;
@@ -126,7 +120,7 @@ const Expense = () => {
         )}
       </div>
       <div className="expenses-table m-[2%]">
-        {paymentAccounts && access?.create && (
+        {paymentAccounts && access?.create_expense && (
           <Page_Title_Add
             options={{ account_id: paymentAccounts }}
             name="expense"
@@ -138,16 +132,28 @@ const Expense = () => {
             }}
           />
         )}
-        {access?.view && (
+        {access?.view_expense && (
           <Table1
             title="expense"
             id="expenses_table"
+            options={
+              access?.edit_expense && [{ "Edit expense": "edit_expense" }]
+            }
+            options_names={{
+              edit_expense: "expense",
+            }}
+            options_functions_field={{
+              edit_expense: {
+                bill_amount: "number",
+                comment: "text",
+              },
+            }}
             info={false}
             searchable={true}
             paging={true}
             exportable={true}
             visible={false}
-            selectable={access?.delete ? "multiple" : "none"}
+            selectable={access?.delete_expense ? "multiple" : "none"}
           />
         )}
 

@@ -15,7 +15,30 @@ const Access = () => {
   const { staffs, update_staffs } = useContext(Staffs_Context);
   const [staff_id, setStaffId] = useState(null);
   const [permissions, setPermissions] = useState([]);
-  const {update_accesses} = useContext(Accesses_Context)
+  const { accesses, update_accesses } = useContext(Accesses_Context);
+  const [access, setAccess] = useState(null);
+  if (!accesses) update_accesses();
+  useEffect(() => {
+    if (!accesses) return;
+
+    const newAccess = {
+      create: false,
+      view: false,
+      edit: false,
+      delete: false,
+    };
+
+    accesses.forEach((acc) => {
+      if (acc.page === "access") {
+        if (acc.action == "1") newAccess.create = true;
+        if (acc.action == "2") newAccess.view = true;
+        if (acc.action == "3") newAccess.edit = true;
+        if (acc.action == "4") newAccess.delete = true;
+      }
+    });
+
+    setAccess(newAccess);
+  }, [accesses]);
   const get_data = async () => {
     if (staff_id) {
       const response = await axios_function(
@@ -83,6 +106,7 @@ const Access = () => {
           <Checkbox
             checked={hasPermission(page, action)}
             onClick={() => togglePermission(page, action)}
+            disabled={!(access?.create && access?.edit && access?.delete)}
           />
         );
       });
@@ -131,7 +155,7 @@ const Access = () => {
               "http://localhost/Projects/CSSLTD-GYM/Backend/access/create_permission",
               { accesses: permissions, user_id: staff_id }
             );
-            update_accesses()
+            update_accesses();
           }}
         >
           SAVE
