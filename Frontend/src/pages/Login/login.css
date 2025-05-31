@@ -70,7 +70,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin: 0.75em 0 1.5em;
+  /* margin: 0.75em 0 1.5em; */
 }
 .remember-me {
   display: flex;
@@ -154,4 +154,9 @@ button {
 }
 button:hover {
   background: rgb(150, 55, 240);
+}
+
+.logo-section .img{
+  width: 100%;
+  height: 100%;
 }

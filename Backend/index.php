@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__ . "/connections/connection.php";
 // Define your base directory 
 $base_dir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/');
 $request = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
@@ -126,22 +126,27 @@ $apis = [
 
     "/access/create" => ['controller' => 'Access_Controller', "method" => "create"],
     "/access/read" => ['controller' => 'Access_Controller', "method" => "read"],
-    
+
     "/access/read_user" => ['controller' => 'Access_Controller', "method" => "read_user"],
     "/access/create_permission" => ['controller' => 'Access_Controller', "method" => "create_permission"],
 
 ];
 
 if (isset($apis[$request])) {
-    $controller_name = $apis[$request]['controller'];
-    $method = $apis[$request]['method'];
-    require_once "./api/v1/{$controller_name}.php";
+    global $conn;
+    if ($conn) {
+        $controller_name = $apis[$request]['controller'];
+        $method = $apis[$request]['method'];
+        require_once "./api/v1/{$controller_name}.php";
 
-    $controller = new $controller_name();
-    if (method_exists($controller, $method)) {
-        $controller->$method();
+        $controller = new $controller_name();
+        if (method_exists($controller, $method)) {
+            $controller->$method();
+        } else {
+            echo "Error: Method {$method} not found in {$controller_name}.";
+        }
     } else {
-        echo "Error: Method {$method} not found in {$controller_name}.";
+        echo "";
     }
 } else {
     echo "404 Not Found";

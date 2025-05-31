@@ -10,7 +10,11 @@ const Reset_Password = () => {
       "http://localhost/Projects/CSSLTD-GYM/Backend/user/reset",
       formData
     );
-    alert(response.message)
+    if (response.result) {
+      console.log(response.message);
+    } else {
+      console.log("ERROR", response.message);
+    }
   };
   return (
     <div className="reset-password w-[100%] flex flex-col justify-center items-center">

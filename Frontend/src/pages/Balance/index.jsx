@@ -58,6 +58,11 @@ const Balance = () => {
         "http://localhost/Projects/CSSLTD-GYM/Backend/general/balance",
         requestPayload
       );
+      if (res1.result) {
+        console.log(res1.message);
+      } else {
+        console.log("ERROR", res1.message);
+      }
       const balanceData =
         typeof res1.data === "string" ? JSON.parse(res1.data) : res1.data;
 
@@ -84,6 +89,11 @@ const Balance = () => {
         "http://localhost/Projects/CSSLTD-GYM/Backend/general/balance_transactions",
         requestPayload
       );
+      if (res2.result) {
+      console.log(res2.message);
+    } else {
+      console.log("ERROR", res2.message);
+    }
       const txData = res2.data;
       setTransactionsHeaders(Object.keys(txData[0] || {}));
       setTransactionsData(txData || []);

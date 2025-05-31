@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./login.css";
 import Logo from "./../../assets/logo.png";
 import Land_image from "./../../assets/land_image.png";
@@ -10,15 +10,28 @@ import {
   useMediaQuery,
   TextField,
   Button,
-  Checkbox,
-  FormControlLabel,
   Typography,
+  Avatar,
+  Snackbar,
+  Alert,
 } from "@mui/material";
+import { GeneralSettings_Context } from "../../context/GeneralSettings_Context";
 
 const LoginPage = () => {
-  const logo = Logo;
+  const { generalSettings, update_generalSettings } = useContext(
+    GeneralSettings_Context
+  );
+  const [logoUrl, setLogoUrl] = useState("#");
+
+  useEffect(() => {
+    if (!generalSettings) update_generalSettings();
+  }, []);
+  useEffect(() => {
+    setLogoUrl("http://localhost/Projects/CSSLTD-GYM/" + generalSettings?.logo);
+  }, [generalSettings]);
+
   const gym_description =
-    "Lorem ipsum dolor, sit amet consectetur adipisicing elit...";
+    "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Reiciendis nisi, natus maiores ipsum corporis odio, voluptatum dicta tempore laudantium fugiat repellat quia animi deleniti illum. Unde velit fugit ex similique.";
   const gym_image = Land_image;
   const gym_name = "CSSLTD";
 
@@ -47,6 +60,8 @@ const LoginPage = () => {
   };
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [openError, setOpenError] = useState(false);
 
   const onSubmit_handler = async (e) => {
     e.preventDefault();
@@ -60,7 +75,13 @@ const LoginPage = () => {
       "http://localhost/Projects/CSSLTD-GYM/Backend/user/login",
       form
     );
-
+    if (response.result) {
+      console.log(response.message);
+    } else {
+      console.log("ERROR", );
+      setErrorMessage(response.message);
+      setOpenError(true);
+    }
     if (response.result) {
       localStorage.setItem("access-token", response.token);
       localStorage.setItem("user_name", response.data.username);
@@ -78,7 +99,19 @@ const LoginPage = () => {
       {showLeft && (
         <div className="left-side">
           <div className="logo-section">
-            <img src={logo} alt="Gym Logo" className="logo" />
+            {/* <img src={logoUrl} alt="Gym Logo" className="logo" /> */}
+            {generalSettings && (
+              <Avatar
+                src={logoUrl}
+                alt="Logo Preview"
+                sx={{
+                  width: "40%",
+                  maxWidth: "500px",
+                  height: "40%",
+                  borderRadius: 0,
+                }}
+              />
+            )}
             <h2 className="tagline">{gym_description}</h2>
             <img
               src={gym_image}
@@ -90,16 +123,19 @@ const LoginPage = () => {
       )}
 
       <div className="right-side">
-        <div className="login-form">
-          <div className="title">
-            <Typography variant="h4" gutterBottom>
-              Welcome to <span className="highlight">{gym_name}</span>
-            </Typography>
-            <Typography variant="h6" gutterBottom>
-              Sign In
-            </Typography>
-          </div>
-          <form onSubmit={onSubmit_handler} style={{ width: "100%" }}>
+        <div className="login-form h-[50%] flex flex-col justify-between items-start">
+          {/* <div className="title"> */}
+          <Typography variant="h4" gutterBottom>
+            Welcome to <span className="highlight">{gym_name}</span>
+          </Typography>
+          <Typography variant="h6" gutterBottom>
+            Sign In
+          </Typography>
+          {/* </div> */}
+          <form
+            onSubmit={onSubmit_handler}
+            className="w-full h-full flex flex-col justify-between"
+          >
             <TextField
               fullWidth
               margin="normal"
@@ -126,29 +162,23 @@ const LoginPage = () => {
               required
             />
 
-            <div className="options" style={{ marginTop: "0.5rem" }}>
-              <FormControlLabel
-                control={
-                  <Checkbox
+            <div className="options">
+              <div className="remember-me">
+                <label className="toggle-switch">
+                  <input
+                    type="checkbox"
                     checked={form.is_remember}
-                    onChange={(e) =>
-                      setForm({ ...form, is_remember: e.target.checked })
-                    }
-                    color="primary"
+                    onChange={(e) => {
+                      setForm({ ...form, is_remember: e.target.checked });
+                    }}
                   />
-                }
-                label="Remember Me"
-              />
-
-              <Button
-                variant="text"
-                color="secondary"
-                onClick={handleForgot}
-                sx={{ marginLeft: "auto", textTransform: "none" }}
-              >
+                  <span className="slider"></span>
+                </label>
+                <span className="remember-text">Remember Me</span>
+              </div>
+              <span className="highlight" onClick={handleForgot}>
                 Forgot Password?
-              </Button>
-
+              </span>
               {showEdit && (
                 <Edit_Popup
                   open={showEdit}
@@ -159,13 +189,16 @@ const LoginPage = () => {
                 />
               )}
             </div>
-
             <Button
               fullWidth
               type="submit"
               variant="contained"
               color="primary"
-              sx={{ mt: 2 }}
+              sx={{
+                mt: 2,
+                backgroundColor: "blueviolet",
+                ":hover": { backgroundColor: "rgb(150, 55, 240);" },
+              }}
             >
               Login
             </Button>
@@ -180,6 +213,20 @@ const LoginPage = () => {
         open={open}
         message="Enter your email and submit to receive a password reset link."
       />
+      <Snackbar
+        open={openError}
+        autoHideDuration={6000}
+        onClose={() => setOpenError(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setOpenError(false)}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

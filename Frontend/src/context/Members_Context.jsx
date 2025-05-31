@@ -13,10 +13,16 @@ export const Members_Provider = ({ children }) => {
       "GET",
       "http://localhost/Projects/CSSLTD-GYM/Backend/member/read"
     );
-    if (response.message === "Access denied.") {
-      navigate("/");
-    } else if (response.data) {
-      console.log(response.data);
+    if (response.result) {
+      console.log(response.message);
+    } else {
+      console.log("ERROR", response.message);
+      if (response.message === "Access denied.") {
+        navigate("/");
+      }
+    }
+    if (response.data) {
+      // console.log(response.data);
       setMembers(response.data);
     }
   };

@@ -49,10 +49,10 @@ class GlobalSetting_Controller
     }
     static function read()
     {
-        $decoded_token = Controllers_Utilities::check_jwt();
-        if (!$decoded_token) {
-            return false;
-        }
+        // $decoded_token = Controllers_Utilities::check_jwt();
+        // if (!$decoded_token) {
+        //     return false;
+        // }
         $data = json_decode(file_get_contents("php://input"), true);
         // if(!Controllers_Utilities::check_params($data,["id"]))
         //     return false;

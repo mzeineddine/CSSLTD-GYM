@@ -12,6 +12,8 @@ import {
   MenuItem,
   Box,
   Autocomplete,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import Textarea from "@mui/joy/Textarea";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -33,6 +35,8 @@ import { Categories_Context } from "../../context/Categories_Context";
 const Add_Popup = (props) => {
   const default_values = {};
   const default_errors = {};
+  const [errorMessage, setErrorMessage] = useState("");
+  const [openError, setOpenError] = useState(false);
   for (let [key, value] of Object.entries(props.fields)) {
     if (value === "date") {
       default_values[key] = dayjs();
@@ -109,17 +113,36 @@ const Add_Popup = (props) => {
           `http://localhost/Projects/CSSLTD-GYM/Backend/${name.toLowerCase()}/create`,
           formData
         );
-        await axios_function(
-          "POST",
-          `http://localhost/Projects/CSSLTD-GYM/Backend/subscription/create`,
-          { ...formData, member_id: response.result }
-        );
+        if (response.result) {
+          const response_1 = await axios_function(
+            "POST",
+            `http://localhost/Projects/CSSLTD-GYM/Backend/subscription/create`,
+            { ...formData, member_id: response.result }
+          );
+          if (response_1.result) {
+            console.log("Message", response_1.message);
+          } else {
+            setErrorMessage(
+              response_1.message || "Subscription creation failed."
+            );
+            setOpenError(true);
+          }
+        } else {
+          setErrorMessage(response.message || "Member creation failed.");
+          setOpenError(true);
+        }
       } else {
-        await axios_function(
+        const response = await axios_function(
           "POST",
           `http://localhost/Projects/CSSLTD-GYM/Backend/${name.toLowerCase()}/create`,
           formData
         );
+        if (response.result) {
+          console.log(response.message);
+        } else {
+          setErrorMessage(response.message || "Creation failed.");
+          setOpenError(true);
+        }
       }
 
       switch (props.name.toLowerCase()) {
@@ -134,6 +157,7 @@ const Add_Popup = (props) => {
           break;
         case "expense":
           update_expenses();
+          update_paymentAccounts();
           break;
         case "payment_account":
         case "expense_payment":
@@ -273,6 +297,20 @@ const Add_Popup = (props) => {
         </Button>
         <Button onClick={handleSubmit}>Confirm</Button>
       </DialogActions>
+      <Snackbar
+        open={openError}
+        autoHideDuration={6000}
+        onClose={() => setOpenError(false)}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => setOpenError(false)}
+          severity="error"
+          sx={{ width: "100%" }}
+        >
+          {errorMessage}
+        </Alert>
+      </Snackbar>
     </Dialog>
   );
 };

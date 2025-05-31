@@ -13,9 +13,15 @@ export const PaymentAccounts_Provider = ({ children }) => {
       "GET",
       "http://localhost/Projects/CSSLTD-GYM/Backend/payment_account/read"
     );
-    if (response.message === "Access denied.") {
-      navigate("/");
-    } else if (response.data) {
+    if (response.result) {
+      console.log(response.message);
+    } else {
+      console.log("ERROR", response.message);
+      if (response.message === "Access denied.") {
+        navigate("/");
+      }
+    }
+    if (response.data) {
       setPaymentAccounts(response.data);
     }
   };
@@ -25,7 +31,9 @@ export const PaymentAccounts_Provider = ({ children }) => {
   };
 
   return (
-    <PaymentAccounts_Context.Provider value={{ paymentAccounts, update_paymentAccounts }}>
+    <PaymentAccounts_Context.Provider
+      value={{ paymentAccounts, update_paymentAccounts }}
+    >
       {children}
     </PaymentAccounts_Context.Provider>
   );

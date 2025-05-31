@@ -14,9 +14,15 @@ export const GeneralSettings_Provider = ({ children }) => {
       "http://localhost/Projects/CSSLTD-GYM/Backend/global_setting/read",
       { id: 1 }
     );
-    if (response.message === "Access denied.") {
-      navigate("/");
-    } else if (response.data) {
+    if (response.result) {
+      console.log(response.message);
+    } else {
+      console.log("ERROR", response.message);
+      if (response.message === "Access denied.") {
+        navigate("/");
+      }
+    }
+    if (response.data) {
       setGeneralSettings(response.data);
     }
   };

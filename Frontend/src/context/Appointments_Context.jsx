@@ -13,9 +13,15 @@ export const Appointments_Provider = ({ children }) => {
       "GET",
       "http://localhost/Projects/CSSLTD-GYM/Backend/appointment/read"
     );
-    if (response.message === "Access denied.") {
-      navigate("/");
-    } else if (response.data) {
+    if (response.result) {
+      console.log(response.message);
+    } else {
+      console.log("ERROR", response.message);
+      if (response.message === "Access denied.") {
+        navigate("/");
+      }
+    }
+    if (response.data) {
       setAppointments(response.data);
     }
   };
@@ -25,7 +31,9 @@ export const Appointments_Provider = ({ children }) => {
   };
 
   return (
-    <Appointments_Context.Provider value={{ appointments, update_appointments }}>
+    <Appointments_Context.Provider
+      value={{ appointments, update_appointments }}
+    >
       {children}
     </Appointments_Context.Provider>
   );

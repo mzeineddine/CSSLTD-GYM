@@ -87,7 +87,7 @@ class User_Controller
                 "token" => Controllers_Utilities::generate_jwt($user)
             ]);
         } else {
-            http_response_code(401);
+            // http_response_code(401);
             echo json_encode([
                 "result" => false,
                 "message" => "Invalid email or password"

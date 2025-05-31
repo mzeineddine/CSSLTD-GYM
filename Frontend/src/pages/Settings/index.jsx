@@ -89,20 +89,31 @@ const Settings = () => {
     e.preventDefault();
     if (formData.logo == generalSettings.logo) {
       console.log("unchanged logo");
-      await axios_function(
+      const response = await axios_function(
         "POST",
         "http://localhost/Projects/CSSLTD-GYM/Backend/global_setting/update",
         { ...formData, logo: "unchanged" }
       );
+      if (response.result) {
+        console.log(response.message);
+        update_generalSettings();
+      } else {
+        console.log("ERROR", response.message);
+      }
     } else {
       e.preventDefault();
-      await axios_function(
+      const response = await axios_function(
         "POST",
         "http://localhost/Projects/CSSLTD-GYM/Backend/global_setting/update",
         formData
       );
-      // console.log(formData)
-      update_generalSettings();
+      if (response.result) {
+        console.log(response.message);
+        // console.log(formData)
+        update_generalSettings();
+      } else {
+        console.log("ERROR", response.message);
+      }
     }
   };
 
@@ -132,22 +143,24 @@ const Settings = () => {
           alt="Logo Preview"
           sx={{ width: 64, height: 64 }}
         />
-        {access?.edit && <Button
-          variant="contained"
-          component="label"
-          startIcon={<UploadIcon />}
-          sx={{
-            backgroundColor: "blueviolet",
-          }}
-        >
-          Upload Logo
-          <input
-            type="file"
-            accept="image/*"
-            hidden
-            onChange={handleLogoChange}
-          />
-        </Button>}
+        {access?.edit && (
+          <Button
+            variant="contained"
+            component="label"
+            startIcon={<UploadIcon />}
+            sx={{
+              backgroundColor: "blueviolet",
+            }}
+          >
+            Upload Logo
+            <input
+              type="file"
+              accept="image/*"
+              hidden
+              onChange={handleLogoChange}
+            />
+          </Button>
+        )}
       </Box>
       <TextField
         label="Company Name"
@@ -201,16 +214,18 @@ const Settings = () => {
         }}
       />
 
-      {access?.edit && <Button
-        type="submit"
-        variant="contained"
-        color="primary"
-        sx={{
-          backgroundColor: "blueviolet",
-        }}
-      >
-        Submit
-      </Button>}
+      {access?.edit && (
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          sx={{
+            backgroundColor: "blueviolet",
+          }}
+        >
+          Submit
+        </Button>
+      )}
     </Box>
   );
 };

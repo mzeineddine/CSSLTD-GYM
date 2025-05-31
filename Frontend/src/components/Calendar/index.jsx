@@ -58,12 +58,17 @@ const Calendar = () => {
   }, [appointments, access]);
 
   const update_db = async (event) => {
-    await axios_function(
+    const response = await axios_function(
       "POST",
       "http://localhost/Projects/CSSLTD-GYM/Backend/appointment/update",
       event
     );
-    update_appointments();
+    if (response.result) {
+      console.log(response.message);
+      update_appointments();
+    } else {
+      console.log("ERROR", response.message);
+    }
   };
 
   // Don't render Scheduler until access is loaded
@@ -99,11 +104,16 @@ const Calendar = () => {
       }}
       onConfirm={access.edit && update_appointments}
       onDelete={async (deletedId) => {
-        await axios_function(
+        const response = await axios_function(
           "DELETE",
           "http://localhost/Projects/CSSLTD-GYM/Backend/appointment/delete",
           { id: deletedId }
         );
+        if (response.result) {
+          console.log(response.message);
+        } else {
+          console.log("ERROR", response.message);
+        }
         setFormattedEvents((prev) =>
           prev.filter((event) => event.event_id !== deletedId)
         );

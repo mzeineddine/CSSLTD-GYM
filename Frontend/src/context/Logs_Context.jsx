@@ -13,9 +13,15 @@ export const Logs_Provider = ({ children }) => {
       "GET",
       "http://localhost/Projects/CSSLTD-GYM/Backend/log/read"
     );
-    if (response.message === "Access denied.") {
-      navigate("/");
-    } else if (response.data) {
+    if (response.result) {
+      console.log(response.message);
+    } else {
+      console.log("ERROR", response.message);
+      if (response.message === "Access denied.") {
+        navigate("/");
+      }
+    }
+    if (response.data) {
       setLogs(response.data);
     }
   };

@@ -122,20 +122,35 @@ const Edit_Popup = ({
         `http://localhost/Projects/CSSLTD-GYM/Backend/${endpoint}/update`,
         payload
       );
-      await axios_function(
-        "POST",
-        "http://localhost/Projects/CSSLTD-GYM/Backend/subscription/update",
-        {
-          ...formData,
-          member_id: response.result,
+      if (response.result) {
+        console.log(response.message);
+        const response_1 = await axios_function(
+          "POST",
+          "http://localhost/Projects/CSSLTD-GYM/Backend/subscription/update",
+          {
+            ...formData,
+            member_id: response.result,
+          }
+        );
+        if (response_1.result) {
+          console.log(response_1.message);
+        } else {
+          console.log("ERROR", response_1.message);
         }
-      );
+      } else {
+        console.log("ERROR", response.message);
+      }
     } else {
-      await axios_function(
+      const response = await axios_function(
         "POST",
         `http://localhost/Projects/CSSLTD-GYM/Backend/${endpoint}/update`,
         payload
       );
+      if (response.result) {
+        console.log(response.message);
+      } else {
+        console.log("ERROR", response.message);
+      }
     }
 
     switch (name.toLowerCase()) {

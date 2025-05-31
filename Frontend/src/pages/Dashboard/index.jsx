@@ -23,14 +23,24 @@ const Dashboard = () => {
       "http://localhost/Projects/CSSLTD-GYM/Backend/coach/count"
     );
     setCoachCount(response.data.count);
+    if (response.result) {
+      console.log(response.message);
+    } else {
+      console.log("ERROR", response.message);
+    }
   };
   const get_profit = async () => {
     const response = await axios_function(
       "GET",
       "http://localhost/Projects/CSSLTD-GYM/Backend/general/profit"
     );
-    // console.log("Response.DATA", response);
-    setProfit(response.data);
+    if (response.result) {
+      console.log(response.message);
+      // console.log("Response.DATA", response);
+      setProfit(response.data);
+    } else {
+      console.log("ERROR", response.message);
+    }
   };
 
   const getChartData = () => {
@@ -39,22 +49,23 @@ const Dashboard = () => {
     let _18_29 = 0;
     let _30_59 = 0;
     let _60 = 0;
-    members && members.forEach((value) => {
-      const birthDate = new Date(value.dob);
-      const today = new Date();
-      let age = today.getFullYear() - birthDate.getFullYear();
-      const monthDiff = today.getMonth() - birthDate.getMonth();
-      const dayDiff = today.getDate() - birthDate.getDate();
+    members &&
+      members.forEach((value) => {
+        const birthDate = new Date(value.dob);
+        const today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        const dayDiff = today.getDate() - birthDate.getDate();
 
-      if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
-        age--;
-      }
-      if (age < 12) _0_11++;
-      else if (age < 18) _12_17++;
-      else if (age < 30) _18_29++;
-      else if (age < 60) _30_59++;
-      else _60++;
-    });
+        if (monthDiff < 0 || (monthDiff === 0 && dayDiff < 0)) {
+          age--;
+        }
+        if (age < 12) _0_11++;
+        else if (age < 18) _12_17++;
+        else if (age < 30) _18_29++;
+        else if (age < 60) _30_59++;
+        else _60++;
+      });
     setChartData([
       { name: "0-11", value: _0_11 },
       { name: "12-17", value: _12_17 },
@@ -64,14 +75,18 @@ const Dashboard = () => {
     ]);
   };
 
-  const getGraphData = async() => {
-
+  const getGraphData = async () => {
     const response = await axios_function(
       "GET",
       "http://localhost/Projects/CSSLTD-GYM/Backend/general/receive_pay_month"
     );
-    setGraphData(response.data);
-  }
+    if (response.result) {
+      console.log(response.message);
+      setGraphData(response.data);
+    } else {
+      console.log("ERROR", response.message);
+    }
+  };
   useEffect(() => {
     setMemberCount(members ? members.length : 0);
     get_coach_count();

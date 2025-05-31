@@ -13,9 +13,15 @@ export const SubscriptionPayment_Provider = ({ children }) => {
       "GET",
       "http://localhost/Projects/CSSLTD-GYM/Backend/subscription_payment/read"
     );
-    if (response.message === "Access denied.") {
-      navigate("/");
-    } else if (response.data) {
+    if (response.result) {
+      console.log(response.message);
+    } else {
+      console.log("ERROR", response.message);
+      if (response.message === "Access denied.") {
+        navigate("/");
+      }
+    }
+    if (response.data) {
       setSubscriptionPayments(response.data);
     }
   };
@@ -25,7 +31,9 @@ export const SubscriptionPayment_Provider = ({ children }) => {
   };
 
   return (
-    <SubscriptionPayments_Context.Provider value={{ subscriptionPayments, update_subscriptionPayments }}>
+    <SubscriptionPayments_Context.Provider
+      value={{ subscriptionPayments, update_subscriptionPayments }}
+    >
       {children}
     </SubscriptionPayments_Context.Provider>
   );

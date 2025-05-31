@@ -13,9 +13,15 @@ export const ExpensePayments_Provider = ({ children }) => {
       "GET",
       "http://localhost/Projects/CSSLTD-GYM/Backend/expense_payment/read"
     );
-    if (response.message === "Access denied.") {
-      navigate("/");
-    } else if (response.data) {
+    if (response.result) {
+      console.log(response.message);
+    } else {
+      console.log("ERROR", response.message);
+      if (response.message === "Access denied.") {
+        navigate("/");
+      }
+    }
+    if (response.data) {
       setExpensePayments(response.data);
     }
   };
@@ -25,7 +31,9 @@ export const ExpensePayments_Provider = ({ children }) => {
   };
 
   return (
-    <ExpensePayments_Context.Provider value={{ expensePayments, update_expensePayments }}>
+    <ExpensePayments_Context.Provider
+      value={{ expensePayments, update_expensePayments }}
+    >
       {children}
     </ExpensePayments_Context.Provider>
   );

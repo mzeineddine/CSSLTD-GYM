@@ -121,17 +121,6 @@ const Custom_Editor = ({ scheduler }) => {
     return Object.keys(errors).length === 0;
   };
 
-  // Disable confirm button if form invalid
-  const isFormValid =
-    !Object.values(formErrors).some((e) => e) &&
-    state.title.trim() &&
-    state.color &&
-    state.member_id &&
-    state.coach_id &&
-    dayjs(state.start_date).isValid() &&
-    dayjs(state.end_date).isValid() &&
-    dayjs(state.start_date).isBefore(dayjs(state.end_date));
-
   const handleSubmit = async () => {
     if (!validateForm()) return;
 
@@ -149,7 +138,7 @@ const Custom_Editor = ({ scheduler }) => {
 
       scheduler.onConfirm(added_updated_event, event ? "edit" : "create");
 
-      await axios_function(
+      const response = await axios_function(
         "POST",
         `http://localhost/Projects/CSSLTD-GYM/Backend/appointment/${
           event ? "update" : "create"
@@ -160,8 +149,12 @@ const Custom_Editor = ({ scheduler }) => {
           end_date: state.end_date.format("YYYY-MM-DD HH:mm:ss"),
         }
       );
-
-      update_appointments();
+      if (response.result) {
+        console.log(response.message);
+        update_appointments();
+      } else {
+        console.log("ERROR", response.message);
+      }
       scheduler.close();
     } finally {
       scheduler.loading(false);

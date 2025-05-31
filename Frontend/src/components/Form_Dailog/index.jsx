@@ -24,11 +24,16 @@ export default function FormDialog(props) {
     }
 
     try {
-      await axios_function(
+      const response = await axios_function(
         "post",
         "http://localhost/Projects/CSSLTD-GYM/Backend/user/reset_password",
         { email: email }
       );
+      if (response.result) {
+        console.log(response.message);
+      } else {
+        console.log("ERROR", response.message);
+      }
       props.handleClose();
       setEmail(""); // Clear after success
     } catch (error) {
@@ -71,7 +76,11 @@ export default function FormDialog(props) {
         </DialogContent>
         <DialogActions>
           <Button onClick={props.handleClose}>Cancel</Button>
-          <Button type="submit" onClick={handleSubmit} disabled={!!emailError || email === ""}>
+          <Button
+            type="submit"
+            onClick={handleSubmit}
+            disabled={!!emailError || email === ""}
+          >
             {props.submit_text}
           </Button>
         </DialogActions>

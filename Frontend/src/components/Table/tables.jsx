@@ -43,7 +43,7 @@ const Table1 = (props) => {
     const deleted_indexes = rows_deleted.data.map((d) => d.dataIndex);
     const deleted_rows_ids = deleted_indexes.map((index) => ids[index]);
     console.log("Deleted rows:", deleted_rows_ids);
-    deleted_rows_ids.forEach((id) => {
+    deleted_rows_ids.forEach(async (id) => {
       let url_title = title;
       if (title == "subscriptionPayments") url_title = "subscription_payment";
       else if (title == "expensePayments") url_title = "expense_payment";
@@ -51,11 +51,16 @@ const Table1 = (props) => {
 
       if (title == "staff") url_title = "user";
       console.log("ID: " + id, "URL: " + url_title);
-      axios_function(
+      const response = await axios_function(
         "Delete",
         "http://localhost/Projects/CSSLTD-GYM/Backend/" + url_title + "/delete",
         { id: id }
       );
+      if (response.result) {
+        console.log(response.message);
+      } else {
+        console.log("ERROR", response.message);
+      }
     });
   };
   useEffect(() => {

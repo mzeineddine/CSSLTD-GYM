@@ -11,7 +11,9 @@ import {
 import MUIDataTable from "mui-datatables";
 import { axios_function } from "../../utilities/axios";
 import { Accesses_Context } from "../../context/Access_Context";
+import { useNavigate } from "react-router-dom";
 const Access = () => {
+  const navigate = useNavigate()
   const { staffs, update_staffs } = useContext(Staffs_Context);
   const [staff_id, setStaffId] = useState(null);
   const [permissions, setPermissions] = useState([]);
@@ -46,6 +48,14 @@ const Access = () => {
         "http://localhost/Projects/CSSLTD-GYM/Backend/access/read",
         { user_id: staff_id }
       );
+      if (response.result) {
+      console.log(response.message);
+    } else {
+      console.log("ERROR", response.message);
+      if (response.message === "Access denied.") {
+        navigate("/");
+      }
+    }
       // Parse action values to integers
       const parsedPermissions = response?.data?.map((perm) => ({
         ...perm,
