@@ -24,6 +24,7 @@ import { PaymentAccounts_Context } from "../../context/PaymentAccounts_Context";
 import { ExpensePayments_Context } from "../../context/ExpensePayments_Context";
 import { SubscriptionPayments_Context } from "../../context/SubscriptionPayments_Context";
 import { Categories_Context } from "../../context/Categories_Context";
+import SnackBar from "../Snackbar";
 
 const Edit_Popup = ({
   name,
@@ -72,7 +73,9 @@ const Edit_Popup = ({
     ...useContext(ExpensePayments_Context),
     ...useContext(SubscriptionPayments_Context),
   };
-
+  const [message, setMessage] = useState("");
+  const [openSnack, setOpenSnack] = useState(false);
+  const [success, setSuccess] = useState(false);
   const validateField = (key, value, type) => {
     if (type === "email") {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
@@ -124,21 +127,30 @@ const Edit_Popup = ({
       );
       if (response.result) {
         console.log(response.message);
-        const response_1 = await axios_function(
-          "POST",
-          "http://localhost/Projects/CSSLTD-GYM/Backend/subscription/update",
-          {
-            ...formData,
-            member_id: response.result,
-          }
-        );
-        if (response_1.result) {
-          console.log(response_1.message);
-        } else {
-          console.log("ERROR", response_1.message);
-        }
+          setMessage(response.message);
+          setOpenSnack(true);
+          setSuccess(true);
+        // const response_1 = await axios_function(
+        //   "POST",
+        //   "http://localhost/Projects/CSSLTD-GYM/Backend/subscription/update",
+        //   {
+        //     ...formData,
+        //     member_id: response.result,
+        //   }
+        // );
+        // if (response_1.result) {
+        //   setMessage(response_1.message);
+        //   setOpenSnack(true);
+        //   setSuccess(true);
+        // } else {
+        //   setMessage(response_1.message);
+        //   setOpenSnack(true);
+        //   setSuccess(false);
+        // }
       } else {
-        console.log("ERROR", response.message);
+        setMessage(response.message);
+        setOpenSnack(true);
+        setSuccess(false);
       }
     } else {
       const response = await axios_function(
@@ -147,9 +159,13 @@ const Edit_Popup = ({
         payload
       );
       if (response.result) {
-        console.log(response.message);
+        setMessage(response.message);
+        setOpenSnack(true);
+        setSuccess(true);
       } else {
-        console.log("ERROR", response.message);
+        setMessage(response.message);
+        setOpenSnack(true);
+        setSuccess(false);
       }
     }
 
@@ -182,7 +198,9 @@ const Edit_Popup = ({
         break;
     }
 
-    onClose();
+    setTimeout(function () {
+      onClose();
+    }, 2000);
     setFormData(defaultValues);
     setFormErrors(defaultErrors);
   };
@@ -245,7 +263,7 @@ const Edit_Popup = ({
                         [k]: validateField(k, val, v),
                       });
                     }}
-                    required
+                    // required
                   />
                 ) : v === "select" ? (
                   <Autocomplete
@@ -303,6 +321,12 @@ const Edit_Popup = ({
         </Button>
         <Button onClick={handleSubmit}>Confirm</Button>
       </DialogActions>
+      <SnackBar
+        success={success}
+        openSnack={openSnack}
+        setOpenSnack={setOpenSnack}
+        message={message}
+      />
     </Dialog>
   );
 };

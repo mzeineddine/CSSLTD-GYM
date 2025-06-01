@@ -17,6 +17,7 @@ import { Categories_Context } from "../../context/Categories_Context.jsx";
 import { SubscriptionPayments_Context } from "../../context/SubscriptionPayments_Context.jsx";
 import { Logs_Context } from "../../context/Logs_Context.jsx";
 import { axios_function } from "../../utilities/axios.js";
+import SnackBar from "../Snackbar/index.jsx";
 const Table1 = (props) => {
   const { members, update_members } = useContext(Members_Context);
   const { staffs, update_staffs } = useContext(Staffs_Context);
@@ -33,7 +34,9 @@ const Table1 = (props) => {
     PaymentAccounts_Context
   );
   const { logs, update_logs } = useContext(Logs_Context);
-
+  const [message, setMessage] = useState("");
+  const [openSnack, setOpenSnack] = useState(false);
+  const [success, setSuccess] = useState(false);
   let { title, searchable, paging, exportable, visible } = props;
   const [headers, setHeaders] = useState([]);
   const [values, setValues] = useState([]);
@@ -57,9 +60,15 @@ const Table1 = (props) => {
         { id: id }
       );
       if (response.result) {
-        console.log(response.message);
+        // console.log(response.message);
+        setMessage(response.message);
+        setOpenSnack(true);
+        setSuccess(true);
       } else {
-        console.log("ERROR", response.message);
+        // console.log("ERROR");
+        setMessage(response.message);
+        setOpenSnack(true);
+        setSuccess(false);
       }
     });
   };
@@ -208,6 +217,12 @@ const Table1 = (props) => {
           </Box>
         </ThemeProvider>
       </CacheProvider>
+      <SnackBar
+        success={success}
+        openSnack={openSnack}
+        setOpenSnack={setOpenSnack}
+        message={message}
+      />
     </div>
   );
 };

@@ -7,11 +7,14 @@ import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import React, { useState } from "react";
 import { axios_function } from "../../utilities/axios";
+import SnackBar from "../Snackbar";
 
 export default function FormDialog(props) {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState("");
-
+  const [message, setMessage] = useState("");
+  const [openSnack, setOpenSnack] = useState(false);
+  const [success, setSuccess] = useState(false);
   const validateEmail = (email) => {
     const pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return pattern.test(email);
@@ -30,9 +33,13 @@ export default function FormDialog(props) {
         { email: email }
       );
       if (response.result) {
-        console.log(response.message);
+        setMessage(response.message);
+        setOpenSnack(true);
+        setSuccess(true);
       } else {
-        console.log("ERROR", response.message);
+        setMessage(response.message);
+        setOpenSnack(true);
+        setSuccess(false);
       }
       props.handleClose();
       setEmail(""); // Clear after success
@@ -85,6 +92,12 @@ export default function FormDialog(props) {
           </Button>
         </DialogActions>
       </Dialog>
+      <SnackBar
+        success={success}
+        openSnack={openSnack}
+        setOpenSnack={setOpenSnack}
+        message={message}
+      />
     </React.Fragment>
   );
 }

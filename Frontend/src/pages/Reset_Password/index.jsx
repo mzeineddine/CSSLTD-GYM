@@ -1,9 +1,13 @@
 import { Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { axios_function } from "../../utilities/axios";
+import SnackBar from "../../components/Snackbar";
 
 const Reset_Password = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
+  const [message, setMessage] = useState("");
+  const [openSnack, setOpenSnack] = useState(false);
+  const [success, setSuccess] = useState(false);
   const handleClick = async () => {
     let response = await axios_function(
       "POST",
@@ -11,9 +15,15 @@ const Reset_Password = () => {
       formData
     );
     if (response.result) {
-      console.log(response.message);
+      // console.log(response.message);
+      setMessage(response.message);
+      setOpenSnack(true);
+      setSuccess(true);
     } else {
-      console.log("ERROR", response.message);
+      // console.log("ERROR");
+      setMessage(response.message);
+      setOpenSnack(true);
+      setSuccess(false);
     }
   };
   return (
@@ -43,6 +53,12 @@ const Reset_Password = () => {
           <Button onClick={handleClick}>Reset</Button>
         </div>
       </div>
+      <SnackBar
+        success={success}
+        openSnack={openSnack}
+        setOpenSnack={setOpenSnack}
+        message={message}
+      />
     </div>
   );
 };

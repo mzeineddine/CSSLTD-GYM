@@ -9,6 +9,7 @@ import { axios_function } from "../../utilities/axios";
 import { useContext, useEffect, useState } from "react";
 import { Members_Context } from "../../context/Members_Context";
 import { Coaches_Context } from "../../context/Coaches_Context";
+import SnackBar from "../../components/Snackbar";
 const Dashboard = () => {
   const { members } = useContext(Members_Context);
   const { coaches } = useContext(Coaches_Context);
@@ -17,6 +18,9 @@ const Dashboard = () => {
   const [profit, setProfit] = useState(0);
   const [chart_data, setChartData] = useState([{}]);
   const [graph_data, setGraphData] = useState([{}]);
+  const [message, setMessage] = useState("");
+  const [openSnack, setOpenSnack] = useState(false);
+  const [success, setSuccess] = useState(false);
   const get_coach_count = async () => {
     const response = await axios_function(
       "GET",
@@ -24,9 +28,15 @@ const Dashboard = () => {
     );
     setCoachCount(response.data.count);
     if (response.result) {
-      console.log(response.message);
+      // console.log(response.message);
+      setMessage(response.message);
+      setOpenSnack(true);
+      setSuccess(true);
     } else {
-      console.log("ERROR", response.message);
+      // console.log("ERROR");
+      setMessage(response.message);
+      setOpenSnack(true);
+      setSuccess(false);
     }
   };
   const get_profit = async () => {
@@ -35,11 +45,16 @@ const Dashboard = () => {
       "http://localhost/Projects/CSSLTD-GYM/Backend/general/profit"
     );
     if (response.result) {
-      console.log(response.message);
-      // console.log("Response.DATA", response);
+      // console.log(response.message);
+      setMessage(response.message);
+      setOpenSnack(true);
+      setSuccess(true);
       setProfit(response.data);
     } else {
-      console.log("ERROR", response.message);
+      // console.log("ERROR");
+      setMessage(response.message);
+      setOpenSnack(true);
+      setSuccess(false);
     }
   };
 
@@ -81,10 +96,16 @@ const Dashboard = () => {
       "http://localhost/Projects/CSSLTD-GYM/Backend/general/receive_pay_month"
     );
     if (response.result) {
-      console.log(response.message);
+      // console.log(response.message);
+      setMessage(response.message);
+      setOpenSnack(true);
+      setSuccess(true);
       setGraphData(response.data);
     } else {
-      console.log("ERROR", response.message);
+      // console.log("ERROR");
+      setMessage(response.message);
+      setOpenSnack(true);
+      setSuccess(false);
     }
   };
   useEffect(() => {
@@ -160,6 +181,12 @@ const Dashboard = () => {
           colors={chart_colors}
         />
       </div>
+      <SnackBar
+        success={success}
+        openSnack={openSnack}
+        setOpenSnack={setOpenSnack}
+        message={message}
+      />
     </div>
   );
 };

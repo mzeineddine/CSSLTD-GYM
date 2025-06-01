@@ -8,6 +8,7 @@ import { Button } from "@mui/material";
 import MUIDataTable from "mui-datatables";
 import "./balance.css";
 import { Accesses_Context } from "../../context/Access_Context";
+import SnackBar from "../../components/Snackbar";
 
 const Balance = () => {
   const { accesses, update_accesses } = useContext(Accesses_Context);
@@ -22,7 +23,9 @@ const Balance = () => {
   const [tableHeaders, setTableHeaders] = useState([]);
   const [transactionsData, setTransactionsData] = useState([]);
   const [transactionsHeaders, setTransactionsHeaders] = useState([]);
-
+  const [message, setMessage] = useState("");
+  const [openSnack, setOpenSnack] = useState(false);
+  const [success, setSuccess] = useState(false);
   useEffect(() => {
     if (!accesses) update_accesses();
     if (!accesses) return;
@@ -59,9 +62,15 @@ const Balance = () => {
         requestPayload
       );
       if (res1.result) {
-        console.log(res1.message);
+        // console.log(response.message);
+        setMessage(res1.message);
+        setOpenSnack(true);
+        setSuccess(true);
       } else {
-        console.log("ERROR", res1.message);
+        // console.log("ERROR");
+        setMessage(res1.message);
+        setOpenSnack(true);
+        setSuccess(false);
       }
       const balanceData =
         typeof res1.data === "string" ? JSON.parse(res1.data) : res1.data;
@@ -90,10 +99,16 @@ const Balance = () => {
         requestPayload
       );
       if (res2.result) {
-      console.log(res2.message);
-    } else {
-      console.log("ERROR", res2.message);
-    }
+        // console.log(response.message);
+        setMessage(res2.message);
+        setOpenSnack(true);
+        setSuccess(true);
+      } else {
+        // console.log("ERROR");
+        setMessage(res2.message);
+        setOpenSnack(true);
+        setSuccess(false);
+      }
       const txData = res2.data;
       setTransactionsHeaders(Object.keys(txData[0] || {}));
       setTransactionsData(txData || []);
@@ -169,6 +184,12 @@ const Balance = () => {
           />
         )}
       </div>
+      <SnackBar
+        success={success}
+        openSnack={openSnack}
+        setOpenSnack={setOpenSnack}
+        message={message}
+      />
     </div>
   );
 };

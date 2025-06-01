@@ -12,8 +12,6 @@ import {
   MenuItem,
   Box,
   Autocomplete,
-  Snackbar,
-  Alert,
 } from "@mui/material";
 import Textarea from "@mui/joy/Textarea";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -30,13 +28,15 @@ import { Expenses_Context } from "../../context/Expenses_Context";
 import { PaymentAccounts_Context } from "../../context/PaymentAccounts_Context";
 import { ExpensePayments_Context } from "../../context/ExpensePayments_Context";
 import { Categories_Context } from "../../context/Categories_Context";
+import SnackBar from "../Snackbar";
 
 // import CloseIcon from '@mui/icons-material';
 const Add_Popup = (props) => {
   const default_values = {};
   const default_errors = {};
-  const [errorMessage, setErrorMessage] = useState("");
-  const [openError, setOpenError] = useState(false);
+  const [message, setMessage] = useState("");
+  const [openSnack, setOpenSnack] = useState(false);
+  const [success, setSuccess] = useState(false);
   for (let [key, value] of Object.entries(props.fields)) {
     if (value === "date") {
       default_values[key] = dayjs();
@@ -120,16 +120,18 @@ const Add_Popup = (props) => {
             { ...formData, member_id: response.result }
           );
           if (response_1.result) {
-            console.log("Message", response_1.message);
+            setMessage(response_1.message);
+            setOpenSnack(true);
+            setSuccess(true);
           } else {
-            setErrorMessage(
-              response_1.message || "Subscription creation failed."
-            );
-            setOpenError(true);
+            setMessage(response_1.message);
+            setOpenSnack(true);
+            setSuccess(false);
           }
         } else {
-          setErrorMessage(response.message || "Member creation failed.");
-          setOpenError(true);
+          setMessage(response.message);
+          setOpenSnack(true);
+          setSuccess(false);
         }
       } else {
         const response = await axios_function(
@@ -138,13 +140,15 @@ const Add_Popup = (props) => {
           formData
         );
         if (response.result) {
-          console.log(response.message);
+          setMessage(response.message);
+          setOpenSnack(true);
+          setSuccess(true);
         } else {
-          setErrorMessage(response.message || "Creation failed.");
-          setOpenError(true);
+          setMessage(response.message);
+          setOpenSnack(true);
+          setSuccess(false);
         }
       }
-
       switch (props.name.toLowerCase()) {
         case "member":
           update_members();
@@ -297,20 +301,12 @@ const Add_Popup = (props) => {
         </Button>
         <Button onClick={handleSubmit}>Confirm</Button>
       </DialogActions>
-      <Snackbar
-        open={openError}
-        autoHideDuration={6000}
-        onClose={() => setOpenError(false)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          onClose={() => setOpenError(false)}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          {errorMessage}
-        </Alert>
-      </Snackbar>
+      <SnackBar
+        success={success}
+        openSnack={openSnack}
+        setOpenSnack={setOpenSnack}
+        message={message}
+      />
     </Dialog>
   );
 };

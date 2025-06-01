@@ -12,10 +12,9 @@ import {
   Button,
   Typography,
   Avatar,
-  Snackbar,
-  Alert,
 } from "@mui/material";
 import { GeneralSettings_Context } from "../../context/GeneralSettings_Context";
+import SnackBar from "../../components/Snackbar";
 
 const LoginPage = () => {
   const { generalSettings, update_generalSettings } = useContext(
@@ -60,9 +59,9 @@ const LoginPage = () => {
   };
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const [errorMessage, setErrorMessage] = useState("");
-  const [openError, setOpenError] = useState(false);
-
+  const [message, setMessage] = useState("");
+  const [openSnack, setOpenSnack] = useState(false);
+  const [success, setSuccess] = useState(false);
   const onSubmit_handler = async (e) => {
     e.preventDefault();
     if (!validateEmail(form.email)) {
@@ -76,11 +75,15 @@ const LoginPage = () => {
       form
     );
     if (response.result) {
-      console.log(response.message);
+      // console.log(response.message);
+      setMessage(response.message);
+      setOpenSnack(true);
+      setSuccess(true);
     } else {
-      console.log("ERROR", );
-      setErrorMessage(response.message);
-      setOpenError(true);
+      // console.log("ERROR");
+      setMessage(response.message);
+      setOpenSnack(true);
+      setSuccess(false);
     }
     if (response.result) {
       localStorage.setItem("access-token", response.token);
@@ -121,7 +124,6 @@ const LoginPage = () => {
           </div>
         </div>
       )}
-
       <div className="right-side">
         <div className="login-form h-[50%] flex flex-col justify-between items-start">
           {/* <div className="title"> */}
@@ -205,7 +207,6 @@ const LoginPage = () => {
           </form>
         </div>
       </div>
-
       <FormDialog
         title="Reset Password"
         handleClose={handleClose}
@@ -213,20 +214,12 @@ const LoginPage = () => {
         open={open}
         message="Enter your email and submit to receive a password reset link."
       />
-      <Snackbar
-        open={openError}
-        autoHideDuration={6000}
-        onClose={() => setOpenError(false)}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          onClose={() => setOpenError(false)}
-          severity="error"
-          sx={{ width: "100%" }}
-        >
-          {errorMessage}
-        </Alert>
-      </Snackbar>
+      <SnackBar
+        success={success}
+        openSnack={openSnack}
+        setOpenSnack={setOpenSnack}
+        message={message}
+      />
     </div>
   );
 };

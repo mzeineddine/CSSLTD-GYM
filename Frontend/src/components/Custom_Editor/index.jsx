@@ -15,6 +15,7 @@ import { axios_function } from "../../utilities/axios";
 import { Appointments_Context } from "../../context/Appointments_Context";
 import { Members_Context } from "../../context/Members_Context";
 import { Coaches_Context } from "../../context/Coaches_Context";
+import SnackBar from "../Snackbar";
 
 const Custom_Editor = ({ scheduler }) => {
   const { members } = useContext(Members_Context);
@@ -45,6 +46,10 @@ const Custom_Editor = ({ scheduler }) => {
     start_date: "",
     end_date: "",
   });
+
+  const [message, setMessage] = useState("");
+  const [openSnack, setOpenSnack] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   // Validate single field on change
   const validateField = (name, value) => {
@@ -150,10 +155,16 @@ const Custom_Editor = ({ scheduler }) => {
         }
       );
       if (response.result) {
-        console.log(response.message);
-        update_appointments();
+        // console.log(response.message);
+        setMessage(response.message);
+        setOpenSnack(true);
+        setSuccess(true);
+        update_appointments()
       } else {
-        console.log("ERROR", response.message);
+        // console.log("ERROR");
+        setMessage(response.message);
+        setOpenSnack(true);
+        setSuccess(false);
       }
       scheduler.close();
     } finally {
@@ -275,6 +286,12 @@ const Custom_Editor = ({ scheduler }) => {
         <Button onClick={scheduler.close}>Cancel</Button>
         <Button onClick={handleSubmit}>Confirm</Button>
       </DialogActions>
+      <SnackBar
+        success={success}
+        openSnack={openSnack}
+        setOpenSnack={setOpenSnack}
+        message={message}
+      />
     </div>
   );
 };

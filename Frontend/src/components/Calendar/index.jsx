@@ -5,6 +5,7 @@ import "./calendar.css";
 import { Appointments_Context } from "../../context/Appointments_Context";
 import { axios_function } from "../../utilities/axios";
 import { Accesses_Context } from "../../context/Access_Context";
+import SnackBar from "../Snackbar";
 
 const Calendar = () => {
   const { accesses, update_accesses } = useContext(Accesses_Context);
@@ -40,7 +41,9 @@ const Calendar = () => {
     useContext(Appointments_Context);
 
   const [formattedEvents, setFormattedEvents] = useState([]);
-
+  const [message, setMessage] = useState("");
+  const [openSnack, setOpenSnack] = useState(false);
+  const [success, setSuccess] = useState(false);
   useEffect(() => {
     if (!access?.view) return;
 
@@ -64,10 +67,13 @@ const Calendar = () => {
       event
     );
     if (response.result) {
-      console.log(response.message);
-      update_appointments();
+      setMessage(response.message);
+      setOpenSnack(true);
+      setSuccess(true);
     } else {
-      console.log("ERROR", response.message);
+      setMessage(response.message);
+      setOpenSnack(true);
+      setSuccess(false);
     }
   };
 
@@ -75,52 +81,64 @@ const Calendar = () => {
   if (!access) return <div>Loading...</div>;
 
   return (
-    <Scheduler
-      editable={access.edit}
-      draggable={access.edit}
-      deletable={access.delete}
-      // onCellClick={access?.create? {} : (e)=>{e.preventDefault()}}
-      view="month"
-      day={{ startHour: 0, endHour: 24, step: 60 }}
-      height={500}
-      hideHeader={true}
-      events={formattedEvents}
-      onEventDrop={async (droppedEvent, newStart, newEnd) => {
-        await update_db({
-          id: newEnd.event_id,
-          title: newEnd.title,
-          coach_id: newEnd.coach_id,
-          member_id: newEnd.member_id,
-          color: newEnd.color,
-          start_date: newEnd.start,
-          end_date: newEnd.end,
-        });
-        setFormattedEvents((prevEvents) =>
-          prevEvents.map((event) =>
-            event.event_id === newEnd.event_id ? newEnd : event
-          )
-        );
-        update_appointments();
-      }}
-      onConfirm={access.edit && update_appointments}
-      onDelete={async (deletedId) => {
-        const response = await axios_function(
-          "DELETE",
-          "http://localhost/Projects/CSSLTD-GYM/Backend/appointment/delete",
-          { id: deletedId }
-        );
-        if (response.result) {
-          console.log(response.message);
-        } else {
-          console.log("ERROR", response.message);
-        }
-        setFormattedEvents((prev) =>
-          prev.filter((event) => event.event_id !== deletedId)
-        );
-        update_appointments();
-      }}
-      customEditor={(scheduler) => <Custom_Editor scheduler={scheduler} />}
-    />
+    <>
+      <Scheduler
+        editable={access.edit}
+        draggable={access.edit}
+        deletable={access.delete}
+        // onCellClick={access?.create? {} : (e)=>{e.preventDefault()}}
+        view="month"
+        day={{ startHour: 0, endHour: 24, step: 60 }}
+        height={500}
+        hideHeader={true}
+        events={formattedEvents}
+        onEventDrop={async (droppedEvent, newStart, newEnd) => {
+          await update_db({
+            id: newEnd.event_id,
+            title: newEnd.title,
+            coach_id: newEnd.coach_id,
+            member_id: newEnd.member_id,
+            color: newEnd.color,
+            start_date: newEnd.start,
+            end_date: newEnd.end,
+          });
+          setFormattedEvents((prevEvents) =>
+            prevEvents.map((event) =>
+              event.event_id === newEnd.event_id ? newEnd : event
+            )
+          );
+          update_appointments();
+        }}
+        onConfirm={access.edit && update_appointments}
+        onDelete={async (deletedId) => {
+          const response = await axios_function(
+            "DELETE",
+            "http://localhost/Projects/CSSLTD-GYM/Backend/appointment/delete",
+            { id: deletedId }
+          );
+          if (response.result) {
+            setMessage(response.message);
+            setOpenSnack(true);
+            setSuccess(true);
+          } else {
+            setMessage(response.message);
+            setOpenSnack(true);
+            setSuccess(false);
+          }
+          setFormattedEvents((prev) =>
+            prev.filter((event) => event.event_id !== deletedId)
+          );
+          update_appointments();
+        }}
+        customEditor={(scheduler) => <Custom_Editor scheduler={scheduler} />}
+      />
+      <SnackBar
+        success={success}
+        openSnack={openSnack}
+        setOpenSnack={setOpenSnack}
+        message={message}
+      />
+    </>
   );
 };
 

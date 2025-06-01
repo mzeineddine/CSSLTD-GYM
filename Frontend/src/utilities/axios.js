@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const axios_function = async (method, url, data, headers) => {
+export const axios_function = async (method, url, data) => {
   let response = await axios({
     method,
     url,
@@ -11,8 +11,9 @@ export const axios_function = async (method, url, data, headers) => {
     data,
   }).catch((err) => {
     console.log(err);
+    if (err.message == "Network Error") console.log(err.message);
     return false;
   });
-  console.log(response.data);
+  // console.log(response.data);
   return response.data;
 };

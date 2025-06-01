@@ -12,13 +12,17 @@ import MUIDataTable from "mui-datatables";
 import { axios_function } from "../../utilities/axios";
 import { Accesses_Context } from "../../context/Access_Context";
 import { useNavigate } from "react-router-dom";
+import SnackBar from "../../components/Snackbar";
 const Access = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { staffs, update_staffs } = useContext(Staffs_Context);
   const [staff_id, setStaffId] = useState(null);
   const [permissions, setPermissions] = useState([]);
   const { accesses, update_accesses } = useContext(Accesses_Context);
   const [access, setAccess] = useState(null);
+  const [message, setMessage] = useState("");
+  const [openSnack, setOpenSnack] = useState(false);
+  const [success, setSuccess] = useState(false);
   if (!accesses) update_accesses();
   useEffect(() => {
     if (!accesses) return;
@@ -49,13 +53,19 @@ const Access = () => {
         { user_id: staff_id }
       );
       if (response.result) {
-      console.log(response.message);
-    } else {
-      console.log("ERROR", response.message);
-      if (response.message === "Access denied.") {
-        navigate("/");
+        // console.log(response.message);
+        setMessage(response.message);
+        setOpenSnack(true);
+        setSuccess(true);
+      } else {
+        // console.log("ERROR");
+        setMessage(response.message);
+        setOpenSnack(true);
+        setSuccess(false);
+        if (response.message === "Access denied.") {
+          navigate("/");
+        }
       }
-    }
       // Parse action values to integers
       const parsedPermissions = response?.data?.map((perm) => ({
         ...perm,
@@ -160,17 +170,34 @@ const Access = () => {
       {staff_id && (
         <Button
           onClick={async () => {
-            let response = await axios_function(
+            const response = await axios_function(
               "POST",
               "http://localhost/Projects/CSSLTD-GYM/Backend/access/create_permission",
               { accesses: permissions, user_id: staff_id }
             );
-            update_accesses();
+            if (response.result) {
+              // console.log(response.message);
+              setMessage(response.message);
+              setOpenSnack(true);
+              setSuccess(true);
+              update_accesses();
+            } else {
+              // console.log("ERROR");
+              setMessage(response.message);
+              setOpenSnack(true);
+              setSuccess(false);
+            }
           }}
         >
           SAVE
         </Button>
       )}
+      <SnackBar
+        success={success}
+        openSnack={openSnack}
+        setOpenSnack={setOpenSnack}
+        message={message}
+      />
     </div>
   );
 };

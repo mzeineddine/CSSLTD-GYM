@@ -12,11 +12,15 @@ import UploadIcon from "@mui/icons-material/Upload";
 import { axios_function } from "../../utilities/axios";
 import { GeneralSettings_Context } from "../../context/GeneralSettings_Context";
 import { Accesses_Context } from "../../context/Access_Context";
+import SnackBar from "../../components/Snackbar";
 
 const Settings = () => {
   const { generalSettings, update_generalSettings } = useContext(
     GeneralSettings_Context
   );
+  const [message, setMessage] = useState("");
+  const [openSnack, setOpenSnack] = useState(false);
+  const [success, setSuccess] = useState(false);
   const { accesses, update_accesses } = useContext(Accesses_Context);
   const [access, setAccess] = useState(null);
   if (!accesses) update_accesses();
@@ -95,10 +99,16 @@ const Settings = () => {
         { ...formData, logo: "unchanged" }
       );
       if (response.result) {
-        console.log(response.message);
+        // console.log(response.message);
+        setMessage(response.message);
+        setOpenSnack(true);
+        setSuccess(true);
         update_generalSettings();
       } else {
-        console.log("ERROR", response.message);
+        // console.log("ERROR");
+        setMessage(response.message);
+        setOpenSnack(true);
+        setSuccess(false);
       }
     } else {
       e.preventDefault();
@@ -108,11 +118,15 @@ const Settings = () => {
         formData
       );
       if (response.result) {
-        console.log(response.message);
-        // console.log(formData)
-        update_generalSettings();
+        // console.log(response.message);
+        setMessage(response.message);
+        setOpenSnack(true);
+        setSuccess(true);
       } else {
-        console.log("ERROR", response.message);
+        // console.log("ERROR");
+        setMessage(response.message);
+        setOpenSnack(true);
+        setSuccess(false);
       }
     }
   };
@@ -226,6 +240,12 @@ const Settings = () => {
           Submit
         </Button>
       )}
+      <SnackBar
+        success={success}
+        openSnack={openSnack}
+        setOpenSnack={setOpenSnack}
+        message={message}
+      />
     </Box>
   );
 };
