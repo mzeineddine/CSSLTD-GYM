@@ -217,7 +217,7 @@ const Edit_Popup = ({
           {Object.entries(fields).map(([k, v]) => {
             const commonProps = {
               fullWidth: true,
-              label: k,
+              label: k.split("_").join(" "),
               value: formData[k],
               error: !!formErrors[k],
               helperText: formErrors[k],
@@ -240,7 +240,8 @@ const Edit_Popup = ({
                   <LocalizationProvider key={k} dateAdapter={AdapterDayjs}>
                     <DemoContainer components={["DatePicker"]}>
                       <DatePicker
-                        label={k}
+                        sx={{width: "100%"}}
+                        label={k.split("_").join(" ")}
                         value={formData[k]}
                         onChange={(newValue) => {
                           setFormData({ ...formData, [k]: newValue });
@@ -294,7 +295,7 @@ const Edit_Popup = ({
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        label={k}
+                        label={k.split("_").join(" ")}
                         error={!!formErrors[k]}
                         helperText={formErrors[k]}
                         required

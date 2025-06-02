@@ -48,7 +48,7 @@ class General
             $stmt_1->execute();
             $result_1 = $stmt_1->fetchAll(PDO::FETCH_ASSOC);
 
-            $sql_2 = "SELECT `name` as account, amount, expense_payments.created_on, 'out' as type FROM expense_payments, payment_accounts WHERE expense_payments.is_deleted = 0";
+            $sql_2 = "SELECT `name` as account, amount, expense_payments.created_on, 'out' as type FROM expense_payments, payment_accounts WHERE expense_payments.is_deleted = 0 and account_id=payment_accounts.id;";
             $stmt_2 = $conn->prepare($sql_2);
             $stmt_2->execute();
             $result_2 = $stmt_2->fetchAll(PDO::FETCH_ASSOC);

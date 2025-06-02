@@ -14,6 +14,6 @@ export const axios_function = async (method, url, data) => {
     if (err.message == "Network Error") console.log(err.message);
     return false;
   });
-  // console.log(response.data);
+  console.log(response.data);
   return response.data;
 };

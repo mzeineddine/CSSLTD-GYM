@@ -41,8 +41,11 @@ const Table1 = (props) => {
   const [headers, setHeaders] = useState([]);
   const [values, setValues] = useState([]);
   const [ids, setIds] = useState([]);
+
   let data = null;
   const handleDelete = (rows_deleted) => {
+    // rows_deleted.preventDefaults();
+    event.preventDefault();
     const deleted_indexes = rows_deleted.data.map((d) => d.dataIndex);
     const deleted_rows_ids = deleted_indexes.map((index) => ids[index]);
     console.log("Deleted rows:", deleted_rows_ids);
@@ -64,6 +67,26 @@ const Table1 = (props) => {
         setMessage(response.message);
         setOpenSnack(true);
         setSuccess(true);
+        // setUpdate((pre)=>{!pre});
+        if (title == "member") {
+          update_members();
+        } else if (title == "staff") {
+          update_staffs();
+        } else if (title == "coach") {
+          update_coaches();
+        } else if (title == "expense") {
+          update_expenses();
+        } else if (title == "paymentAccounts") {
+          update_paymentAccounts();
+        } else if (title == "expensePayments") {
+          update_expensePayments();
+        } else if (title == "categories") {
+          update_categories();
+        } else if (title == "subscriptionPayments") {
+          data = subscriptionPayments;
+        } else if (title == "log") {
+          update_logs();
+        }
       } else {
         // console.log("ERROR");
         setMessage(response.message);
@@ -125,8 +148,12 @@ const Table1 = (props) => {
           if (
             value[Object.keys(props.data_filter)[0]] ==
             props.data_filter[Object.keys(props.data_filter)[0]]
-          )
+          ) {
+            console.log("VALUE", value);
+            delete value["member_id"]
+            delete value["account_id"]
             return value;
+          }
         });
       }
       console.log("data: ", data);
@@ -213,7 +240,13 @@ const Table1 = (props) => {
           })}
         >
           <Box sx={{ minWidth: 800 }}>
-            <MUIDataTable data={values} columns={headers} options={options} />
+            <MUIDataTable
+              data={values}
+              columns={headers.map((value) => {
+                return value.split("_").join(" ");
+              })}
+              options={options}
+            />
           </Box>
         </ThemeProvider>
       </CacheProvider>

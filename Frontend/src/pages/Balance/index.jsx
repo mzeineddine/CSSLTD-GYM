@@ -113,9 +113,10 @@ const Balance = () => {
       setTransactionsHeaders(Object.keys(txData[0] || {}));
       setTransactionsData(txData || []);
     } catch (err) {
-      console.error("Error fetching transactions:", err);
-      setTransactionsHeaders([]);
-      setTransactionsData([]);
+      // console.error("Error fetching transactions:", err);
+      setMessage(err);
+      setOpenSnack(true);
+      setSuccess(false);
     }
   };
 
@@ -175,8 +176,8 @@ const Balance = () => {
         {access?.view && (
           <MUIDataTable
             title={"Transactions"}
-            data={transactionsData}
-            columns={transactionsHeaders}
+            data={transactionsData ? transactionsData : ""}
+            columns={transactionsHeaders ? transactionsHeaders : ""}
             options={{
               selectableRows: "none",
               responsive: "standard",

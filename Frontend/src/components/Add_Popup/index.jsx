@@ -150,6 +150,7 @@ const Add_Popup = (props) => {
         }
       }
       switch (props.name.toLowerCase()) {
+        case "subscription_payment":
         case "member":
           update_members();
           break;
@@ -176,7 +177,9 @@ const Add_Popup = (props) => {
 
       setFormData(default_values);
       setFormErrors(default_errors);
-      props.onClose();
+      setTimeout(function () {
+        props.onClose();
+      }, 2000);
     } catch (error) {
       console.error("Submit failed", error);
     }
@@ -197,7 +200,7 @@ const Add_Popup = (props) => {
           {Object.entries(props.fields).map(([k, v]) => {
             const commonProps = {
               fullWidth: true,
-              label: k,
+              label: k.split("_").join(" "),
               value: formData[k],
               error: !!formErrors[k],
               helperText: formErrors[k],
@@ -220,7 +223,8 @@ const Add_Popup = (props) => {
                   <LocalizationProvider key={k} dateAdapter={AdapterDayjs}>
                     <DemoContainer components={["DatePicker"]}>
                       <DatePicker
-                        label={k}
+                        sx={{width:"100%"}}
+                        label={k.split("_").join(" ")}
                         value={formData[k]}
                         onChange={(newValue) => {
                           setFormData({ ...formData, [k]: newValue });
@@ -274,7 +278,7 @@ const Add_Popup = (props) => {
                     renderInput={(params) => (
                       <TextField
                         {...params}
-                        label={k}
+                        label={k.split("_").join(" ")}
                         error={!!formErrors[k]}
                         helperText={formErrors[k]}
                         required
