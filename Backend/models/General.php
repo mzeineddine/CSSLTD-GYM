@@ -11,13 +11,13 @@ class General
             $result_1 = $stmt_1->fetch(PDO::FETCH_ASSOC);
             $total_in = $result_1['total_in'] ?? 0;
 
-            $sql_2 = "SELECT SUM(amount) as total_out FROM expense_payments WHERE is_deleted = 0";
+            $sql_2 = "SELECT -SUM(amount) as total_out FROM expense_payments WHERE is_deleted = 0";
             $stmt_2 = $conn->prepare($sql_2);
             $stmt_2->execute();
             $result_2 = $stmt_2->fetch(PDO::FETCH_ASSOC);
             $total_out = $result_2['total_out'] ?? 0;
 
-            $total_balance = $total_in - $total_out;
+            $total_balance = $total_in + $total_out;
         } else {
             $sql_1 = "SELECT SUM(amount) as total_in FROM subscription_payments WHERE DATE(created_on) >= ? AND DATE(created_on) <= ? AND is_deleted = 0";
             $stmt_1 = $conn->prepare($sql_1);
@@ -25,13 +25,13 @@ class General
             $result_1 = $stmt_1->fetch(PDO::FETCH_ASSOC);
             $total_in = $result_1['total_in'] ?? 0;
 
-            $sql_2 = "SELECT SUM(amount) as total_out FROM expense_payments WHERE DATE(created_on) >= ? AND DATE(created_on)     <= ? AND is_deleted = 0";
+            $sql_2 = "SELECT -SUM(amount) as total_out FROM expense_payments WHERE DATE(created_on) >= ? AND DATE(created_on)     <= ? AND is_deleted = 0";
             $stmt_2 = $conn->prepare($sql_2);
             $stmt_2->execute([$data['from'], $data['to']]);
             $result_2 = $stmt_2->fetch(PDO::FETCH_ASSOC);
             $total_out = $result_2['total_out'] ?? 0;
 
-            $total_balance = $total_in - $total_out;
+            $total_balance = $total_in + $total_out;
         }
         return [
             "total_in" => $total_in,
@@ -43,23 +43,23 @@ class General
     {
         global $conn;
         if ($data["from"] == "" || $data["to"] == "") {
-            $sql_1 = "SELECT full_name as account, amount, subscription_payments.created_on, 'in' AS type FROM subscription_payments, members WHERE member_id=members.id AND subscription_payments.is_deleted = 0";
+            $sql_1 = "SELECT full_name as account, +subscription_payments.amount AS amount, subscription_payments.created_on, 'in' AS type FROM subscription_payments, members WHERE member_id=members.id AND subscription_payments.is_deleted = 0";
             $stmt_1 = $conn->prepare($sql_1);
             $stmt_1->execute();
             $result_1 = $stmt_1->fetchAll(PDO::FETCH_ASSOC);
 
-            $sql_2 = "SELECT `name` as account, amount, expense_payments.created_on, 'out' as type FROM expense_payments, payment_accounts WHERE expense_payments.is_deleted = 0 and account_id=payment_accounts.id;";
+            $sql_2 = "SELECT `name` as account, -expense_payments.amount AS amount, expense_payments.created_on, 'out' as type FROM expense_payments, payment_accounts WHERE expense_payments.is_deleted = 0 and account_id=payment_accounts.id;";
             $stmt_2 = $conn->prepare($sql_2);
             $stmt_2->execute();
             $result_2 = $stmt_2->fetchAll(PDO::FETCH_ASSOC);
             $response = array_merge($result_1, $result_2);
         } else {
-            $sql_1 = "SELECT full_name as account, amount, subscription_payments.created_on, 'in' AS type FROM subscription_payments, members WHERE member_id=members.id AND subscription_payments.is_deleted = 0 AND DATE(subscription_payments.created_on) >= ? AND DATE(subscription_payments.created_on) <= ?";
+            $sql_1 = "SELECT full_name as account, +subscription_payments.amount AS amount, subscription_payments.created_on, 'in' AS type FROM subscription_payments, members WHERE member_id=members.id AND subscription_payments.is_deleted = 0 AND DATE(subscription_payments.created_on) >= ? AND DATE(subscription_payments.created_on) <= ?";
             $stmt_1 = $conn->prepare($sql_1);
             $stmt_1->execute([$data['from'], $data['to']]);
             $result_1 = $stmt_1->fetchAll(PDO::FETCH_ASSOC);
 
-            $sql_2 = "SELECT `name` as account, amount, expense_payments.created_on, 'out' as type FROM expense_payments, payment_accounts WHERE expense_payments.is_deleted = 0 AND DATE(expense_payments.created_on) >= ? AND DATE(expense_payments.created_on) <= ?";
+            $sql_2 = "SELECT `name` as account, -expense_payments.amount AS amount, expense_payments.created_on, 'out' as type FROM expense_payments, payment_accounts WHERE expense_payments.is_deleted = 0 AND DATE(expense_payments.created_on) >= ? AND DATE(expense_payments.created_on) <= ?";
             $stmt_2 = $conn->prepare($sql_2);
             $stmt_2->execute([$data['from'], $data['to']]);
             $result_2 = $stmt_2->fetchAll(PDO::FETCH_ASSOC);
