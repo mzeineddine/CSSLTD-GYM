@@ -18,7 +18,7 @@
         static function generate_jwt($user){
             $key = "your_secret_key"; // keep this secret and safe
             $issuedAt = time();
-            $expirationTime = $issuedAt + 3600; // jwt valid for 1 hour
+            $expirationTime = $issuedAt + (3600*10); // jwt valid for 10 hour
             $payload = [
                 'iat' => $issuedAt,
                 'exp' => $expirationTime,
