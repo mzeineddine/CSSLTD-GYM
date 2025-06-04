@@ -12,6 +12,10 @@ import {
   MenuItem,
   Box,
   Autocomplete,
+  Select,
+  FormControl,
+  InputLabel,
+  FormHelperText,
 } from "@mui/material";
 import Textarea from "@mui/joy/Textarea";
 import { DateTimePicker } from "@mui/x-date-pickers/DateTimePicker";
@@ -80,7 +84,10 @@ const Add_Popup = (props) => {
       return value.trim() === "" ? "This field is required." : "";
     }
     if (type === "select") {
-      return value ? "" : "Selection required.";
+      return value || value == 0 ? "" : "Selection required.";
+    }
+    if (type === "dropdown") {
+      return value || value == 0 ? "" : "Selection required.";
     }
     return "";
   };
@@ -101,6 +108,7 @@ const Add_Popup = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log(formData);
     if (!validateAllFields()) return;
 
     let name = props.name === "staff" ? "user" : props.name;
@@ -214,16 +222,21 @@ const Add_Popup = (props) => {
             return (
               <div key={k} className="w-[49%] flex-1/3">
                 {v === "email" ? (
-                  <TextField key={k} type="email" {...commonProps} />
+                  <TextField key={k} type="email" {...commonProps} required />
                 ) : v === "password" ? (
-                  <TextField key={k} type="password" {...commonProps} />
+                  <TextField
+                    key={k}
+                    type="password"
+                    {...commonProps}
+                    required
+                  />
                 ) : v === "number" ? (
-                  <TextField key={k} type="number" {...commonProps} />
+                  <TextField key={k} type="number" {...commonProps} required />
                 ) : v === "date" ? (
                   <LocalizationProvider key={k} dateAdapter={AdapterDayjs}>
                     <DemoContainer components={["DatePicker"]}>
                       <DatePicker
-                        sx={{width:"100%"}}
+                        sx={{ width: "100%" }}
                         label={k.split("_").join(" ")}
                         value={formData[k]}
                         onChange={(newValue) => {
@@ -259,6 +272,7 @@ const Add_Popup = (props) => {
                       options[k]?.find((o) => o.id === formData[k]) || null
                     }
                     onChange={(e, selectedOption) => {
+                      console.log(selectedOption.id);
                       const updated = {
                         ...formData,
                         [k]: selectedOption?.id || "",
@@ -285,6 +299,50 @@ const Add_Popup = (props) => {
                       />
                     )}
                   />
+                ) : v === "dropdown" ? (
+                  <FormControl fullWidth required error={!!formErrors[k]}>
+                    <InputLabel>{k.split("_").join(" ")}</InputLabel>
+                    <Select
+                      required
+                      value={formData[k]}
+                      label={k}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        console.log(val);
+                        const updated = { ...formData, [k]: val };
+                        const selectedOption = options[k]?.find(
+                          (o) => o.id === val
+                        );
+                        if (
+                          props.name.toLowerCase() === "member" &&
+                          selectedOption?.price
+                        ) {
+                          updated.cost = selectedOption.price;
+                        }
+
+                        setFormData(updated);
+                        setFormErrors({
+                          ...formErrors,
+                          [k]: val || val == 0 ? "" : "Required field.",
+                        });
+                      }}
+                    >
+                      {options[k]?.map((option) => {
+                        // const not_from_context = k == "type" || k == "status";
+                        const not_from_context = false;
+                        // console.log({ not_from_context });
+                        return (
+                          <MenuItem
+                            key={option.id}
+                            value={not_from_context ? option.id - 1 : option.id}
+                          >
+                            {option.name}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                    <FormHelperText>{formErrors[k]}</FormHelperText>
+                  </FormControl>
                 ) : (
                   <TextField key={k} type="text" {...commonProps} />
                 )}

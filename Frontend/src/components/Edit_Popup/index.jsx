@@ -8,6 +8,11 @@ import {
   Button,
   TextField,
   Autocomplete,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormHelperText,
 } from "@mui/material";
 import Textarea from "@mui/joy/Textarea";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
@@ -44,6 +49,31 @@ const Edit_Popup = ({
 
   for (const [key, val] of Object.entries(filled_field)) {
     defaultValues[key] = fields[key] === "date" ? dayjs(val) : val;
+    if (key == "type") {
+      if (val == "Month") {
+        defaultValues["type"] = 0;
+      } else if (val == "Class") {
+        defaultValues["type"] = 1;
+      }
+    } else if (key == "access_level") {
+      if (val == "Admin") {
+        defaultValues["access_level"] = 1;
+      } else if (val == "User") {
+        defaultValues["access_level"] = 2;
+      } else if (val == "Supervisor") {
+        defaultValues["access_level"] = 3;
+      } else if (val == "Manager") {
+        defaultValues["access_level"] = 4;
+      } else if (val == "Auditor") {
+        defaultValues["access_level"] = 5;
+      }
+    } else if (key == "status") {
+      if (val == "active") {
+        defaultValues["status"] = 0;
+      } else if (val == "inactive") {
+        defaultValues["status"] = 1;
+      }
+    }
   }
 
   const [formData, setFormData] = useState(defaultValues);
@@ -88,8 +118,11 @@ const Edit_Popup = ({
     if (type === "number") {
       return !isNaN(value) && value !== "" ? "" : "Must be a valid number";
     }
-    if (type === "select" || type === "text-area" || type === "text") {
-      return value ? "" : "This field is required";
+    if (type === "select") {
+      return value || value == 0 ? "" : "Selection required.";
+    }
+    if (type === "dropdown") {
+      return value || value == 0 ? "" : "Selection required.";
     }
     return "";
   };
@@ -127,9 +160,9 @@ const Edit_Popup = ({
       );
       if (response.result) {
         console.log(response.message);
-          setMessage(response.message);
-          setOpenSnack(true);
-          setSuccess(true);
+        setMessage(response.message);
+        setOpenSnack(true);
+        setSuccess(true);
         // const response_1 = await axios_function(
         //   "POST",
         //   "http://localhost/Projects/CSSLTD-GYM/Backend/subscription/update",
@@ -240,7 +273,7 @@ const Edit_Popup = ({
                   <LocalizationProvider key={k} dateAdapter={AdapterDayjs}>
                     <DemoContainer components={["DatePicker"]}>
                       <DatePicker
-                        sx={{width: "100%"}}
+                        sx={{ width: "100%" }}
                         label={k.split("_").join(" ")}
                         value={formData[k]}
                         onChange={(newValue) => {
@@ -302,6 +335,49 @@ const Edit_Popup = ({
                       />
                     )}
                   />
+                ) : v === "dropdown" ? (
+                  <FormControl fullWidth required error={!!formErrors[k]}>
+                    <InputLabel>{k.split("_").join(" ")}</InputLabel>
+                    <Select
+                      value={formData[k]}
+                      label={k}
+                      onChange={(e) => {
+                        const val = e.target.value;
+                        console.log(val);
+                        const updated = { ...formData, [k]: val };
+                        const selectedOption = options[k]?.find(
+                          (o) => o.id === val
+                        );
+                        if (
+                          name.toLowerCase() === "member" &&
+                          selectedOption?.price
+                        ) {
+                          updated.cost = selectedOption.price;
+                        }
+
+                        setFormData(updated);
+                        setFormErrors({
+                          ...formErrors,
+                          [k]: val || val == 0 ? "" : "Required field.",
+                        });
+                      }}
+                    >
+                      {options[k]?.map((option) => {
+                        // const not_from_context = k == "type" || k == "status";
+                        const not_from_context = false;
+                        // console.log({ not_from_context });
+                        return (
+                          <MenuItem
+                            key={option.id}
+                            value={not_from_context ? option.id - 1 : option.id}
+                          >
+                            {option.name}
+                          </MenuItem>
+                        );
+                      })}
+                    </Select>
+                    <FormHelperText>{formErrors[k]}</FormHelperText>
+                  </FormControl>
                 ) : (
                   <TextField key={k} type="text" {...commonProps} />
                 )}

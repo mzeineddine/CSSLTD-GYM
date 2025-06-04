@@ -64,6 +64,16 @@ export default function PositionedMenu(props) {
     setShowEdit(true);
   };
 
+  const edit_coach = (function_name) => {
+    setFunction_name(function_name);
+    setShowEdit(true);
+  };
+
+  const edit_staff = (function_name) => {
+    setFunction_name(function_name);
+    setShowEdit(true);
+  };
+
   const edit_member = (function_name) => {
     setFunction_name(function_name);
     setShowEdit(true);

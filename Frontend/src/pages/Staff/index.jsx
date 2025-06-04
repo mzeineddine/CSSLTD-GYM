@@ -55,15 +55,28 @@ const Staff = () => {
       {access?.create && (
         <Page_Title_Add
           name="Staff"
+          options={{
+            access_level: [
+              { id: 1, name: "Admin" },
+              { id: 2, name: "User" },
+              { id: 3, name: "Supervisor" },
+              { id: 4, name: "Manager" },
+              { id: 5, name: "Auditor" },
+            ],
+            status: [
+              { id: 0, name: "active" },
+              { id: 1, name: "inactive" },
+            ],
+          }}
           fields={{
             email: "email",
             password: "password",
             username: "text",
-            access_level: "number",
+            access_level: "dropdown",
             title: "text",
             contact: "text",
             address: "text",
-            status: "number",
+            status: "dropdown",
           }}
         />
       )}
@@ -72,6 +85,35 @@ const Staff = () => {
           <Table1
             // headers={headers}
             // data={members}
+            options={access?.edit && [{ "Edit staff": "edit_staff" }]}
+            options_names={{
+              edit_staff: "user",
+            }}
+            select_options={{
+              access_level: [
+                { id: 1, name: "Admin" },
+                { id: 2, name: "User" },
+                { id: 3, name: "Supervisor" },
+                { id: 4, name: "Manager" },
+                { id: 5, name: "Auditor" },
+              ],
+              status: [
+                { id: 0, name: "active" },
+                { id: 1, name: "inactive" },
+              ],
+            }}
+            options_functions_field={{
+              edit_staff: {
+                email: "email",
+                password: "password",
+                username: "text",
+                access_level: "dropdown",
+                title: "text",
+                contact: "text",
+                address: "text",
+                status: "dropdown",
+              },
+            }}
             title="staff"
             info={false}
             searchable={true}

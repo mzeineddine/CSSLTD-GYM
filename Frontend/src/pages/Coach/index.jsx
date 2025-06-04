@@ -64,6 +64,24 @@ const Coach = () => {
       <div className="appointment-table">
         {access?.view && (
           <Table1
+            options={access?.edit && [{ "Edit coach": "edit_coach" }]}
+            options_names={{
+              edit_coach: "coach",
+            }}
+            select_options={{
+              type: [
+                { id: 0, name: "Month" },
+                { id: 1, name: "Class" },
+              ],
+            }}
+            options_functions_field={{
+              edit_coach: {
+                full_name: "text",
+                contact: "text",
+                address: "text",
+                dob: "date",
+              },
+            }}
             title="coach"
             info={false}
             searchable={true}

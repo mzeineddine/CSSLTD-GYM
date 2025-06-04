@@ -12,9 +12,9 @@ class User extends User_Skeleton
         // id, username, email, password, title, access_level, 
         // contact, address, status, created_on, is_deleted
         global $conn;
-        $sql = "INSERT INTO users (`username`, `email`, `password`,`title`,`access_level`,`contact`,`address`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO users (`username`, `email`, `password`,`title`,`access_level`,`contact`,`address`, `status`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
         $stmt = $conn->prepare($sql);
-        $stmt->execute([$data["username"], $data["email"], password_hash($data['password'], PASSWORD_DEFAULT), $data["title"], $data["access_level"], $data["contact"], $data["address"]]);
+        $stmt->execute([$data["username"], $data["email"], password_hash($data['password'], PASSWORD_DEFAULT), $data["title"], $data["access_level"], $data["contact"], $data["address"], $data["status"]]);
         return boolval($stmt->rowCount());
     }
     static function read($data)

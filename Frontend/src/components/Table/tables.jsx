@@ -41,6 +41,8 @@ const Table1 = (props) => {
   const [headers, setHeaders] = useState([]);
   const [values, setValues] = useState([]);
   const [ids, setIds] = useState([]);
+  const [status, setStatus] = useState([]);
+  const [access_level, setAccessLevels] = useState([]);
 
   let data = null;
   const handleDelete = (rows_deleted) => {
@@ -150,8 +152,8 @@ const Table1 = (props) => {
             props.data_filter[Object.keys(props.data_filter)[0]]
           ) {
             console.log("VALUE", value);
-            delete value["member_id"]
-            delete value["account_id"]
+            delete value["member_id"];
+            delete value["account_id"];
             return value;
           }
         });
@@ -166,7 +168,69 @@ const Table1 = (props) => {
           : headers_without_id
       );
       const rows_without_id = data.map((item) => {
+        if (title == "staff") {
+          let { status } = { ...item };
+          let { access_level } = { ...item };
+          if (!isNaN(access_level)) {
+            switch (access_level) {
+              case 1:
+                access_level = "Admin";
+                break;
+              case 2:
+                access_level = "User";
+                break;
+              case 3:
+                access_level = "Supervisor";
+                break;
+              case 4:
+                access_level = "Manager";
+                break;
+              case 5:
+                access_level = "Auditor";
+                break;
+              default:
+                access_level = "Undefined";
+            }
+          }
+          if (!isNaN(status)) {
+            switch (status) {
+              case 0:
+                status = "active";
+                break;
+              case 1:
+                status = "inactive";
+                break;
+              default:
+                status = "Undefined";
+                break;
+            }
+          }
+          item.status = status;
+          item.access_level = access_level;
+
+          // console.log(item.status)
+        }
+
+        if (title == "categories") {
+          let { type } = { ...item };
+          if (!isNaN(type)) {
+            switch (type) {
+              case 0:
+                type = "Month";
+                break;
+              case 1:
+                type = "Class";
+                break;
+              default:
+                type = "Undefined";
+            }
+          }
+          item.type = type;
+          // console.log(item.status)
+        }
+
         const [_, ...row] = [...Object.values(item)];
+
         props.options &&
           row.push(
             <PositionedMenu
@@ -182,10 +246,26 @@ const Table1 = (props) => {
       setValues(rows_without_id);
 
       const rows_id = data.map((item) => {
-        const [id, ...row] = [...Object.values(item)];
+        const { id } = { ...item };
         return id;
       });
       setIds(rows_id);
+
+      if (title == "staff") {
+        const rows_status = data.map((item) => {
+          const { status } = { ...item };
+          const { id } = { ...item };
+          return { [id]: status };
+        });
+        setStatus(rows_status);
+
+        const rows_access_level = data.map((item) => {
+          const { access_level } = { ...item };
+          const { id } = { ...item };
+          return { [id]: access_level };
+        });
+        setAccessLevels(rows_access_level);
+      }
     }
   }, [
     members,
@@ -221,10 +301,7 @@ const Table1 = (props) => {
     onRowsDelete: handleDelete,
   };
   return (
-    <div
-      className="table-container w-[100%] overflow-x-auto"
-      // style={{ width: "100%", overflowX: "auto" }}
-    >
+    <div className="table-container w-[100%] overflow-x-auto">
       <CacheProvider value={muiCache}>
         <ThemeProvider
           theme={createTheme({
