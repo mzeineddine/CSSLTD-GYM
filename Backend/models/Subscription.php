@@ -17,13 +17,19 @@ class Subscription extends Subscription_Skeleton
     {
         global $conn;
         $id = $data['id'] ?? null;
+        $member_id = $data['member_id'] ?? null;
         if ($id) {
-            $stmt = $conn->prepare("SELECT subscriptions.*, username as created_by FROM subscriptions, users WHERE created_by=users.id AND subscription.id = ? AND subscriptions.is_deleted=0");
+            $stmt = $conn->prepare("SELECT subscriptions.id, members.full_name as member_name, categories.name as category_name,subscriptions.cost, subscriptions.start_date, subscriptions.end_date, subscriptions.created_on, username as created_by FROM subscriptions, members, categories, users WHERE subscriptions.created_by=users.id AND subscriptions.id = ? AND subscriptions.is_deleted=0 AND members.id=subscriptions.member_id AND categories.id=subscriptions.category_id");
             $stmt->execute([$id]);
             $expense = $stmt->fetch(PDO::FETCH_ASSOC);
             return $expense;
+        } else if ($member_id) {
+            $stmt = $conn->prepare("SELECT subscriptions.id, members.full_name as member_name, categories.name as category_name,subscriptions.cost, subscriptions.start_date, subscriptions.end_date, subscriptions.created_on, username as created_by FROM subscriptions, members, categories, users WHERE subscriptions.created_by=users.id AND member_id = ? AND subscriptions.is_deleted=0 AND members.id=subscriptions.member_id AND categories.id=subscriptions.category_id");
+            $stmt->execute([$member_id]);
+            $expense = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            return $expense;
         } else {
-            $stmt = $conn->query("SELECT subscriptions.*m username as created_by FROM subscriptions, users WHERE created_by=users.id AND subscriptions.is_deleted=0");
+            $stmt = $conn->query("SELECT subscriptions.id, members.full_name as member_name, categories.name as category_name,subscriptions.cost, subscriptions.start_date, subscriptions.end_date, subscriptions.created_on, username as created_by FROM subscriptions, members, categories, users WHERE subscriptions.created_by=users.id AND subscriptions.is_deleted=0 AND members.id=subscriptions.member_id AND categories.id=subscriptions.category_id  AND end_date>CURRENT_DATE order by end_date desc");
             $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $expenses;
         }
@@ -32,7 +38,7 @@ class Subscription extends Subscription_Skeleton
     static function update($data)
     {
         global $conn;
-        $sql = "UPDATE subscriptions SET `member_id`=?,`category_id`=?,`cost`=?,,`start_date`=?,`end_date`=? WHERE id = ?";
+        $sql = "UPDATE subscriptions SET `member_id`=?,`category_id`=?,`cost`=?,`start_date`=?,`end_date`=? WHERE id = ?";
         $stmt = $conn->prepare($sql);
         $stmt->execute([$data['member_id'], $data['category_id'], $data['cost'], $data['start_date'], $data['end_date'], $data["id"]]);
         return boolval($stmt->rowCount());

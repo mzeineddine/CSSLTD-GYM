@@ -32,6 +32,10 @@ const Member = () => {
       view_member_payment: false,
       edit_member_payment: false,
       delete_member_payment: false,
+      create_subscription : false,
+      view_subscription : false,
+      edit_subscription : false,
+      delete_subscription : false,
     };
 
     accesses.forEach((acc) => {
@@ -46,6 +50,12 @@ const Member = () => {
         if (acc.action == "2") newAccess.view_member_payment = true;
         if (acc.action == "3") newAccess.edit_member_payment = true;
         if (acc.action == "4") newAccess.delete_member_payment = true;
+      }
+      if (acc.page === "subscription") {
+        if (acc.action == "1") newAccess.create_subscription = true;
+        if (acc.action == "2") newAccess.view_subscription = true;
+        if (acc.action == "3") newAccess.edit_subscription = true;
+        if (acc.action == "4") newAccess.delete_subscription = true;
       }
     });
 
@@ -80,7 +90,8 @@ const Member = () => {
             options={
               (access?.edit ||
                 access?.create_member_payment ||
-                access?.view_member_payment) && [
+                access?.view_member_payment ||
+                access?.view_subscription) && [
                 access?.edit && { "Edit Member": "edit_member" },
                 access?.create_member_payment && {
                   "Add Payment": "add_payment",
@@ -88,11 +99,15 @@ const Member = () => {
                 access?.view_member_payment && {
                   "View Payments": "view_payment",
                 },
+                access?.view_subscription && {
+                  "View Subscriptions": "view_subscription",
+                },
               ]
             }
             options_names={{
               edit_member: "member",
               add_payment: "subscription_payment",
+              view_subscription: "subscription",
               view_payment: "subscription_payment",
             }}
             options_functions_field={{
@@ -108,6 +123,10 @@ const Member = () => {
               },
 
               view_payment: {
+                name: "text",
+                description: "text",
+              },
+              view_subscription: {
                 name: "text",
                 description: "text",
               },

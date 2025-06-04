@@ -54,6 +54,15 @@ export default function PositionedMenu(props) {
     }
   };
 
+  const view_subscription = () => {
+    console.log(props.data)
+    if (props.options_names["view_subscription"] == "subscription") {
+      navigate("/subscriptions", { state: props.data });
+    } else {
+      navigate("/subscriptions", { state: props.data });
+    }
+  };
+
   const edit_payment = (function_name) => {
     setFunction_name(function_name);
     setShowEdit(true);
@@ -80,6 +89,10 @@ export default function PositionedMenu(props) {
   };
 
   const edit_expense = (function_name) => {
+    setFunction_name(function_name);
+    setShowEdit(true);
+  };
+  const edit_subscription = (function_name) => {
     setFunction_name(function_name);
     setShowEdit(true);
   };

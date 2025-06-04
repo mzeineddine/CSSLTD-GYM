@@ -272,13 +272,14 @@ const Add_Popup = (props) => {
                       options[k]?.find((o) => o.id === formData[k]) || null
                     }
                     onChange={(e, selectedOption) => {
-                      console.log(selectedOption.id);
+                      console.log(formData);
                       const updated = {
                         ...formData,
                         [k]: selectedOption?.id || "",
                       };
                       if (
-                        props.name.toLowerCase() === "member" &&
+                        (props.name.toLowerCase() === "member" ||
+                          props.name.toLowerCase() === "subscription") &&
                         selectedOption?.price
                       ) {
                         updated.cost = selectedOption.price;
@@ -307,14 +308,16 @@ const Add_Popup = (props) => {
                       value={formData[k]}
                       label={k}
                       onChange={(e) => {
+                        console.log(formData);
                         const val = e.target.value;
-                        console.log(val);
+                        // console.log(val);
                         const updated = { ...formData, [k]: val };
                         const selectedOption = options[k]?.find(
                           (o) => o.id === val
                         );
                         if (
-                          props.name.toLowerCase() === "member" &&
+                          (props.name.toLowerCase() === "member" ||
+                            props.name.toLowerCase() === "subscription") &&
                           selectedOption?.price
                         ) {
                           updated.cost = selectedOption.price;

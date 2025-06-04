@@ -86,6 +86,7 @@ const Access = () => {
   const pages = [
     "member",
     "member_payment",
+    "subscription",
     "staff",
     "coach",
     "category",

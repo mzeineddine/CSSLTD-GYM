@@ -5,8 +5,9 @@ import { useContext,} from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function Search_Member() {
-  const { members } = useContext(Members_Context);
+  const { members, update_members } = useContext(Members_Context);
   const navigate = useNavigate();
+  if(!members) update_members()
   return (
     <Autocomplete
       disablePortal

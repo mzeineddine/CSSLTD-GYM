@@ -28,10 +28,10 @@ export default function Subscription_Payment() {
         if (acc.action == "4") newAccess.delete = true;
       }
     });
+    console.log("!@#",data);
 
     setAccess(newAccess);
   }, [accesses]);
-  console.log(data)
   return (
     <div className="subscription_payment m-[2%]">
       {access?.create && (
@@ -46,10 +46,11 @@ export default function Subscription_Payment() {
       )}
       <Table1
         title="subscriptionPayments"
-        options={[access?.edit &&{ "Edit Payment": "edit_payment" }]}
+        options={[access?.edit && { "Edit Payment": "edit_payment" }]}
         options_names={{
           edit_payment: "subscription_payment",
         }}
+        data={data}
         options_functions_field={{
           edit_payment: {
             amount: "number",

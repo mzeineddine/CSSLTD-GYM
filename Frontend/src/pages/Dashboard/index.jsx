@@ -1,7 +1,11 @@
 import DashboardStatCard from "../../components/DashboardStatCard";
 import "./dashboard.css";
-import icon from "../../assets/icons/member_icon.svg";
 import { Link } from "react-router-dom";
+
+import GroupIcon from '@mui/icons-material/Group';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import SportsGymnasticsIcon from '@mui/icons-material/SportsGymnastics';
+
 import Graph from "../../components/Graph";
 import PiChart from "../../components/PiChart";
 import Table1 from "../../components/Table/tables";
@@ -115,15 +119,6 @@ const Dashboard = () => {
     getChartData();
     getGraphData();
   }, [members, coaches]);
-  // const graph_data = [
-  //   { month: "Jan", left: 4000, new: 2400 },
-  //   { month: "Feb", left: 3000, new: 1398 },
-  //   { month: "Mar", left: 2000, new: 9800 },
-  //   { month: "Apr", left: 2780, new: 3908 },
-  //   { month: "May", left: 1890, new: 4800 },
-  //   { month: "Jun", left: 2390, new: 3800 },
-  //   { month: "Jul", left: 3490, new: 4300 },
-  // ];
   const graph_title = "Received and Paid Money";
   const key_x = "month_year";
   const lines_data = [
@@ -145,9 +140,9 @@ const Dashboard = () => {
   return (
     <div className="dashboard">
       <div className="dashboardStatCards">
-        <DashboardStatCard icon={icon} title="Members" count={member_count} />
-        <DashboardStatCard icon={icon} title="Coaches" count={coaches_count} />
-        <DashboardStatCard icon={icon} title="Profit" count={profit} />
+        <DashboardStatCard icon={GroupIcon} title="Members" count={member_count} />
+        <DashboardStatCard icon={SportsGymnasticsIcon} title="Coaches" count={coaches_count} />
+        <DashboardStatCard icon={AttachMoneyIcon} title="Profit" count={profit} />
       </div>
       <div className="appointment-table flex flex-col justify-between rounded-2xl items-center bg-neutral-50 p-[2%]">
         <div className="info flex flex-row justify-between items-center w-full px-[1%]">
@@ -159,7 +154,7 @@ const Dashboard = () => {
           </div>
         </div>
         <Table1
-          title="member"
+          title="subscription"
           info={true}
           searchable={true}
           paging={true}

@@ -156,12 +156,12 @@ class Subscription_Controller
             "result" => $deleted,
             "message" => $deleted ? "Subscription deleted successfully" : "Subscription not deleted",
         ]);
+        // print_r($subscription);
         if ($deleted) {
             Log::create([
                 "action" => "Delete",
                 "created_by" => $decoded_token->id,
-                "description" => "SUBSCRIPTION from cost " . $subscription["cost"] .
-                    " to cost" . $data["cost"]
+                "description" => "SUBSCRIPTION of cost " . $subscription["cost"] 
             ]);
         }
         return $deleted;

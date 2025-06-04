@@ -9,7 +9,7 @@ import { Expenses_Context } from "../../context/Expenses_Context.jsx";
 import { PaymentAccounts_Context } from "../../context/PaymentAccounts_Context.jsx";
 import PositionedMenu from "../Acttion_Menu/index.jsx";
 import { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./tables.css";
 import Add_Popup from "../Add_Popup/index.jsx";
 import { ExpensePayments_Context } from "../../context/ExpensePayments_Context.jsx";
@@ -40,10 +40,32 @@ const Table1 = (props) => {
   let { title, searchable, paging, exportable, visible } = props;
   const [headers, setHeaders] = useState([]);
   const [values, setValues] = useState([]);
+  const [subscriptions, setSubscriptions] = useState([]);
   const [ids, setIds] = useState([]);
   const [status, setStatus] = useState([]);
   const [access_level, setAccessLevels] = useState([]);
 
+  const navigate = useNavigate();
+  const getSubscriptions = async () => {
+    // console.log({member_id: props.member_id})
+    const response = await axios_function(
+      "POST",
+      "http://localhost/Projects/CSSLTD-GYM/Backend/subscription/read",
+      {member_id: props.member_id}
+    );
+    if (response.result) {
+      console.log(response.message);
+    } else {
+      console.log("ERROR", response.message);
+      if (response.message === "Access denied.") {
+        navigate("/");
+      }
+    }
+    if (response.data) {
+      setSubscriptions(response.data);
+      // return response.data;
+    }
+  };
   let data = null;
   const handleDelete = (rows_deleted) => {
     // rows_deleted.preventDefaults();
@@ -56,6 +78,7 @@ const Table1 = (props) => {
       if (title == "subscriptionPayments") url_title = "subscription_payment";
       else if (title == "expensePayments") url_title = "expense_payment";
       else if (title == "paymentAccounts") url_title = "payment_account";
+      else if (title == "willing to end") url_title = "subscription";
 
       if (title == "staff") url_title = "user";
       console.log("ID: " + id, "URL: " + url_title);
@@ -88,6 +111,8 @@ const Table1 = (props) => {
           data = subscriptionPayments;
         } else if (title == "log") {
           update_logs();
+        } else if (title == "subscription") {
+          getSubscriptions();
         }
       } else {
         // console.log("ERROR");
@@ -116,6 +141,9 @@ const Table1 = (props) => {
       data = subscriptionPayments;
     } else if (title == "log") {
       data = logs;
+    } else if (title == "subscription") {
+      data = subscriptions;
+      console.log("DATA:", data);
     }
     if (!data || data.length == 0) {
       if (title == "member") {
@@ -136,9 +164,11 @@ const Table1 = (props) => {
         update_subscriptionPayments();
       } else if (title == "log") {
         update_logs();
+      } else if (title == "subscription") {
+        getSubscriptions();
       }
     } else {
-      data.forEach((data) => {
+      data?.forEach((data) => {
         delete data.password;
         delete data.is_deleted;
       });
@@ -226,6 +256,7 @@ const Table1 = (props) => {
             }
           }
           item.type = type;
+
           // console.log(item.status)
         }
 
@@ -234,7 +265,7 @@ const Table1 = (props) => {
         props.options &&
           row.push(
             <PositionedMenu
-              data={item}
+              data={{...item, member_id:props?.member_id}}
               options_names={props.options_names}
               select_options={props.select_options}
               options_functions_field={props.options_functions_field}
@@ -277,6 +308,7 @@ const Table1 = (props) => {
     categories,
     subscriptionPayments,
     logs,
+    subscriptions
   ]);
 
   const muiCache = createCache({

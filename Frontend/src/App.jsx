@@ -17,6 +17,7 @@ import { Expenses_Provider } from "./context/Expenses_Context";
 import { PaymentAccounts_Provider } from "./context/PaymentAccounts_Context";
 import { ExpensePayments_Provider } from "./context/ExpensePayments_Context";
 import Expense_Payment from "./components/Expense_Payment";
+import Subscriptions from "./components/Subscription";
 import { Appointments_Provider } from "./context/Appointments_Context";
 import Settings from "./pages/Settings";
 import Category from "./pages/Category";
@@ -88,6 +89,8 @@ function App() {
                                 />
                                 <Route path="/log" element={<Log />} />
                                 <Route path="/access" element={<Access />} />
+                                <Route path="/subscriptions" element={<Subscriptions />} />
+
 
                                 {/* <Route path="/logout" element={<Logout />} /> */}
                                 {/* <Route path="/profile" element={<Profile />} /> */}
