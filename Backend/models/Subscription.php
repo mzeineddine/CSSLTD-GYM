@@ -19,17 +19,17 @@ class Subscription extends Subscription_Skeleton
         $id = $data['id'] ?? null;
         $member_id = $data['member_id'] ?? null;
         if ($id) {
-            $stmt = $conn->prepare("SELECT subscriptions.id, members.full_name as member_name, categories.name as category_name,subscriptions.cost, subscriptions.start_date, subscriptions.end_date, subscriptions.created_on, username as created_by FROM subscriptions, members, categories, users WHERE subscriptions.created_by=users.id AND subscriptions.id = ? AND subscriptions.is_deleted=0 AND members.id=subscriptions.member_id AND categories.id=subscriptions.category_id");
+            $stmt = $conn->prepare("SELECT subscriptions.id, members.full_name as member, categories.name as category,subscriptions.cost, subscriptions.start_date, subscriptions.end_date, subscriptions.created_on, username as created_by FROM subscriptions, members, categories, users WHERE subscriptions.created_by=users.id AND subscriptions.id = ? AND subscriptions.is_deleted=0 AND members.id=subscriptions.member_id AND categories.id=subscriptions.category_id");
             $stmt->execute([$id]);
             $expense = $stmt->fetch(PDO::FETCH_ASSOC);
             return $expense;
         } else if ($member_id) {
-            $stmt = $conn->prepare("SELECT subscriptions.id, members.full_name as member_name, categories.name as category_name,subscriptions.cost, subscriptions.start_date, subscriptions.end_date, subscriptions.created_on, username as created_by FROM subscriptions, members, categories, users WHERE subscriptions.created_by=users.id AND member_id = ? AND subscriptions.is_deleted=0 AND members.id=subscriptions.member_id AND categories.id=subscriptions.category_id");
+            $stmt = $conn->prepare("SELECT subscriptions.id, members.full_name as member, categories.name as category,subscriptions.cost, subscriptions.start_date, subscriptions.end_date, subscriptions.created_on, username as created_by FROM subscriptions, members, categories, users WHERE subscriptions.created_by=users.id AND member_id = ? AND subscriptions.is_deleted=0 AND members.id=subscriptions.member_id AND categories.id=subscriptions.category_id");
             $stmt->execute([$member_id]);
             $expense = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $expense;
         } else {
-            $stmt = $conn->query("SELECT subscriptions.id, members.full_name as member_name, categories.name as category_name,subscriptions.cost, subscriptions.start_date, subscriptions.end_date, subscriptions.created_on, username as created_by FROM subscriptions, members, categories, users WHERE subscriptions.created_by=users.id AND subscriptions.is_deleted=0 AND members.id=subscriptions.member_id AND categories.id=subscriptions.category_id  AND end_date>CURRENT_DATE order by end_date desc");
+            $stmt = $conn->query("SELECT subscriptions.id, members.full_name as member, categories.name as category,subscriptions.cost, subscriptions.start_date, subscriptions.end_date, subscriptions.created_on, username as created_by FROM subscriptions, members, categories, users WHERE subscriptions.created_by=users.id AND subscriptions.is_deleted=0 AND members.id=subscriptions.member_id AND categories.id=subscriptions.category_id  AND end_date>CURRENT_DATE order by end_date asc");
             $expenses = $stmt->fetchAll(PDO::FETCH_ASSOC);
             return $expenses;
         }

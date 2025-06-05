@@ -4,7 +4,7 @@ import Add_Popup from "../Add_Popup";
 import { Members_Context } from "../../context/Members_Context";
 const Page_Title_Add = (props) => {
   // const navigate = new useNavigate();
-  const name = props.name
+  const name = props.name;
   const handleOnClick = () => {
     setShowModal(true);
   };
@@ -14,12 +14,12 @@ const Page_Title_Add = (props) => {
   return (
     <div className="page-title-add">
       <div className="title">
-        <h2>{name}</h2>
+        <h2>{name.split("_").join(" ")}</h2>
       </div>
       <div className="add">
         <button onClick={handleOnClick}>
           <p>+</p>
-          <p>Add {name}</p>
+          <p>Add {name.split("_").join(" ")}</p>
         </button>
         <Add_Popup
           open={showModal}
