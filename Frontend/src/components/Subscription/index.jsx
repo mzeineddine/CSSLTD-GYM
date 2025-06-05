@@ -49,7 +49,7 @@ export default function Subscription() {
           data={data}
           id_change={"member_id"}
           fields={{
-            category_id: "dropdown",
+            category_id: "select",
             start_date: "date",
             end_date: "date",
             cost: "number",
@@ -70,7 +70,7 @@ export default function Subscription() {
           }}
           options_functions_field={{
             edit_subscription: {
-              category_id: "dropdown",
+              category_id: "select",
               start_date: "date",
               end_date: "date",
               cost: "number",

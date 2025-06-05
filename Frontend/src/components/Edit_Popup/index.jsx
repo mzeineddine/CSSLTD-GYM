@@ -30,6 +30,7 @@ import { ExpensePayments_Context } from "../../context/ExpensePayments_Context";
 import { SubscriptionPayments_Context } from "../../context/SubscriptionPayments_Context";
 import { Categories_Context } from "../../context/Categories_Context";
 import SnackBar from "../Snackbar";
+import { Subscriptions_Context } from "../../context/Subscriptions_Context";
 
 const Edit_Popup = ({
   name,
@@ -93,6 +94,7 @@ const Edit_Popup = ({
     update_paymentAccounts,
     update_expensePayments,
     update_subscriptionPayments,
+    update_subscriptions,
   } = {
     ...useContext(Members_Context),
     ...useContext(Staffs_Context),
@@ -102,6 +104,7 @@ const Edit_Popup = ({
     ...useContext(PaymentAccounts_Context),
     ...useContext(ExpensePayments_Context),
     ...useContext(SubscriptionPayments_Context),
+    ...useContext(Subscriptions_Context),
   };
   const [message, setMessage] = useState("");
   const [openSnack, setOpenSnack] = useState(false);
@@ -229,6 +232,10 @@ const Edit_Popup = ({
         update_expenses();
         update_expensePayments();
         break;
+      case "subscription":
+        update_subscriptions();
+        update_members();
+        break;
     }
 
     setTimeout(function () {
@@ -314,7 +321,8 @@ const Edit_Popup = ({
                         [k]: selectedOption?.id || "",
                       };
                       if (
-                        name.toLowerCase() === "member" &&
+                        (name.toLowerCase() === "member" ||
+                          name.toLowerCase() === "subscription") &&
                         selectedOption?.price
                       ) {
                         updated.cost = selectedOption.price;
@@ -349,7 +357,8 @@ const Edit_Popup = ({
                           (o) => o.id === val
                         );
                         if (
-                          name.toLowerCase() === "member" &&
+                          (name.toLowerCase() === "member" ||
+                            name.toLowerCase() === "subscription") &&
                           selectedOption?.price
                         ) {
                           updated.cost = selectedOption.price;

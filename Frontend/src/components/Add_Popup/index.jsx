@@ -33,6 +33,7 @@ import { PaymentAccounts_Context } from "../../context/PaymentAccounts_Context";
 import { ExpensePayments_Context } from "../../context/ExpensePayments_Context";
 import { Categories_Context } from "../../context/Categories_Context";
 import SnackBar from "../Snackbar";
+import { Subscriptions_Context } from "../../context/Subscriptions_Context";
 
 // import CloseIcon from '@mui/icons-material';
 const Add_Popup = (props) => {
@@ -67,6 +68,8 @@ const Add_Popup = (props) => {
   const { update_expenses } = useContext(Expenses_Context);
   const { update_paymentAccounts } = useContext(PaymentAccounts_Context);
   const { update_expensePayments } = useContext(ExpensePayments_Context);
+  const { update_subscriptions } = useContext(Subscriptions_Context);
+
 
   const validateField = (key, value, type) => {
     if (type === "email") {
@@ -178,6 +181,10 @@ const Add_Popup = (props) => {
           break;
         case "category":
           update_categories();
+          break;
+        case "subscription":
+          update_subscriptions(formData.member_id);
+          update_members();
           break;
       }
       if (props.name.toLowerCase() === "expense_payment")

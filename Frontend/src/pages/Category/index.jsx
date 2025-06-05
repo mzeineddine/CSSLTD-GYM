@@ -41,7 +41,7 @@ const Category = () => {
           }}
           fields={{
             name: "text",
-            type: "dropdown",
+            type: "select",
             price: "number",
           }}
         />
@@ -63,7 +63,7 @@ const Category = () => {
             options_functions_field={{
               edit_category: {
                 name: "text",
-                type: "dropdown",
+                type: "select",
                 price: "number",
               },
             }}
